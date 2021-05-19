@@ -649,8 +649,13 @@ for no, brickname in enumerate(bricknames_south_sample):
     objid = data.field('objid')
 
 
-    south = south_survey_is_south[np.where(brickid_south == brickid)][0]
+    south = south_survey_is_south[np.where(brickid_south == brickid)]
+    if len(south) > 0:
+        south = south[0]
+    else:
+        south = True
 
+    # Do not forget to check this clause
     #['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
     for i in range(len(flux_g)):
