@@ -566,7 +566,13 @@ for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
 for no, brickname in enumerate(bricknames_south_sample):
     df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
 
-    brickid = brickid_south[np.where(brickname_south == brickname)][0]
+    brickid = brickid_south[np.where(brickname_south == brickname)]
+    if len(brickid > 0):
+        brickid = brickid[0]
+    else:
+        brickid = 0
+        ##### Check tomorrow how there can be a brickname without corresponding id
+
     hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
     data = hdulistSingleBrick[1].data
 
@@ -678,7 +684,7 @@ for no, brickname in enumerate(bricknames_south_sample):
         print(no, " of ", len(bricknames_south_sample), "bricks processed")
 
     df.to_csv('../bricks_data/galaxy_catalogue_sample.csv', index=False)
-    print(" ===================== Brick", brickname, "complete=====================")
+    print(" ===================== Brick", brickname, " complete=====================")
 
 
 print()
