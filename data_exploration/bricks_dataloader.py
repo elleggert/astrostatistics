@@ -651,20 +651,60 @@ for no, brickname in enumerate(bricknames_south_sample):
     maskbits = data.field('maskbits')
 
     #Extracting Positions, and Object IDs
+    ids = data.field('brickid')
     ra = data.field('ra')
     dec = data.field('dec')
     objid = data.field('objid')
 
 
     south = south_survey_is_south[np.where(brickid_south == brickid)]
+    south_array = np.full(shape=len(flux_g), fill_value=south)
+
     if len(south) > 0:
         south = south[0]
     else:
         south = True
 
+
+    target_type = np.zeros(len(flux_g))
+
+    is_LRG = isLRG(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
+                 zfiberflux=fiberflux_z, rfluxivar=flux_ivar_r, zfluxivar=flux_ivar_z, w1fluxivar=flux_ivar_w1,
+                 gaiagmag=gaia_g_mag, gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z, maskbits=maskbits,
+                 zfibertotflux=fibertotflux_z, primary=None, south=south)
+
+    target_type[np.where(is_LRG == True)] = 1
+
+    is_ELG, is_ELGVLO = isELG(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
+                            gfiberflux=fiberflux_g, gsnr=snr_g, rsnr=snr_r, zsnr=snr_z,
+                            gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z,
+                            maskbits=maskbits,south=south)
+
+    target_type[np.where(is_ELG == True)] = 2
+    target_type[np.where(is_ELGVLO == True)] = 2
+
+    is_QSO =  isQSO_cuts(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
+                  w1snr=snr_w1, w2snr=snr_w2, maskbits=maskbits,
+                  gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z,
+                  objtype=None, primary=None, optical=False, south=south)
+
+    target_type[np.where(is_QSO == True)] = 3
+
+    stacked_array = np.stack((ids,objid,ra,dec,south_array,target_type), axis=1)
+    support_df = pd.DataFrame(stacked_array,columns=['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type'])
+    support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
+
+    df = df.append(support_df)
+
+
+    #df = df.append({'BrickID': brickid, 'ObjectID': objid, 'RA': ra, 'DEC': dec,
+     #                   'South': south, 'Target_type': 3}, ignore_index=True)
+
+
     # Do not forget to check this clause
     #['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
+    '''
     for i in range(len(flux_g)):
 
         if isLRG(gflux=flux_g[i], rflux=flux_r[i], zflux=flux_z[i], w1flux=flux_w1[i], w2flux=flux_w2[i],
@@ -692,6 +732,9 @@ for no, brickname in enumerate(bricknames_south_sample):
                              'South': south, 'Target_type': 3}, ignore_index=True)
             continue
 
+    '''
+
+
     #df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
     #if no % 3 == 0:
@@ -703,6 +746,7 @@ for no, brickname in enumerate(bricknames_south_sample):
 print()
 print("=============================== Classification South Completed ==================================")
 print()
+df = df[df['Target_type'] > 0]
 df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 print(df.shape)
 print(df.head())
