@@ -1,3 +1,5 @@
+import time
+
 from astropy.io import fits
 import wget
 import numpy as np
@@ -555,6 +557,9 @@ print()
 print("=============================== Classification South... ==================================")
 print()
 
+start = time.time()
+
+
 bricknames_south_sample = []
 
 for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
@@ -697,6 +702,11 @@ for no, brickname in enumerate(bricknames_south_sample):
 print()
 print("=============================== Classification South Completed ==================================")
 print()
+print(df.shape)
+print(df.head())
+
+print("Time taken for 15 bricks: ", time.time() - start)
+
 '''
 bricknames_north_sample = []
 
