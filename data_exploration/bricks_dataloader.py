@@ -692,6 +692,8 @@ for no, brickname in enumerate(bricknames_south_sample):
                              'South': south, 'Target_type': 3}, ignore_index=True)
             continue
 
+    #df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+
     #if no % 3 == 0:
         #print(no, " of ", len(bricknames_south_sample), "bricks processed")
 
