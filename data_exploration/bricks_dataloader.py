@@ -557,14 +557,16 @@ print()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
+for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
 
+df = pd.DataFrame(columns=['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type'])
+
 
 for no, brickname in enumerate(bricknames_south_sample):
-    df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
+    #df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
 
     brickid = brickid_south[np.where(brickname_south == brickname)]
     if len(brickid > 0):
@@ -573,7 +575,7 @@ for no, brickname in enumerate(bricknames_south_sample):
         brickid = 0
         ##### Check tomorrow how there can be a brickname without corresponding id
 
-    hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
+    hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
     data = hdulistSingleBrick[1].data
 
     #Obtaining the flux in nano-maggies of g, r, z, W1 and W2 bands.
@@ -685,10 +687,10 @@ for no, brickname in enumerate(bricknames_south_sample):
                              'South': south, 'Target_type': 3}, ignore_index=True)
             continue
 
-    if no % 20 == 0:
+    if no % 3 == 0:
         print(no, " of ", len(bricknames_south_sample), "bricks processed")
 
-    df.to_csv('../bricks_data/galaxy_catalogue_sample.csv', index=False)
+    df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
     print(" ===================== Brick", brickname, " complete=====================")
 
 
