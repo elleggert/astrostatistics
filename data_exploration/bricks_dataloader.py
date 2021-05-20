@@ -692,16 +692,16 @@ for no, brickname in enumerate(bricknames_south_sample):
                              'South': south, 'Target_type': 3}, ignore_index=True)
             continue
 
-    if no % 3 == 0:
-        print(no, " of ", len(bricknames_south_sample), "bricks processed")
+    #if no % 3 == 0:
+        #print(no, " of ", len(bricknames_south_sample), "bricks processed")
 
-    df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
-    print(" ===================== Brick", brickname, " complete=====================")
+    #print(" ===================== Brick", brickname, " complete=====================")
 
 
 print()
 print("=============================== Classification South Completed ==================================")
 print()
+df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 print(df.shape)
 print(df.head())
 
