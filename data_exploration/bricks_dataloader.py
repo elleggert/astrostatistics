@@ -103,6 +103,20 @@ def get_extinction_corrected_fluxes(data):
            fiberflux_z / mw_transmission_z
 
 
+def get_fluxes_not_extinction_corrected(data):
+    # Retrurns Predicted -band flux within a fiber of diameter 1.5 arcsec from all sources at this location in 1 arcsec Gaussian seeing
+    # Returns Inverse variance of FLUXES
+    return data.field('fibertotflux_g'), \
+           data.field('fibertotflux_r'), \
+           data.field('fibertotflux_z'),  \
+           data.field('flux_ivar_g'),\
+           data.field('flux_ivar_r'),\
+           data.field('flux_ivar_z'), \
+           data.field('flux_ivar_w1'),\
+           data.field('flux_ivar_w2')
+
+
+
 for no, brickname in enumerate(bricknames_south_sample):
     # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
 
@@ -121,18 +135,8 @@ for no, brickname in enumerate(bricknames_south_sample):
 
 
 
-    # Predicted -band flux within a fiber of diameter 1.5 arcsec from all sources at this location in 1 arcsec Gaussian seeing
     # This Flux is not corrected for extinction
-    fibertotflux_g = data.field('fibertotflux_g')
-    fibertotflux_r = data.field('fibertotflux_r')
-    fibertotflux_z = data.field('fibertotflux_z')
-
-    # Get Inverse variance of FLUXES
-    flux_ivar_g = data.field('flux_ivar_g')
-    flux_ivar_r = data.field('flux_ivar_r')
-    flux_ivar_z = data.field('flux_ivar_z')
-    flux_ivar_w1 = data.field('flux_ivar_w1')
-    flux_ivar_w2 = data.field('flux_ivar_w2')
+    fibertotflux_g, fibertotflux_r, fibertotflux_z, flux_ivar_g, flux_ivar_r, flux_ivar_z, flux_ivar_w1, flux_ivar_w2 = get_fluxes_not_extinction_corrected(data)
 
     # Get the number of pixels contributed to the central pixels in the bands
     nobs_g = data.field('nobs_g')
