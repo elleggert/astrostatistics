@@ -1,6 +1,5 @@
-import astropy.io
-import astropy.table
 import numpy as np
+
 
 
 def get_imaging_maskbits(bitnamelist=None):

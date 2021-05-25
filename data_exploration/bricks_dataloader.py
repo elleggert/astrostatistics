@@ -91,15 +91,14 @@ def get_extinction_corrected_fluxes(data):
     mw_transmission_w1 = data.field('mw_transmission_w1')
     mw_transmission_w2 = data.field('mw_transmission_w2')
 
-
     # correcting for extinction ---> divide by the transmission
     return flux_g / mw_transmission_g, \
            flux_r / mw_transmission_r, \
            flux_z / mw_transmission_z, \
            flux_w1 / mw_transmission_w1, \
            flux_w2 / mw_transmission_w2, \
-           fiberflux_g / mw_transmission_g,\
-           fiberflux_r / mw_transmission_r,\
+           fiberflux_g / mw_transmission_g, \
+           fiberflux_r / mw_transmission_r, \
            fiberflux_z / mw_transmission_z
 
 
@@ -108,13 +107,70 @@ def get_fluxes_not_extinction_corrected(data):
     # Returns Inverse variance of FLUXES
     return data.field('fibertotflux_g'), \
            data.field('fibertotflux_r'), \
-           data.field('fibertotflux_z'),  \
-           data.field('flux_ivar_g'),\
-           data.field('flux_ivar_r'),\
+           data.field('fibertotflux_z'), \
+           data.field('flux_ivar_g'), \
+           data.field('flux_ivar_r'), \
            data.field('flux_ivar_z'), \
-           data.field('flux_ivar_w1'),\
+           data.field('flux_ivar_w1'), \
            data.field('flux_ivar_w2')
 
+
+class Brick:
+    'Represents all attributes necessary to classify all galaxies in a brick into their categories'
+
+    def __init__(self, data):
+        self.data = data
+        self.initialise_brick()
+
+    def initialise_brick(self):
+        self.flux_g = self.data.field('flux_g')
+        self.flux_r = self.data.field('flux_r')
+        self.flux_z = self.data.field('flux_z')
+        self.flux_w1 = self.data.field('flux_w1')
+        self.flux_w2 = self.data.field('flux_w2')
+
+        # getting predicted -band flux within a fiber of diameter 1.5 arcsec from this object in 1 arcsec Gaussian seeing
+
+        self.fiberflux_g = self.data.field('fiberflux_g')
+        self.fiberflux_r = self.data.field('fiberflux_r')
+        self.fiberflux_z = self.data.field('fiberflux_z')
+
+        # correcting for extinction ---> divide by the transmission
+
+        self.mw_transmission_g = self.data.field('mw_transmission_g')
+        self.mw_transmission_r = self.data.field('mw_transmission_r')
+        self.mw_transmission_z = self.data.field('mw_transmission_z')
+        self.mw_transmission_w1 = self.data.field('mw_transmission_w1')
+        self.mw_transmission_w2 = self.data.field('mw_transmission_w2')
+
+        # Retrurns Predicted -band flux within a fiber of diameter 1.5 arcsec from all sources at this location in 1 arcsec Gaussian seeing
+        # Returns Inverse variance of FLUXES
+
+        self.fibertotflux_g = self.data.field('fibertotflux_g')
+        self.fibertotflux_r = self.data.field('fibertotflux_r')
+        self.fibertotflux_z = self.data.field('fibertotflux_z')
+
+        self.flux_ivar_g = self.data.field('flux_ivar_g')
+        self.flux_ivar_r = self.data.field('flux_ivar_r')
+        self.flux_ivar_z = self.data.field('flux_ivar_z')
+        self.flux_ivar_w1 = self.data.field('flux_ivar_w1')
+        self.flux_ivar_w2 = self.data.field('flux_ivar_w2')
+
+
+
+        self.extinction_correction()
+
+    def extinction_correction(self):
+        # correcting for extinction ---> divide by the transmission
+        self.flux_g = self.flux_g / self.mw_transmission_g
+        self.flux_r = self.flux_r / self.mw_transmission_r
+        self.flux_z = self.flux_z / self.mw_transmission_z
+        self.flux_w1 = self.flux_w1 / self.mw_transmission_w1
+        self.flux_w2 = self.flux_w2 / self.mw_transmission_w2
+
+        self.fiberflux_g = self.fiberflux_g / self.mw_transmission_g
+        self.fiberflux_r = self.fiberflux_r / self.mw_transmission_r
+        self.fiberflux_z = self.fiberflux_z / self.mw_transmission_z
 
 
 for no, brickname in enumerate(bricknames_south_sample):
@@ -125,18 +181,20 @@ for no, brickname in enumerate(bricknames_south_sample):
         brickid = brickid[0]
     else:
         brickid = 0
-        # Check tomorrow how there can be a brickname without corresponding id
+        # Check how there can be a brickname without corresponding id
 
     hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
     data = hdulistSingleBrick[1].data
 
+    brick = Brick(data)
+
     # Obtaining the flux in nano-maggies of g, r, z, W1 and W2 bands.
-    flux_g, flux_r, flux_z, flux_w1, flux_w2, fiberflux_g, fiberflux_r, fiberflux_z = get_extinction_corrected_fluxes(data)
-
-
+    flux_g, flux_r, flux_z, flux_w1, flux_w2, fiberflux_g, fiberflux_r, fiberflux_z = get_extinction_corrected_fluxes(
+        data)
 
     # This Flux is not corrected for extinction
-    fibertotflux_g, fibertotflux_r, fibertotflux_z, flux_ivar_g, flux_ivar_r, flux_ivar_z, flux_ivar_w1, flux_ivar_w2 = get_fluxes_not_extinction_corrected(data)
+    fibertotflux_g, fibertotflux_r, fibertotflux_z, flux_ivar_g, flux_ivar_r, flux_ivar_z, flux_ivar_w1, flux_ivar_w2 = get_fluxes_not_extinction_corrected(
+        data)
 
     # Get the number of pixels contributed to the central pixels in the bands
     nobs_g = data.field('nobs_g')
