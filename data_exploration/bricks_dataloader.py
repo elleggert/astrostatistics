@@ -196,6 +196,34 @@ class Brick:
     def set_south(self, south):
         self.south = south
 
+    def classify_galaxies(self):
+        target_type = np.zeros(len(self.flux_g))
+
+        is_LRG = isLRG(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1, w2flux=self.flux_w2,
+                       zfiberflux=self.fiberflux_z, rfluxivar=self.flux_ivar_r, zfluxivar=self.flux_ivar_z,
+                       w1fluxivar=self.flux_ivar_w1, gaiagmag=self.gaia_g_mag, gnobs=self.nobs_g, rnobs=self.nobs_r,
+                       znobs=self.nobs_z, maskbits=self.maskbits, zfibertotflux=self.fibertotflux_z, primary=None, south=self.south)
+
+        target_type[np.where(is_LRG == True)] = 1
+
+        is_ELG, is_ELGVLO = isELG(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1, w2flux=self.flux_w2,
+                                  gfiberflux=self.fiberflux_g, gsnr=self.snr_g, rsnr=self.snr_r, zsnr=self.snr_z,
+                                  gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
+                                  maskbits=self.maskbits, south=self.south)
+
+        target_type[np.where(is_ELG == True)] = 2
+        target_type[np.where(is_ELGVLO == True)] = 2
+
+        is_QSO = isQSO_cuts(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1, w2flux=self.flux_w2,
+                            w1snr=self.snr_w1, w2snr=self.snr_w2, maskbits=self.maskbits,
+                            gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
+                            objtype=None, primary=None, optical=False, south=self.south)
+
+        target_type[np.where(is_QSO == True)] = 3
+
+        return target_type
+
+
 
 for no, brickname in enumerate(bricknames_south_sample):
     # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
@@ -212,7 +240,6 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     brick = Brick(data)
 
-
     # Extracting Positions, and Object IDs
     ids = data.field('brickid')
     ra = data.field('ra')
@@ -228,30 +255,10 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     brick.set_south(south)
 
-    target_type = np.zeros(len(ids))
+    target_type = brick.classify_galaxies()
 
-    is_LRG = isLRG(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
-                   zfiberflux=fiberflux_z, rfluxivar=flux_ivar_r, zfluxivar=flux_ivar_z, w1fluxivar=flux_ivar_w1,
-                   gaiagmag=gaia_g_mag, gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z, maskbits=maskbits,
-                   zfibertotflux=fibertotflux_z, primary=None, south=south)
 
-    target_type[np.where(is_LRG == True)] = 1
-
-    is_ELG, is_ELGVLO = isELG(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
-                              gfiberflux=fiberflux_g, gsnr=snr_g, rsnr=snr_r, zsnr=snr_z,
-                              gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z,
-                              maskbits=maskbits, south=south)
-
-    target_type[np.where(is_ELG == True)] = 2
-    target_type[np.where(is_ELGVLO == True)] = 2
-
-    is_QSO = isQSO_cuts(gflux=flux_g, rflux=flux_r, zflux=flux_z, w1flux=flux_w1, w2flux=flux_w2,
-                        w1snr=snr_w1, w2snr=snr_w2, maskbits=maskbits,
-                        gnobs=nobs_g, rnobs=nobs_r, znobs=nobs_z,
-                        objtype=None, primary=None, optical=False, south=south)
-
-    target_type[np.where(is_QSO == True)] = 3
-
+    #Process array
     stacked_array = np.stack((ids, objid, ra, dec, south_array, target_type), axis=1)
     support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
     support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
@@ -263,36 +270,6 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # Do not forget to check this clause
     # ['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
-
-    '''
-    for i in range(len(flux_g)):
-
-        if isLRG(gflux=flux_g[i], rflux=flux_r[i], zflux=flux_z[i], w1flux=flux_w1[i], w2flux=flux_w2[i],
-                 zfiberflux=fiberflux_z[i], rfluxivar=flux_ivar_r[i], zfluxivar=flux_ivar_z[i], w1fluxivar=flux_ivar_w1[i],
-                 gaiagmag=gaia_g_mag[i], gnobs=nobs_g[i], rnobs=nobs_r[i], znobs=nobs_z[i], maskbits=maskbits[i],
-                 zfibertotflux=fibertotflux_z[i], primary=None, south=south):
-            df = df.append({'BrickID': brickid, 'ObjectID': objid[i],'RA': ra[i], 'DEC': dec[i],
-                             'South': south, 'Target_type': 1}, ignore_index=True)
-            continue
-
-        elg, elgvlo = isELG(gflux=flux_g[i], rflux=flux_r[i], zflux=flux_z[i], w1flux=flux_w1[i], w2flux=flux_w2[i],
-                            gfiberflux=fiberflux_g[i], gsnr=snr_g[i], rsnr=snr_r[i], zsnr=snr_z[i],
-                            gnobs=nobs_g[i], rnobs=nobs_r[i], znobs=nobs_z[i],
-                            maskbits=maskbits[i],south=south)
-        if elg or elgvlo:
-            df = df.append({'BrickID': brickid, 'ObjectID': objid[i],'RA': ra[i], 'DEC': dec[i],
-                             'South': south, 'Target_type': 2}, ignore_index=True)
-            continue
-
-        if isQSO_cuts(gflux=flux_g[i], rflux=flux_r[i], zflux=flux_z[i], w1flux=flux_w1[i], w2flux=flux_w2[i],
-                      w1snr=snr_w1[i], w2snr=snr_w2[i], maskbits=maskbits[i],
-                      gnobs=nobs_g[i], rnobs=nobs_r[i], znobs=nobs_z[i],
-                      objtype=None, primary=None, optical=False, south=south):
-            df = df.append({'BrickID': brickid, 'ObjectID': objid[i],'RA': ra[i], 'DEC': dec[i],
-                             'South': south, 'Target_type': 3}, ignore_index=True)
-            continue
-
-    '''
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
