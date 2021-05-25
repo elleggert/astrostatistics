@@ -7,19 +7,53 @@ class Brick:
     'Represents all attributes necessary to classify all galaxies in a brick into their categories'
 
     def __init__(self, data):
-        # The init method calls other methods to initialise the brick, considered bad practice to do so but with
-        # over 25 attributes this looked more than messy
         self.data = data
-        self.initialise_brick()
+        """ The init method does not intialise any of the elements, will be initialised depending on the usage of the 
+        brick e.g. galaxy classification / stellar density calculation"""
 
-    def initialise_brick(self):
+        self.flux_g = None
+        self.flux_r = None
+        self.flux_z = None
+        self.flux_w1 = None
+        self.flux_w2 = None
+        self.fiberflux_g = None
+        self.fiberflux_r = None
+        self.fiberflux_z = None
+        self.fibertotflux_g = None
+        self.fibertotflux_r = None
+        self.fibertotflux_z = None
+        self.flux_ivar_g = None
+        self.flux_ivar_r = None
+        self.flux_ivar_z = None
+        self.flux_ivar_w1 = None
+        self.flux_ivar_w2 = None
+        self.mw_transmission_g = None
+        self.mw_transmission_r = None
+        self.mw_transmission_z = None
+        self.mw_transmission_w1 = None
+        self.mw_transmission_w2 = None
+        self.gaia_g_mag = None
+        self.gaia_b_mag = None
+        self.gaia_r_mag = None
+        self.nobs_g = None
+        self.nobs_r = None
+        self.nobs_z = None
+        self.maskbits = None
+        self.snr_g = None
+        self.snr_r = None
+        self.snr_z = None
+        self.snr_w1 = None
+        self.snr_w2 = None
+        self.south = None
+
+    def initialise_brick_for_galaxy_classification(self, south=None):
         """Calls different Initialisation Methods"""
         self.initialise_fluxes()
         self.initialise_no_observations_maskbits()
         self.initialise_gaia_magnitudes()
         self.extinction_correction()
         self.calculate_signal_to_noise()
-        self.south = None
+        self.set_south(south)
 
     def calculate_signal_to_noise(self):
         """Get the Signal-to-noise in g, r, z, W1 and W2 defined as the flux per

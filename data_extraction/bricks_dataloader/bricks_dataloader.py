@@ -7,13 +7,13 @@ import pandas as pd
 
 from brick import Brick
 
-hdulistBricksSouthSummary = fits.open('../bricks_data/survey-bricks-dr9-south.fits')
+hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
 brickname_south = data_south.field('brickname')
 brickid_south = data_south.field('brickid')
 south_survey_is_south = data_south.field('survey_primary')
 
-hdulistBricksNorthSummary = fits.open('../bricks_data/survey-bricks-dr9-north.fits')
+hdulistBricksNorthSummary = fits.open('../../bricks_data/survey-bricks-dr9-north.fits')
 data_north = hdulistBricksNorthSummary[1].data
 brickname_north = data_north.field('brickname')
 brickid_north = data_north.field('brickid')
@@ -83,13 +83,11 @@ for no, brickname in enumerate(bricknames_south_sample):
     data = hdulistSingleBrick[1].data
 
     brick = Brick(data)
-
-    # Extracting Positions, and Object IDs
+    south = south_survey_is_south[np.where(brickid_south == brickid)]
     ids = data.field('brickid')
     ra = data.field('ra')
     dec = data.field('dec')
     objid = data.field('objid')
-    south = south_survey_is_south[np.where(brickid_south == brickid)]
     south_array = np.full(shape=len(ids), fill_value=south)
 
     if len(south) > 0:
@@ -97,7 +95,9 @@ for no, brickname in enumerate(bricknames_south_sample):
     else:
         south = True
 
-    brick.set_south(south)
+    brick.initialise_brick_for_galaxy_classification(south)
+
+    # Extracting Positions, and Object IDs
 
     target_type = brick.classify_galaxies()
 
@@ -125,7 +125,7 @@ print()
 print("=============================== Classification South Completed ==================================")
 print()
 df = df[df['Target_type'] > 0]
-df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+df.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 print(df.shape)
 print(df.head())
 
