@@ -174,7 +174,7 @@ class Brick:
 
     def get_stellar_objects(self):
         stellar_objects = np.zeros(self.no_of_objects)
-        stellar_objects[np.where(self.type == "PSF")] = 1
+        stellar_objects[np.where((self.type == "PSF") and (self.flux_r > 17) and (self.flux_r < 18))] = 1
         return stellar_objects
 
 
