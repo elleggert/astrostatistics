@@ -7,7 +7,7 @@ import time
 
 start = time.time()
 
-bricks_to_download = 10
+bricks_to_download = 1000
 # Sampling from area with probability 1:3, since this is the real distribution of bricks
 area = "south"
 rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
@@ -36,10 +36,7 @@ for filename in os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/'):
 
 # Getting a random sample of bricknames without replacement and deleting all that are already downloaded
 bricknames_sample = random.sample(bricknames, bricks_to_download)
-bricknames_sample.append("0735m407")
-print(bricknames_sample)
 bricknames_sample = [x for x in bricknames_sample if x not in downloaded_bricks]
-print(bricknames_sample)
 
 
 for i, brickname in enumerate(bricknames_sample):
