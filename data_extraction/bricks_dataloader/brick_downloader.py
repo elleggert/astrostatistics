@@ -1,6 +1,7 @@
 from astropy.io import fits
 import os
 import wget
+import numpy.random
 import random
 import time
 
@@ -9,7 +10,9 @@ start = time.time()
 bricks_to_download = 10
 # Sampling from area with probability 1:3, since this is the real distribution of bricks
 area = "south"
-if random.uniform() <= 0.25:
+rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
+print(rand)
+if rand <= 0.25:
     area = "north"
 
 
@@ -26,19 +29,23 @@ bricknames = list(data.field('brickname'))
 downloaded_bricks = []
 
 # Getting already downloaded files:
-for filename in os.listdir(f'/Volumes/Astrostick/bricks_data/{area}/'):
+for filename in os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     downloaded_bricks.append(brickn)
 
 # Getting a random sample of bricknames without replacement and deleting all that are already downloaded
 bricknames_sample = random.sample(bricknames, bricks_to_download)
+bricknames_sample.append("0735m407")
+print(bricknames_sample)
 bricknames_sample = [x for x in bricknames_sample if x not in downloaded_bricks]
+print(bricknames_sample)
+
 
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
-    wget.download(url, f'/Volumes/Astrostick/bricks_data/{area}/')
+    wget.download(url, f'/Volumes/Astrodisk/bricks_data/{area}/')
 
     print(f"Brick {area} downloaded: ", brickname)
 
