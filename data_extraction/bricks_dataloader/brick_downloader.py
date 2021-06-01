@@ -51,4 +51,6 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
-print("Time taken for: ", {bricks_to_download}, " bricks: ", time.time() - start)
+print("Time taken for: ", bricks_to_download, " bricks: ", time.time() - start)
+
+print(f"Number of bricks in {area}:", len(os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/')))
