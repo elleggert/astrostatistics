@@ -7,7 +7,7 @@ import time
 
 start = time.time()
 
-bricks_to_download = 7000
+bricks_to_download = 1000
 # Sampling from area with probability 1:3, since this is the real distribution of bricks
 area = "south"
 rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
@@ -44,7 +44,7 @@ for i, brickname in enumerate(bricknames_sample):
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
     wget.download(url, f'/Volumes/Astrodisk/bricks_data/{area}/')
 
-    print(f"Brick {area} downloaded: ", brickname)
+    print(f"Brick {area} downloaded: ", brickname, ", Brick ", i , " of ", bricks_to_download)
 
 
 print()
