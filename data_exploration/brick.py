@@ -61,7 +61,6 @@ class Brick:
     def initialise_brick_for_stellar_density(self):
         self.initialise_fluxes()
         self.initialise_type()
-        self.extinction_correction()
         self.no_of_objects = len(self.flux_g)
 
 
@@ -173,9 +172,12 @@ class Brick:
         return target_type
 
     def get_stellar_objects(self):
-        stellar_objects = np.zeros(self.no_of_objects)
-        stellar_objects[np.where((self.type == "PSF") and (self.flux_r > 17) and (self.flux_r < 18))] = 1
-        return stellar_objects
+        mask = (self.flux_r > 17) & (self.flux_r < 18) & (self.type == 'PSF')
+        return mask
+        #fluxr = self.flux_r[mask]
+        #return len(flux_r)
+
+
 
 
 
