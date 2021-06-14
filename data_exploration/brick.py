@@ -172,10 +172,8 @@ class Brick:
         return target_type
 
     def get_stellar_objects(self):
-        mask = (self.flux_r > 17) & (self.flux_r < 18) & (self.type == 'PSF')
-        return mask
-        #fluxr = self.flux_r[mask]
-        #return len(flux_r)
+        is_PSF =  (self.type == 'PSF') & (self.flux_r > 17) & (self.flux_r < 18)
+        return is_PSF
 
 
 
