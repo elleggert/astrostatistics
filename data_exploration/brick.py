@@ -1,6 +1,9 @@
 import numpy as np
-
-from galaxy_classification import isLRG, isELG, isQSO_cuts
+import time
+start = time.time()
+#from galaxy_classification import isLRG, isELG, isQSO_cuts
+from desitarget.cuts import isLRG, isELG, isQSO_cuts
+print("Time taken for import: ", time.time() - start)
 
 
 class Brick:
