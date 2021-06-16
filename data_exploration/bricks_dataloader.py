@@ -108,7 +108,7 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     df_galaxy = df_galaxy.append(support_df)
 
-    """ NOW CLASSIFYNIG STARS
+    """ NOW CLASSIFYNIG STARS"""
     brick.initialise_brick_for_stellar_density()
 
     stars = brick.get_stellar_objects()
@@ -117,7 +117,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG', 'GMR', 'RMZ'])
     df_stars = df_stars.append(support_df)
 
-"""
+
     # Do not forget to check this clause
     # ['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
