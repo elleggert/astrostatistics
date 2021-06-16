@@ -84,12 +84,6 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     brick = Brick(data)
     south = south_survey_is_south[np.where(brickid_south == brickid)]
-    ids = data.field('brickid')
-    ra = data.field('ra')
-    dec = data.field('dec')
-    objid = data.field('objid')
-    south_array = np.full(shape=len(ids), fill_value=south)
-
     if len(south) > 0:
         south = south[0]
     else:
@@ -97,12 +91,16 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     brick.initialise_brick_for_galaxy_classification(south)
 
+    south_array = np.full(shape=len(brick.no_of_objects), fill_value=south)
+
+
+
     # Extracting Positions, and Object IDs
 
     target_type = brick.classify_galaxies()
 
     # Process array
-    stacked_array = np.stack((ids, objid, ra, dec, south_array, target_type), axis=1)
+    stacked_array = np.stack((brick.ids, brick.objid, brick.ra, brick.dec, south_array, target_type), axis=1)
     support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
     support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
 

@@ -12,6 +12,10 @@ class Brick:
         """ The init method does not intialise any of the elements, will be initialised depending on the usage of the 
         brick e.g. galaxy classification / stellar density calculation"""
 
+        self.ra = None
+        self.dec = None
+        self.ids = None
+        self.objid = None
         self.flux_g = None
         self.flux_r = None
         self.flux_z = None
@@ -45,11 +49,18 @@ class Brick:
         self.snr_z = None
         self.snr_w1 = None
         self.snr_w2 = None
+        self.mag_g = None
+        self.mag_r = None
+        self.mag_z = None
+        self.gmr = None
+        self.rmz = None
         self.south = None
         self.type = None
 
     def initialise_brick_for_galaxy_classification(self, south=None):
         """Calls different Initialisation Methods"""
+        self.initialise_position()
+        self.initialise_ids()
         self.initialise_fluxes()
         self.initialise_no_observations_maskbits()
         self.initialise_gaia_magnitudes()
@@ -58,12 +69,27 @@ class Brick:
         self.set_south(south)
         self.no_of_objects = len(self.flux_g)
 
+    def initialise_ids(self):
+        self.ids = self.data.field('brickid')
+        self.objid = self.data.field('objid')
+
+    def initialise_position(self):
+        self.ra = self.data.field('ra')
+        self.dec = self.data.field('dec')
+
     def initialise_brick_for_stellar_density(self):
+        self.initialise_position()
         self.initialise_fluxes()
         self.initialise_type()
+        self.initialise_magnitudes_colours_uncorrected()
         self.no_of_objects = len(self.flux_g)
 
-
+    def initialise_magnitudes_colours_uncorrected(self):
+        self.mag_g = 22.5 - 2.5 * np.log10(self.flux_g.clip(1e-7))
+        self.mag_r = 22.5 - 2.5 * np.log10(self.flux_r.clip(1e-7))
+        self.mag_z = 22.5 - 2.5 * np.log10(self.flux_z.clip(1e-7))
+        self.gmr = self.mag_g - self.mag_r
+        self.rmz = self.mag_r - self.mag_z
 
     def calculate_signal_to_noise(self):
         """Get the Signal-to-noise in g, r, z, W1 and W2 defined as the flux per
@@ -172,8 +198,11 @@ class Brick:
         return target_type
 
     def get_stellar_objects(self):
-        is_PSF =  (self.type == 'PSF') & (self.flux_r > 17) & (self.flux_r < 18)
-        return is_PSF
+        is_PSF = (self.type == 'PSF') & (self.mag_r > 17) & (self.mag_r < 18)
+        stacked_array = np.stack((self.ra, self.dec, self.mag_g, self.mag_r, self.mag_z, self.gmr, self.rmz),
+                                 axis=1)
+
+        return stacked_array[np.where(is_PSF == True)]
 
 
 
