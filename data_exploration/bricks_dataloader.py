@@ -67,7 +67,9 @@ for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
 
-df = pd.DataFrame(columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
+df_galaxy = pd.DataFrame(columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
+df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG', 'GMR', 'RMZ'])
+
 
 for no, brickname in enumerate(bricknames_south_sample):
     # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
@@ -104,28 +106,35 @@ for no, brickname in enumerate(bricknames_south_sample):
     support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
     support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
 
-    df = df.append(support_df)
+    df_galaxy = df_galaxy.append(support_df)
 
-    # df = df.append({'BrickID': brickid, 'ObjectID': objid, 'RA': ra, 'DEC': dec,
-    #                   'South': south, 'Target_type': 3}, ignore_index=True)
+    """ NOW CLASSIFYNIG STARS
+    brick.initialise_brick_for_stellar_density()
 
+    stars = brick.get_stellar_objects()
+
+
+    support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG', 'GMR', 'RMZ'])
+    df_stars = df_stars.append(support_df)
+
+"""
     # Do not forget to check this clause
     # ['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
-    # if no % 3 == 0:
-    # print(no, " of ", len(bricknames_south_sample), "bricks processed")
 
     # print(" ===================== Brick", brickname, " complete=====================")
 
 print()
 print("=============================== Classification South Completed ==================================")
 print()
-df = df[df['Target_type'] > 0]
-df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
-print(df.shape)
-print(df.head())
+df_galaxy = df_galaxy[df_galaxy['Target_type'] > 0]
+df_galaxy.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+df_stars.to_csv('../bricks_data/stellar_catalogue_sample_profiling.csv', index=False)
+
+print(df_galaxy.shape)
+print(df_galaxy.head())
 
 print("Time taken for 15 bricks: ", time.time() - start)
 
