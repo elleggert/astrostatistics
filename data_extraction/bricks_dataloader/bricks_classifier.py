@@ -7,13 +7,13 @@ import pandas as pd
 
 from brick import Brick
 
-hdulistBricksSouthSummary = fits.open('../bricks_data/survey-bricks-dr9-south.fits')
+hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
 brickname_south = data_south.field('brickname')
 brickid_south = data_south.field('brickid')
 south_survey_is_south = data_south.field('survey_primary')
 
-hdulistBricksNorthSummary = fits.open('../bricks_data/survey-bricks-dr9-north.fits')
+hdulistBricksNorthSummary = fits.open('../../bricks_data/survey-bricks-dr9-north.fits')
 data_north = hdulistBricksNorthSummary[1].data
 brickname_north = data_north.field('brickname')
 brickid_north = data_north.field('brickid')
@@ -67,9 +67,13 @@ for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
 
-df_galaxy = pd.DataFrame(columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
-df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG', 'GMR', 'RMZ'])
+df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
+df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
+df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', index=False)
 
+print(df_galaxy.head())
+print(df_stars.head())
 
 for no, brickname in enumerate(bricknames_south_sample):
     # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
@@ -93,17 +97,15 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     brick.initialise_brick_for_galaxy_classification(south)
 
-    south_array = np.full(shape=brick.no_of_objects, fill_value=south)
+    #south_array = np.full(shape=brick.no_of_objects, fill_value=south)
 
-
-
-    # Extracting Positions, and Object IDs
 
     target_type = brick.classify_galaxies()
 
+
     # Process array
-    stacked_array = np.stack((brick.ids, brick.objid, brick.ra, brick.dec, south_array, target_type), axis=1)
-    support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'ObjectID', 'RA', 'DEC', 'South', 'Target_type'])
+    stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
+    support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
     support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
 
     df_galaxy = df_galaxy.append(support_df)
@@ -114,7 +116,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     stars = brick.get_stellar_objects()
 
 
-    support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG', 'GMR', 'RMZ'])
+    support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
     df_stars = df_stars.append(support_df)
 
 
@@ -122,19 +124,38 @@ for no, brickname in enumerate(bricknames_south_sample):
     # ['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+    """
+    df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
+    df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv',  mode='a', index=False, header=False)
 
+
+    print(df_galaxy.head())
+    print(df_galaxy.Maskbits.unique())
+    print(df_stars.head())
+
+    break
+    print(df_galaxy.shape)
+    print(df_stars.shape)
+"""
 
     # print(" ===================== Brick", brickname, " complete=====================")
 
 print()
 print("=============================== Classification South Completed ==================================")
 print()
-df_galaxy = df_galaxy[df_galaxy['Target_type'] > 0]
-df_galaxy.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
-df_stars.to_csv('../bricks_data/stellar_catalogue_sample_profiling.csv', index=False)
+#df_galaxy = df_galaxy[df_galaxy['Target_type'] > 0]
+#df_galaxy.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
+#df_stars.to_csv('../bricks_data/stellar_catalogue_sample_profiling.csv', index=False)
 
-print(df_galaxy.shape)
+
+df_galaxy = df_galaxy.astype({'BrickID': 'int32', 'Target_type': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
+
+df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
+df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv',  mode='a', index=False, header=False)
+print(df_galaxy.Targ)
 print(df_galaxy.head())
+print(df_stars.head())
+
 
 print("Time taken for 15 bricks: ", time.time() - start)
 

@@ -1,9 +1,7 @@
 import numpy as np
 import time
-start = time.time()
 #from galaxy_classification import isLRG, isELG, isQSO_cuts
 from desitarget.cuts import isLRG, isELG, isQSO_cuts
-print("Time taken for import: ", time.time() - start)
 
 
 class Brick:
@@ -47,6 +45,7 @@ class Brick:
         self.nobs_r = None
         self.nobs_z = None
         self.maskbits = None
+        self.fitbits = None
         self.snr_g = None
         self.snr_r = None
         self.snr_z = None
@@ -55,8 +54,8 @@ class Brick:
         self.mag_g = None
         self.mag_r = None
         self.mag_z = None
-        self.gmr = None
-        self.rmz = None
+        #self.gmr = None
+        #self.rmz = None
         self.south = None
         self.type = None
 
@@ -91,8 +90,8 @@ class Brick:
         self.mag_g = 22.5 - 2.5 * np.log10(self.flux_g.clip(1e-7))
         self.mag_r = 22.5 - 2.5 * np.log10(self.flux_r.clip(1e-7))
         self.mag_z = 22.5 - 2.5 * np.log10(self.flux_z.clip(1e-7))
-        self.gmr = self.mag_g - self.mag_r
-        self.rmz = self.mag_r - self.mag_z
+        #self.gmr = self.mag_g - self.mag_r
+        #self.rmz = self.mag_r - self.mag_z
 
     def calculate_signal_to_noise(self):
         """Get the Signal-to-noise in g, r, z, W1 and W2 defined as the flux per
@@ -116,6 +115,7 @@ class Brick:
         self.nobs_z = self.data.field('nobs_z')
         # Retrieving the maskbits for quasar detection and boolean for brick is in north
         self.maskbits = self.data.field('maskbits')
+        self.fitbits = self.data.field('fitbits')
 
     def initialise_fluxes(self):
         """ Initialise the various fluxes, fiber fluxes and inverse variance of the fluxes in the different bands"""
@@ -202,7 +202,7 @@ class Brick:
 
     def get_stellar_objects(self):
         is_PSF = (self.type == 'PSF') & (self.mag_r > 17) & (self.mag_r < 18)
-        stacked_array = np.stack((self.ra, self.dec, self.mag_g, self.mag_r, self.mag_z, self.gmr, self.rmz),
+        stacked_array = np.stack((self.ra, self.dec, self.mag_g, self.mag_r, self.mag_z),
                                  axis=1)
 
         return stacked_array[np.where(is_PSF == True)]
