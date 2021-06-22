@@ -1,7 +1,7 @@
 import numpy as np
 import time
 #from galaxy_classification import isLRG, isELG, isQSO_cuts
-from desitarget.cuts import isLRG, isELG, isQSO_cuts
+from desitarget.cuts import isLRG, isELG, isQSO_cuts, isQSO_randomforest
 
 
 class Brick:
@@ -190,12 +190,18 @@ class Brick:
         target_type[np.where(is_ELG == True)] = 2
         target_type[np.where(is_ELGVLO == True)] = 2
 
+        is_QSO = isQSO_randomforest(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
+                            w2flux=self.flux_w2, maskbits=self.maskbits,
+                            gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
+                            ra=self.ra, dec=self.dec, south=self.south)
+
+        """
         is_QSO = isQSO_cuts(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
                             w2flux=self.flux_w2,
                             w1snr=self.snr_w1, w2snr=self.snr_w2, maskbits=self.maskbits,
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
                             objtype=None, primary=None, optical=False, south=self.south)
-
+        """
         target_type[np.where(is_QSO == True)] = 3
 
         return target_type
@@ -207,6 +213,56 @@ class Brick:
 
         return stacked_array[np.where(is_PSF == True)]
 
+
+    def append_brick(self, data, south):
+        brick = Brick(data)
+        brick.initialise_brick_for_galaxy_classification(south)
+        self.ra = np.append(self.ra , brick.ra )
+        self.dec = np.append(self.dec , brick.dec )
+        self.ids = np.append(self.ids , brick.ids)
+        self.objid = np.append(self.objid , brick.objid )
+        self.flux_g = np.append(self.flux_g , brick.flux_g )
+        self.flux_r = np.append(self.flux_r , brick.flux_r)
+        self.flux_z = np.append(self.flux_z, brick.flux_z )
+        self.flux_w1 = np.append(self.flux_w1 , brick.flux_w1 )
+        self.flux_w2 = np.append(self.flux_w2 , brick.flux_w2 )
+        self.fiberflux_g = np.append(self.fiberflux_g , brick.fiberflux_g )
+        self.fiberflux_r = np.append(self.fiberflux_r , brick.fiberflux_r )
+        self.fiberflux_z = np.append(self.fiberflux_z , brick.fiberflux_z )
+        self.fibertotflux_g = np.append(self.fibertotflux_g , brick.fibertotflux_g )
+        self.fibertotflux_r = np.append(self.fibertotflux_r , brick.fibertotflux_r )
+        self.fibertotflux_z = np.append(self.fibertotflux_z , brick.fibertotflux_z )
+        self.flux_ivar_g = np.append(self.flux_ivar_g , brick.flux_ivar_g )
+        self.flux_ivar_r = np.append(self.flux_ivar_r , brick.flux_ivar_r )
+        self.flux_ivar_z = np.append(self.flux_ivar_z , brick.flux_ivar_z )
+        self.flux_ivar_w1 = np.append(self.flux_ivar_w1 , brick.flux_ivar_w1 )
+        self.flux_ivar_w2 = np.append(self.flux_ivar_w2 , brick.flux_ivar_w2 )
+        self.mw_transmission_g = np.append(self.mw_transmission_g , brick.mw_transmission_g )
+        self.mw_transmission_r = np.append(self.mw_transmission_r , brick.mw_transmission_r )
+        self.mw_transmission_z = np.append(self.mw_transmission_z , brick.mw_transmission_z )
+        self.mw_transmission_w1 = np.append(self.mw_transmission_w1 , brick.mw_transmission_w1 )
+        self.mw_transmission_w2 = np.append(self.mw_transmission_w2 , brick.mw_transmission_w2 )
+        self.gaia_g_mag = np.append(self.gaia_g_mag , brick.gaia_g_mag )
+        self.gaia_b_mag = np.append(self.gaia_b_mag , brick.gaia_b_mag )
+        self.gaia_r_mag = np.append(self.gaia_r_mag, brick.gaia_r_mag )
+        self.nobs_g = np.append(self.nobs_g , brick.nobs_g )
+        self.nobs_r = np.append(self.nobs_r , brick.nobs_r )
+        self.nobs_z = np.append(self.nobs_z, brick.nobs_z )
+        self.maskbits = np.append(self.maskbits , brick.maskbits )
+        self.fitbits = np.append(self.fitbits , brick.fitbits )
+        self.snr_g = np.append(self.snr_g , brick.snr_g )
+        self.snr_r = np.append(self.snr_r , brick.snr_r )
+        self.snr_z = np.append(self.snr_z , brick.snr_z )
+        self.snr_w1 = np.append(self.snr_w1 , brick.snr_w1 )
+        self.snr_w2 = np.append(self.snr_w2 , brick.snr_w2 )
+        self.mag_g = np.append(self.mag_g , brick.mag_g )
+        self.mag_r = np.append(self.mag_r , brick.mag_r )
+        self.mag_z = np.append(self.mag_z , brick.mag_z )
+        #self.gmr = np.append(self.gmr , brick.gmr)
+        #self.rmz = np.append(self.rmz , brick.rmz)
+        #self.south = np.append(self.south , brick.south )
+        self.type = np.append(self.type , brick.type )
+        self.no_of_objects = len(self.flux_r)
 
 
 
