@@ -63,7 +63,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
+for filename in os.listdir('/Volumes/Astrodisk/bricks_data/south/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -131,7 +131,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/south/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
     south = south_survey_is_south[np.where(brickid_south == brickid)]
@@ -173,8 +173,15 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
-    if no % 50 == 0:
+    if no % 1000 == 0:
         print(no)
+        df_galaxy = df_galaxy.astype(
+            {'BrickID': 'int32', 'Target_type': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
+        df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', mode='a', index=False, header=False)
+        df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', mode='a', index=False, header=False)
+
+        df_galaxy = df_galaxy[0:0]
+        df_stars = df_stars[0:0]
 
     """
     print(df_galaxy.head())
@@ -220,7 +227,7 @@ df_galaxy = df_galaxy.astype({'BrickID': 'int32', 'Target_type': 'int8', 'Fitbit
 df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', mode='a', index=False, header=False)
 df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', mode='a', index=False, header=False)
 
-print(df_galaxy.groupby('Target_type').count())
+#print(df_galaxy.groupby('Target_type').count())
 
 
 """
