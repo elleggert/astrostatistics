@@ -76,13 +76,14 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 
+"""
 
 hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{bricknames_south_sample[0]}.fits')
 
 
 data = hdulistSingleBrick[1].data
 brick = Brick(data)
-
+"""
 for no, brickname in enumerate(bricknames_south_sample):
 
     # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
@@ -94,6 +95,7 @@ for no, brickname in enumerate(bricknames_south_sample):
         brickid = 0
         # Check how there can be a brickname without corresponding id
 
+    """
     if no == 0:
 
         south = south_survey_is_south[np.where(brickid_south == brickid)]
@@ -110,22 +112,21 @@ for no, brickname in enumerate(bricknames_south_sample):
         support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
         df_stars = df_stars.append(support_df)
         continue
-
+    """
     hdulistSingleBrick = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
     data = hdulistSingleBrick[1].data
 
-    #brick = Brick(data)
+    brick = Brick(data)
     south = south_survey_is_south[np.where(brickid_south == brickid)]
     if len(south) > 0:
         south = south[0]
     else:
         south = True
 
-    brick.append_brick(data, south)
-
     #south_array = np.full(shape=brick.no_of_objects, fill_value=south)
 
-    """
+
+    brick.initialise_brick_for_galaxy_classification(south)
     target_type = brick.classify_galaxies()
 
 
@@ -136,7 +137,7 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     df_galaxy = df_galaxy.append(support_df)
     
-    """
+
 
     """ NOW CLASSIFYNIG STARS"""
     brick.initialise_brick_for_stellar_density()
@@ -169,13 +170,6 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # print(" ===================== Brick", brickname, " complete=====================")
 
-target_type = brick.classify_galaxies()
-
-stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
-support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
-support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
-
-df_galaxy = df_galaxy.append(support_df)
 
 print()
 print("=============================== Classification South Completed ==================================")
