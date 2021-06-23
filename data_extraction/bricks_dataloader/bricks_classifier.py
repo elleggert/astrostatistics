@@ -63,16 +63,18 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
+for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
 
+bricknames_south_sample.pop()
+
 #print(bricknames_south_sample[0])
 df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
-df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
-df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', index=False)
+#df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
+#df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', index=False)
 
 print(df_galaxy.head())
 print(df_stars.head())
@@ -129,7 +131,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
     south = south_survey_is_south[np.where(brickid_south == brickid)]
@@ -162,14 +164,17 @@ for no, brickname in enumerate(bricknames_south_sample):
     support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
     df_stars = df_stars.append(support_df)
 
-    print("Brick progression ", time.time() - start)
+
+
+    #print("Brick progression ", time.time() - start)
 
     # Do not forget to check this clause
     # ['BrickID', 'ObjectID','RA', 'DEC', 'South', 'Target_type']
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
-
+    if no % 50 == 0:
+        print(no)
 
     """
     print(df_galaxy.head())
