@@ -30,7 +30,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrodisk/bricks_data/south/'):
+for filename in os.listdir('/Volumes/Astrodisk/bricks_data/north/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -91,17 +91,17 @@ for no, brickname in enumerate(bricknames_south_sample):
     print("Brick progression ", time.time() - start)
     """
 
-    brickid = brickid_south[np.where(brickname_south == brickname)]
+    brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
         brickid = brickid[0]
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/south/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/north/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
-    south = south_survey_is_south[np.where(brickid_south == brickid)]
+    south = north_survey_is_south[np.where(brickid_north == brickid)]
     if len(south) > 0:
         south = south[0]
     else:
