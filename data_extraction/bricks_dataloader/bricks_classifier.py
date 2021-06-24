@@ -30,7 +30,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrodisk/bricks_data/south/'):
+for filename in os.listdir('/Volumes/Astrodisk/bricks_data/north/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -91,17 +91,17 @@ for no, brickname in enumerate(bricknames_south_sample):
     print("Brick progression ", time.time() - start)
     """
 
-    brickid = brickid_south[np.where(brickname_south == brickname)]
+    brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
         brickid = brickid[0]
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/south/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/north/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
-    south = south_survey_is_south[np.where(brickid_south == brickid)]
+    south = north_survey_is_south[np.where(brickid_north == brickid)]
     if len(south) > 0:
         south = south[0]
     else:
@@ -188,7 +188,8 @@ target_type = brick.classify_galaxies()
 # Process array
 stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
 support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
-support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
+support_df.drop(support_df[support_df.Target_type == 0].insch0rf+
+ex, inplace=True)
 df_galaxy = df_galaxy.append(support_df)
 print(df_galaxy.shape)
 
