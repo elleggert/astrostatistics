@@ -30,7 +30,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrodisk/bricks_data/north/'):
+for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -90,18 +90,22 @@ for no, brickname in enumerate(bricknames_south_sample):
     
     print("Brick progression ", time.time() - start)
     """
+    brickid = brickid_south[np.where(brickname_south == brickname)]
 
-    brickid = brickid_north[np.where(brickname_north == brickname)]
+    #brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
         brickid = brickid[0]
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrodisk/bricks_data/north/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
-    south = north_survey_is_south[np.where(brickid_north == brickid)]
+
+    # south = north_survey_is_south[np.where(brickid_north == brickid)]
+
+    south = south_survey_is_south[np.where(brickid_south == brickid)]
     if len(south) > 0:
         south = south[0]
     else:
@@ -143,17 +147,20 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
+    if no % 20 == 0:
+        print(no/200)
 
 
-    if no % 500 == 0:
-        print(no)
+    if no % 200 == 0:
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'Target_type': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
-        df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', mode='a', index=False, header=False)
-        df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', mode='a', index=False, header=False)
-
-        df_galaxy = df_galaxy[0:0]
-        df_stars = df_stars[0:0]
+        #df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
+        #df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
+        df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False, header=False)
+        df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', index=False, header=False)
+        #df_galaxy = df_galaxy[0:0]
+        #df_stars = df_stars[0:0]
+        break
 
     """
     print(df_galaxy.head())
@@ -197,8 +204,11 @@ print(df_galaxy.shape)
 
 df_galaxy = df_galaxy.astype({'BrickID': 'int32', 'Target_type': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
 
-df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', mode='a', index=False, header=False)
-df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', mode='a', index=False, header=False)
+#df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', mode='a', index=False, header=False)
+#df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', mode='a', index=False, header=False)
+
+df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False, header=False)
+df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', index=False, header=False)
 
 #print(df_galaxy.groupby('Target_type').count())
 
@@ -226,8 +236,8 @@ print()
 
 df_galaxy = df_galaxy.astype({'BrickID': 'int32', 'Target_type': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
 
-df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
-df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv',  mode='a', index=False, header=False)
+#df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
+#df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv',  mode='a', index=False, header=False)
 print(df_galaxy.groupby('Target_type').count())
 
 

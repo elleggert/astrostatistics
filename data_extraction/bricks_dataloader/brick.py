@@ -190,11 +190,12 @@ class Brick:
         target_type[np.where(is_ELG == True)] = 2
         target_type[np.where(is_ELGVLO == True)] = 2
 
-        """
+
         is_QSO = isQSO_randomforest(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
                             w2flux=self.flux_w2, maskbits=self.maskbits,
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
                             ra=self.ra, dec=self.dec, south=self.south)
+
         """
 
         is_QSO = isQSO_cuts(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
@@ -203,6 +204,7 @@ class Brick:
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
                             objtype=None, primary=None, optical=False, south=self.south)
 
+        """
         target_type[np.where(is_QSO == True)] = 3
 
         return target_type
