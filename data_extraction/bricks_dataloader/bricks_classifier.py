@@ -29,7 +29,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
+for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -38,7 +38,7 @@ bricknames_south_sample.pop()
 
 #print(bricknames_south_sample[0])
 #df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'QSO_RF', 'Fitbits', 'Maskbits'])
-df_galaxy = pd.DataFrame(columns=['LRG', 'ELG', 'QSO', 'QSO_RF'])
+df_galaxy = pd.DataFrame(columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
 #df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
 #df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', index=False)
@@ -64,7 +64,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
 
@@ -86,7 +86,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     target_type = brick.classify_galaxies()
 
     support_df = pd.DataFrame(target_type,
-                              columns=['LRG', 'ELG', 'QSO', 'QSO_RF'])
+                              columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
     # Process array
     #stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
     # support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
@@ -114,9 +114,10 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
-    if no % 20 == 0:
-        print(no/200)
+    if no % 10 == 0:
+        print(no/1000)
 
+    """
 
     if no == 200:
         #df_galaxy = df_galaxy.astype(
@@ -128,7 +129,7 @@ for no, brickname in enumerate(bricknames_south_sample):
         #df_galaxy = df_galaxy[0:0]
         #df_stars = df_stars[0:0]
         break
-
+    """
 
     # print(" ===================== Brick", brickname, " complete=====================")
 

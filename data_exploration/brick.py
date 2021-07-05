@@ -2,7 +2,7 @@ import numpy as np
 import time
 start = time.time()
 #from galaxy_classification import isLRG, isELG, isQSO_cuts
-from desitarget.cuts import isLRG, isELG, isQSO_cuts
+from desitarget.cuts import isLRG, isELG, isQSO_cuts, isQSO_randomforest,apply_cuts
 print("Time taken for import: ", time.time() - start)
 
 
@@ -197,6 +197,7 @@ class Brick:
                             objtype=None, primary=None, optical=False, south=self.south)
 
         target_type[np.where(is_QSO == True)] = 3
+
 
         return target_type
 

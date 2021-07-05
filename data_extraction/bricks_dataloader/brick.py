@@ -1,7 +1,7 @@
 import numpy as np
 import time
 #from galaxy_classification import isLRG, isELG, isQSO_cuts
-from desitarget.cuts import isLRG, isELG, isQSO_cuts, isQSO_randomforest
+from desitarget.cuts import isLRG, isELG, isQSO_cuts, isQSO_randomforest, apply_cuts
 
 
 class Brick:
@@ -173,6 +173,7 @@ class Brick:
         # target_type = np.zeros(self.no_of_objects)
         target_lrg = np.zeros(self.no_of_objects)
         target_elg = np.zeros(self.no_of_objects)
+        target_elgvlo = np.zeros(self.no_of_objects)
         target_qso = np.zeros(self.no_of_objects)
         target_qso_rf = np.zeros(self.no_of_objects)
 
@@ -197,13 +198,13 @@ class Brick:
         #target_type[np.where(is_ELGVLO == True)] = 2
 
         target_elg[np.where(is_ELG == True)] = 2
-        target_elg[np.where(is_ELGVLO == True)] = 2
+        target_elgvlo[np.where(is_ELGVLO == True)] = 2
 
 
         is_QSO_rf = isQSO_randomforest(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
                             w2flux=self.flux_w2, maskbits=self.maskbits,
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
-                            ra=self.ra, dec=self.dec, south=self.south)
+                            ra=self.ra, dec=self.dec, south=self.south, objtype=self.type)
 
         target_qso_rf[np.where(is_QSO_rf == True)] = 3
 
@@ -213,12 +214,13 @@ class Brick:
                             w2flux=self.flux_w2,
                             w1snr=self.snr_w1, w2snr=self.snr_w2, maskbits=self.maskbits,
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
-                            objtype=None, primary=None, optical=False, south=self.south)
+                            objtype=self.type, primary=None, optical=False, south=self.south)
 
         target_qso[np.where(is_QSO == True)] = 3
 
         #target_type[np.where(is_QSO == True)] = 3
-        target_type = np.stack((target_lrg, target_elg, target_qso, target_qso_rf), axis=1)
+
+        target_type = np.stack((target_lrg, target_elg,target_elgvlo, target_qso, target_qso_rf), axis=1)
         return target_type
 
     def get_stellar_objects(self):
