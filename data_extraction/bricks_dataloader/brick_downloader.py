@@ -34,6 +34,7 @@ for filename in os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/'):
     brickn = brickn.replace(".fits", "")
     downloaded_bricks.append(brickn)
 
+
 # Getting a random sample of bricknames without replacement and deleting all that are already downloaded
 bricknames_sample = random.sample(bricknames, bricks_to_download)
 bricknames_sample = [x for x in bricknames_sample if x not in downloaded_bricks]

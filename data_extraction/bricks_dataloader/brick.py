@@ -173,9 +173,7 @@ class Brick:
         # target_type = np.zeros(self.no_of_objects)
         target_lrg = np.zeros(self.no_of_objects)
         target_elg = np.zeros(self.no_of_objects)
-        target_elgvlo = np.zeros(self.no_of_objects)
         target_qso = np.zeros(self.no_of_objects)
-        target_qso_rf = np.zeros(self.no_of_objects)
 
         is_LRG = isLRG(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
                        w2flux=self.flux_w2,
@@ -184,7 +182,6 @@ class Brick:
                        znobs=self.nobs_z, maskbits=self.maskbits, zfibertotflux=self.fibertotflux_z, primary=None,
                        south=self.south)
 
-        # target_type[np.where(is_LRG == True)] = 1
         target_lrg[np.where(is_LRG == True)] = 1
 
 
@@ -194,20 +191,7 @@ class Brick:
                                   gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
                                   maskbits=self.maskbits, south=self.south)
 
-        #target_type[np.where(is_ELG == True)] = 2
-        #target_type[np.where(is_ELGVLO == True)] = 2
-
-        target_elg[np.where(is_ELG == True)] = 2
-        target_elgvlo[np.where(is_ELGVLO == True)] = 2
-
-
-        is_QSO_rf = isQSO_randomforest(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
-                            w2flux=self.flux_w2, maskbits=self.maskbits,
-                            gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
-                            ra=self.ra, dec=self.dec, south=self.south, objtype=self.type)
-
-        target_qso_rf[np.where(is_QSO_rf == True)] = 3
-
+        target_elg[np.where(is_ELG == True)] = 1
 
 
         is_QSO = isQSO_cuts(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
@@ -216,12 +200,12 @@ class Brick:
                             gnobs=self.nobs_g, rnobs=self.nobs_r, znobs=self.nobs_z,
                             objtype=self.type, primary=None, optical=False, south=self.south)
 
-        target_qso[np.where(is_QSO == True)] = 3
+        target_qso[np.where(is_QSO == True)] = 1
 
-        #target_type[np.where(is_QSO == True)] = 3
-
-        target_type = np.stack((target_lrg, target_elg,target_elgvlo, target_qso, target_qso_rf), axis=1)
-        return target_type
+        target_objects = np.stack((self.ids, self.ra, self.dec, target_lrg,target_elg,target_qso, self.maskbits, self.fitbits), axis=1)
+        mask = (target_lrg == True) | (target_elg == True) | (target_qso == True)
+        target_objects = target_objects[mask]
+        return target_objects
 
     def get_stellar_objects(self):
         is_PSF = (self.type == 'PSF') & (self.mag_r > 17) & (self.mag_r < 18)

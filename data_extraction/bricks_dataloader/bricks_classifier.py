@@ -29,7 +29,7 @@ start = time.time()
 
 bricknames_south_sample = []
 
-for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
+for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
     bricknames_south_sample.append(brickn)
@@ -37,11 +37,11 @@ for filename in os.listdir('/Volumes/Astrostick/bricks_data/south/'):
 bricknames_south_sample.pop()
 
 #print(bricknames_south_sample[0])
-#df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'QSO_RF', 'Fitbits', 'Maskbits'])
-df_galaxy = pd.DataFrame(columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
+df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Fitbits', 'Maskbits'])
+#df_galaxy = pd.DataFrame(columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
-#df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
-#df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', index=False)
+df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
+df_stars.to_csv('../../bricks_data/stellar_catalogue.csv', index=False)
 
 print(df_galaxy.head())
 print(df_stars.head())
@@ -64,7 +64,7 @@ for no, brickname in enumerate(bricknames_south_sample):
     else:
         brickid = 0
 
-    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south/tractor-{brickname}.fits')
+    hdu = fits.open(f'/Volumes/Astrostick/bricks_data/south_test/tractor-{brickname}.fits')
     data = hdu[1].data
     brick = Brick(data)
 
@@ -83,10 +83,10 @@ for no, brickname in enumerate(bricknames_south_sample):
 
 
     brick.initialise_brick_for_galaxy_classification(south)
-    target_type = brick.classify_galaxies()
+    target_objects = brick.classify_galaxies()
 
-    support_df = pd.DataFrame(target_type,
-                              columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
+    support_df = pd.DataFrame(target_objects,
+                              columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Fitbits', 'Maskbits'])
     # Process array
     #stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
     # support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
