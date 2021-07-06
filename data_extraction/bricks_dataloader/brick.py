@@ -192,6 +192,7 @@ class Brick:
                                   maskbits=self.maskbits, south=self.south)
 
         target_elg[np.where(is_ELG == True)] = 1
+        target_elg[np.where(is_ELGVLO == True)] = 1
 
 
         is_QSO = isQSO_cuts(gflux=self.flux_g, rflux=self.flux_r, zflux=self.flux_z, w1flux=self.flux_w1,
