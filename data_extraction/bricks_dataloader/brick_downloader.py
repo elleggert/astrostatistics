@@ -7,7 +7,7 @@ import time
 
 start = time.time()
 
-bricks_to_download = 12000
+bricks_to_download = 1000
 # Sampling from area with probability 1:3, since this is the real distribution of bricks
 area = "south"
 rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
@@ -52,6 +52,6 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
-print("Time taken for: ", bricks_to_download, " bricks: ", time.time() - start)
+print("Time taken for: ", bricks_to_download, " bricks: ", round(((time.time() - start)/60),2))
 
 print(f"Number of bricks in {area}:", len(os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/')))
