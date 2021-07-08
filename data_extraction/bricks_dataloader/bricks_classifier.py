@@ -37,7 +37,7 @@ for filename in os.listdir('/Volumes/Astrostick/bricks_data/south_test/'):
 bricknames_south_sample.pop()
 
 #print(bricknames_south_sample[0])
-df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Fitbits', 'Maskbits'])
+df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Maskbits'])
 #df_galaxy = pd.DataFrame(columns=['LRG', 'ELG','ELGVLO', 'QSO', 'QSO_RF'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
 df_galaxy.to_csv('../../bricks_data/galaxy_catalogue.csv', index=False)
@@ -50,13 +50,9 @@ print(df_stars.head())
 
 for no, brickname in enumerate(bricknames_south_sample):
 
-    # df = pd.read_csv('../bricks_data/galaxy_catalogue_sample.csv')
-
-        # Check how there can be a brickname without corresponding id
-
 
     brickid = brickid_south[np.where(brickname_south == brickname)]
-
+    #North Bricks
     #brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
@@ -79,19 +75,13 @@ for no, brickname in enumerate(bricknames_south_sample):
     ## Enable this is classifying North Objects
     # south = north_survey_is_south[np.where(brickid_north == brickid)][0]
 
-    #south_array = np.full(shape=brick.no_of_objects, fill_value=south)
 
 
     brick.initialise_brick_for_galaxy_classification(south)
     target_objects = brick.classify_galaxies()
 
     support_df = pd.DataFrame(target_objects,
-                              columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Fitbits', 'Maskbits'])
-    # Process array
-    #stacked_array = np.stack((brick.ids, brick.ra, brick.dec, target_type, brick.maskbits, brick.fitbits), axis=1)
-    # support_df = pd.DataFrame(stacked_array, columns=['BrickID', 'RA', 'DEC', 'Target_type', 'Fitbits', 'Maskbits'])
-    #support_df = pd.DataFrame(stacked_array, columns = ['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'QSO_RF', 'Fitbits', 'Maskbits'])
-    # support_df.drop(support_df[support_df.Target_type == 0].index, inplace=True)
+                              columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO', 'Maskbits'])
 
     df_galaxy = df_galaxy.append(support_df)
     
@@ -121,7 +111,7 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     if no == 200:
         #df_galaxy = df_galaxy.astype(
-            #{'BrickID': 'int32', 'LRG': 'int8', 'Fitbits': 'int16', 'Maskbits': 'int16'})
+            #{'BrickID': 'int32', 'LRG': 'int8',  'Maskbits': 'int16'})
         #df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
         #df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', mode='a', index=False, header=False)
         df_galaxy.to_csv('../../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False, header=False)

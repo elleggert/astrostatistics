@@ -203,7 +203,7 @@ class Brick:
 
         target_qso[np.where(is_QSO == True)] = 1
 
-        target_objects = np.stack((self.ids, self.ra, self.dec, target_lrg,target_elg,target_qso, self.maskbits, self.fitbits), axis=1)
+        target_objects = np.stack((self.ids, self.ra, self.dec, target_lrg,target_elg,target_qso, self.maskbits), axis=1)
         mask = (target_lrg == True) | (target_elg == True) | (target_qso == True)
         target_objects = target_objects[mask]
         return target_objects
