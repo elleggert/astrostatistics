@@ -7,7 +7,7 @@ import pandas as pd
 
 from brick import Brick
 
-area = 'north'
+area = 'south'
 device = 'Astrodisk'
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
