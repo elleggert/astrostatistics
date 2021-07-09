@@ -7,7 +7,7 @@ import time
 
 start = time.time()
 
-bricks_to_download = 2000
+bricks_to_download = 16000
 # Sampling from area with probability 1:3, since this is the real distribution of bricks
 area = "south"
 rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
