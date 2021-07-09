@@ -96,10 +96,8 @@ for no, brickname in enumerate(bricknames_south_sample):
 
     # df.to_csv('../bricks_data/galaxy_catalogue_sample_profiling.csv', index=False)
 
-    if no % 10 == 0:
-        print(no / 1000)
-
-    if no == 200:
+    if no % 447 == 0:
+        print(no / 447)
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
