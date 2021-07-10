@@ -42,8 +42,8 @@ if device == "Astrostick":
 # print(bricknames_south_sample[0])
 df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
-df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', index=False)
-df_stars.to_csv(f'../../bricks_data/stellar_catalogue_{area}.csv', index=False)
+#df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', index=False)
+#df_stars.to_csv(f'../../bricks_data/stellar_catalogue_{area}.csv', index=False)
 
 print(df_galaxy.head())
 print(df_stars.head())
