@@ -66,9 +66,7 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
-print(bricknames_sample)
-
-
+exit()
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
@@ -103,7 +101,7 @@ for i, brickname in enumerate(bricknames_sample):
     target_objects = brick.classify_galaxies()
 
     # Appending one empty line per brick to be sure that all bricks are extracted
-    df_galaxy = df_galaxy.append({'BrickID': 630831, 'RA': np.nan, 'DEC': np.nan, 'LRG': 0, 'ELG': 0, 'QSO': 0},
+    df_galaxy = df_galaxy.append({'BrickID': brickid, 'RA': np.nan, 'DEC': np.nan, 'LRG': 0, 'ELG': 0, 'QSO': 0},
                                  ignore_index=True)
 
     support_df = pd.DataFrame(target_objects,
@@ -150,4 +148,4 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
-print("Time taken for: ", len(bricknames), " bricks: ", round(((time.time() - start) / 60), 2))
+print("Time taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 60), 2))
