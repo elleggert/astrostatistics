@@ -6,6 +6,9 @@ import time
 import pandas as pd
 from brick import Brick
 
+# 2772p520 Last exported
+# 2776p527 Last downloaded
+
 area = 'north'
 device = 'Astrodisk'
 
@@ -24,7 +27,6 @@ north_survey_is_south = np.invert(survey_north)
 
 start = time.time()
 
-# Sampling from area with probability 1:3, since this is the real distribution of bricks
 
 print()
 print(f"=============================== Download {area} ..... ==================================")
