@@ -66,7 +66,6 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
-exit()
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
