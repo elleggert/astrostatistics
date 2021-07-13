@@ -79,9 +79,9 @@ class CCD:
         self.filter_colour = encoder.transform(self.filter_colour)
 
     def stack_systematics(self):
-        self.data =  np.stack((self.filter_colour, self.camera, self.exptime, self.airmass, self.seeing), axis=1)
+        self.data = np.stack((self.filter_colour, self.camera, self.exptime, self.airmass, self.seeing), axis=1)
 
     def get_ccds(self, ids):
-
+        return self.data[ids]
 
 
