@@ -66,6 +66,7 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
+
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
@@ -132,17 +133,15 @@ for i, brickname in enumerate(bricknames_sample):
     os.remove(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
 
     print(f" Brick {area} processed: ", brickname, ", Brick ", i, " of ", len(bricknames_sample))
-    if i > bricks_to_classify:
-        df_galaxy = df_galaxy.astype(
+
+
+
+df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
-        df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
-        df_stars.to_csv(f'../../bricks_data/stellar_catalogue_{area}.csv', mode='a', index=False, header=False)
-        df_galaxy = df_galaxy[0:0]
-        df_stars = df_stars[0:0]
-        break
-
-
-
+df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
+df_stars.to_csv(f'../../bricks_data/stellar_catalogue_{area}.csv', mode='a', index=False, header=False)
+df_galaxy = df_galaxy[0:0]
+df_stars = df_stars[0:0]
 print()
 print(f"=============================== Download {area} completed ==================================")
 print()
