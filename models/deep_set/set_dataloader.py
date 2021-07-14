@@ -6,7 +6,6 @@ from sklearn.preprocessing import LabelEncoder
 # noinspection PyAttributeOutsideInit
 class CCD:
     def __init__(self):
-
         decamCCD = fits.open('../../bricks_data/ccds-annotated-decam-dr9.fits')
         mosaicCCD = fits.open('../../bricks_data/ccds-annotated-mosaic-dr9.fits')
         bassCCD = fits.open('../../bricks_data/ccds-annotated-90prime-dr9.fits')
@@ -23,26 +22,34 @@ class CCD:
         self.stack_systematics()
 
     def initalise_boundaries(self):
-        ra0 = np.concatenate((self.dataDecam.field('ra0'), self.dataMosaic.field('ra0'), self.dataBass.field('ra0')), axis=0)
-        dec0 = np.concatenate((self.dataDecam.field('dec0'), self.dataMosaic.field('dec0'), self.dataBass.field('dec0')), axis=0)
-        ra1 = np.concatenate((self.dataDecam.field('ra1'), self.dataMosaic.field('ra1'), self.dataBass.field('ra1')), axis=0)
-        dec1 = np.concatenate((self.dataDecam.field('dec1'), self.dataMosaic.field('dec1'), self.dataBass.field('dec1')), axis=0)
-        ra2 = np.concatenate((self.dataDecam.field('ra2'), self.dataMosaic.field('ra2'), self.dataBass.field('ra2')), axis=0)
-        dec2 = np.concatenate((self.dataDecam.field('dec2'), self.dataMosaic.field('dec2'), self.dataBass.field('dec2')), axis=0)
-        ra3 = np.concatenate((self.dataDecam.field('ra3'), self.dataMosaic.field('ra3'), self.dataBass.field('ra3')), axis=0)
-        dec3 = np.concatenate((self.dataDecam.field('dec3'), self.dataMosaic.field('dec3'), self.dataBass.field('dec3')), axis=0)
+        self.ra0 = self.concat_surveys('ra0')
+        self.dec0 = self.concat_surveys('dec0')
+        self.ra1 = self.concat_surveys('ra1')
+        self.dec1 = self.concat_surveys('dec1')
+        self.ra2 = self.concat_surveys('ra2')
+        self.dec2 = self.concat_surveys('dec2')
+        self.ra3 = self.concat_surveys('ra3')
+        self.dec3 = self.concat_surveys('dec3')
+
+    def concat_surveys(self, field):
+        return np.concatenate((self.dataDecam.field(field),
+                               self.dataMosaic.field(field),
+                               self.dataBass.field(field)),
+                              axis=0)
 
     def initialise_systematics(self):
         # Extracting systematics
         self.filter_colour = np.concatenate(
             (self.dataDecam.field('filter'), self.dataMosaic.field('filter'), self.dataBass.field('filter')), axis=0)
-        self.camera = np.concatenate((self.dataDecam.field('camera'), self.dataMosaic.field('camera'), self.dataBass.field('camera')),
-                                     axis=0)
+        self.camera = np.concatenate(
+            (self.dataDecam.field('camera'), self.dataMosaic.field('camera'), self.dataBass.field('camera')),
+            axis=0)
         self.exptime = np.concatenate(
             (self.dataDecam.field('exptime'), self.dataMosaic.field('exptime'), self.dataBass.field('exptime')), axis=0)
         self.airmass = np.concatenate(
             (self.dataDecam.field('airmass'), self.dataMosaic.field('airmass'), self.dataBass.field('airmass')), axis=0)
-        self.fwhm = np.concatenate((self.dataDecam.field('fwhm'), self.dataMosaic.field('fwhm'), self.dataBass.field('fwhm')), axis=0)
+        self.fwhm = np.concatenate(
+            (self.dataDecam.field('fwhm'), self.dataMosaic.field('fwhm'), self.dataBass.field('fwhm')), axis=0)
         self.seeing = self.fwhm * 0.262
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
@@ -70,7 +77,6 @@ class CCD:
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
     def encode_categoricals(self):
-
         encoder = LabelEncoder()
         encoder.fit(np.unique(self.camera))
         self.camera = encoder.transform(self.camera)
@@ -79,9 +85,8 @@ class CCD:
         self.filter_colour = encoder.transform(self.filter_colour)
 
     def stack_systematics(self):
+        self.num_features = 5
         self.data = np.stack((self.filter_colour, self.camera, self.exptime, self.airmass, self.seeing), axis=1)
 
     def get_ccds(self, ids):
         return self.data[ids]
-
-

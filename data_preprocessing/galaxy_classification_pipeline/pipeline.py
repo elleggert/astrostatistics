@@ -9,7 +9,7 @@ from brick import Brick
 # 2772p520 Last exported
 # 2776p527 Last downloaded
 
-area = 'north'
+area = 'south'
 device = 'Astrodisk'
 bricks_to_classify = 5
 
@@ -51,10 +51,18 @@ df = pd.read_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv',
                  dtype={'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
 
 brickids_processed = list(df.BrickID.unique())
+print("Bricks total:", len(bricknames))
+print("Bricks processed:", len(brickids_processed))
 
 bricknames_processed = []
 for i, id in enumerate(brickids_processed):
-    bricknames_processed.append(brickname_north[np.where(brickid_north == id)][0])
+    temp = brickname_north[np.where(brickid_north == id)]
+    if len(temp) > 0:
+        bricknames_processed.append(temp[0])
+    else:
+        print(id)
+        print(temp)
+
 
 # Deleted all those already downloaded
 bricknames_sample = [x for x in bricknames_sample if x not in bricknames_processed]
@@ -66,6 +74,9 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
+print("Time taken for: ", round(((time.time() - start) / 60), 2))
+
+exit()
 
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
@@ -149,4 +160,4 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
-print("Time taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 60), 2))
+print("Time taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
