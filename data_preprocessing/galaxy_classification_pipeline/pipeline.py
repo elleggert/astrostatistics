@@ -56,12 +56,12 @@ print("Bricks processed:", len(brickids_processed))
 
 bricknames_processed = []
 for i, id in enumerate(brickids_processed):
-    temp = brickname_north[np.where(brickid_north == id)]
-    if len(temp) > 0:
-        bricknames_processed.append(temp[0])
-    else:
-        print(id)
-        print(temp)
+    temp = brickname_south[np.where(brickid_south == id)]
+    #if len(temp) > 0:
+    bricknames_processed.append(temp[0])
+    #else:
+        #print(id)
+        #print(temp)
 
 
 # Deleted all those already downloaded
@@ -83,10 +83,10 @@ for i, brickname in enumerate(bricknames_sample):
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
     wget.download(url, f'/Volumes/{device}/bricks_data/{area}/')
 
-    # brickid = brickid_south[np.where(brickname_south == brickname)]
+    brickid = brickid_south[np.where(brickname_south == brickname)]
 
     # North Bricks
-    brickid = brickid_north[np.where(brickname_north == brickname)]
+    #brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
         brickid = brickid[0]
@@ -97,9 +97,9 @@ for i, brickname in enumerate(bricknames_sample):
     data = hdu[1].data
     brick = Brick(data)
 
-    south = north_survey_is_south[np.where(brickid_north == brickid)]
+    #south = north_survey_is_south[np.where(brickid_north == brickid)]
 
-    # south = south_survey_is_south[np.where(brickid_south == brickid)]
+    south = south_survey_is_south[np.where(brickid_south == brickid)]
     if len(south) > 0:
         south = south[0]
     else:
