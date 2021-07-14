@@ -132,6 +132,9 @@ for i, brickname in enumerate(bricknames_sample):
     # Remove Downloaded Brick
     os.remove(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
 
+    if i > bricks_to_classify:
+        break
+
     print(f" Brick {area} processed: ", brickname, ", Brick ", i, " of ", len(bricknames_sample))
 
 
