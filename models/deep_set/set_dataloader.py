@@ -39,18 +39,15 @@ class CCD:
 
     def initialise_systematics(self):
         # Extracting systematics
-        self.filter_colour = np.concatenate(
-            (self.dataDecam.field('filter'), self.dataMosaic.field('filter'), self.dataBass.field('filter')), axis=0)
-        self.camera = np.concatenate(
-            (self.dataDecam.field('camera'), self.dataMosaic.field('camera'), self.dataBass.field('camera')),
-            axis=0)
-        self.exptime = np.concatenate(
-            (self.dataDecam.field('exptime'), self.dataMosaic.field('exptime'), self.dataBass.field('exptime')), axis=0)
-        self.airmass = np.concatenate(
-            (self.dataDecam.field('airmass'), self.dataMosaic.field('airmass'), self.dataBass.field('airmass')), axis=0)
-        self.fwhm = np.concatenate(
-            (self.dataDecam.field('fwhm'), self.dataMosaic.field('fwhm'), self.dataBass.field('fwhm')), axis=0)
-        self.seeing = self.fwhm * 0.262
+        self.filter_colour = self.concat_surveys('filter')
+        self.camera = self.concat_surveys('camera')
+        self.exptime = self.concat_surveys('exptime')
+        self.airmass = self.concat_surveys('airmass')
+        self.seeing = self.concat_surveys('fwhm') * 0.262
+        self.ccdskysb = self.concat_surveys('ccdskysb')
+        self.galdepth = self.concat_surveys('galdepth')
+        self.ebv = self.concat_surveys('ebv')
+        self.ccdnphotom = self.concat_surveys('ccdnphotom')
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
         # self.ccdskycounts = np.concatenate((dataDecam.field('ccdskycounts'), dataMosaic.field('ccdskycounts'), dataBass.field('ccdskycounts')), axis = 0)
@@ -72,7 +69,7 @@ class CCD:
         # self.humidity = np.concatenate((dataDecam.field('humidity'), dataMosaic.field('humidity'), dataBass.field('humidity')), axis = 0)
         # self.outtemp = np.concatenate((dataDecam.field('outtemp'), dataMosaic.field('outtemp'), dataBass.field('outtemp')), axis = 0)
         # self.tileebv = np.concatenate((dataDecam.field('tileebv'), dataMosaic.field('tileebv'), dataBass.field('tileebv')), axis = 0)
-        # self.ebv = np.concatenate((dataDecam.field('ebv'), dataMosaic.field('ebv'), dataBass.field('ebv')), axis = 0)
+        #self.ebv = np.concatenate((dataDecam.field('ebv'), dataMosaic.field('ebv'), dataBass.field('ebv')), axis = 0)
         # self.galdepth = np.concatenate((dataDecam.field('galdepth'), dataMosaic.field('galdepth'), dataBass.field('galdepth')), axis = 0)
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
@@ -85,8 +82,17 @@ class CCD:
         self.filter_colour = encoder.transform(self.filter_colour)
 
     def stack_systematics(self):
-        self.num_features = 5
-        self.data = np.stack((self.filter_colour, self.camera, self.exptime, self.airmass, self.seeing), axis=1)
+        self.num_features = 9
+        self.data = np.stack((self.filter_colour,
+                              self.camera,
+                              self.exptime,
+                              self.airmass,
+                              self.seeing,
+                              self.ccdskysb,
+                              self.galdepth,
+                              self.ebv,
+                              self.ccdnphotom),
+                              axis=1)
 
     def get_ccds(self, ids):
         return self.data[ids]
