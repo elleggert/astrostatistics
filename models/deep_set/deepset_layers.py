@@ -41,65 +41,65 @@ class InvLinear(nn.Module):
         self.reset_parameters()
 
 
-def reset_parameters(self):
-    init.xavier_uniform_(self.beta)
-    if self.bias is not None:
-        fan_in, _ = init._calculate_fan_in_and_fan_out(self.beta)
-        bound = 1 / math.sqrt(fan_in)
-        init.uniform_(self.bias, -bound, bound)
+    def reset_parameters(self):
+        init.xavier_uniform_(self.beta)
+        if self.bias is not None:
+            fan_in, _ = init._calculate_fan_in_and_fan_out(self.beta)
+            bound = 1 / math.sqrt(fan_in)
+            init.uniform_(self.bias, -bound, bound)
 
 
-def forward(self, X, mask=None):
-    r"""
-    Maps the input set X = {x_1, ..., x_M} to a vector y of dimension out_features,
-    through a permutation invariant linear transformation of the form:
-        $y = \beta reduction(X) + bias$
-    Inputs:
-    X: N sets of size at most M where each element has dimension in_features
-       (tensor with shape (N, M, in_features))
-    mask: binary mask to indicate which elements in X are valid (byte tensor
-        with shape (N, M) or None); if None, all sets have the maximum size M.
-        Default: ``None``.
-    Outputs:
-    Y: N vectors of dimension out_features (tensor with shape (N, out_features))
-    """
-    # print("INVLAYER:", X.shape)
-    N, M, _ = X.shape
-    device = X.device
-    y = torch.zeros(N, self.out_features).to(device)
-    if mask is None:
-        mask = torch.ones(N, M).byte().to(device)
+    def forward(self, X, mask=None):
+        r"""
+        Maps the input set X = {x_1, ..., x_M} to a vector y of dimension out_features,
+        through a permutation invariant linear transformation of the form:
+            $y = \beta reduction(X) + bias$
+        Inputs:
+        X: N sets of size at most M where each element has dimension in_features
+           (tensor with shape (N, M, in_features))
+        mask: binary mask to indicate which elements in X are valid (byte tensor
+            with shape (N, M) or None); if None, all sets have the maximum size M.
+            Default: ``None``.
+        Outputs:
+        Y: N vectors of dimension out_features (tensor with shape (N, out_features))
+        """
+        # print("INVLAYER:", X.shape)
+        N, M, _ = X.shape
+        device = X.device
+        y = torch.zeros(N, self.out_features).to(device)
+        if mask is None:
+            mask = torch.ones(N, M).byte().to(device)
 
-    if self.reduction == 'mean':
-        sizes = mask.float().sum(dim=1).unsqueeze(1)
-        Z = X * mask.unsqueeze(2).float()
-        y = (Z.sum(dim=1) @ self.beta) / sizes
-
-
-    elif self.reduction == 'sum':
-        Z = X * mask.unsqueeze(2).float()
-        y = Z.sum(dim=1) @ self.beta
-
-    elif self.reduction == 'max':
-        Z = X.clone()
-        Z[~mask] = float('-Inf')
-        y = Z.max(dim=1)[0] @ self.beta
-
-    else:  # min
-        Z = X.clone()
-        Z[~mask] = float('Inf')
-        y = Z.min(dim=1)[0] @ self.beta
-
-    if self.bias is not None:
-        y += self.bias
-
-    return y
+        if self.reduction == 'mean':
+            sizes = mask.float().sum(dim=1).unsqueeze(1)
+            Z = X * mask.unsqueeze(2).float()
+            y = (Z.sum(dim=1) @ self.beta) / sizes
 
 
-def extra_repr(self):
-    return 'in_features={}, out_features={}, bias={}, reduction={}'.format(
-        self.in_features, self.out_features,
-        self.bias is not None, self.reduction)
+        elif self.reduction == 'sum':
+            Z = X * mask.unsqueeze(2).float()
+            y = Z.sum(dim=1) @ self.beta
+
+        elif self.reduction == 'max':
+            Z = X.clone()
+            Z[~mask] = float('-Inf')
+            y = Z.max(dim=1)[0] @ self.beta
+
+        else:  # min
+            Z = X.clone()
+            Z[~mask] = float('Inf')
+            y = Z.min(dim=1)[0] @ self.beta
+
+        if self.bias is not None:
+            y += self.bias
+
+        return y
+
+
+    def extra_repr(self):
+        return 'in_features={}, out_features={}, bias={}, reduction={}'.format(
+            self.in_features, self.out_features,
+            self.bias is not None, self.reduction)
 
 
 class EquivLinear(InvLinear):

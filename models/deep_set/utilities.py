@@ -31,7 +31,7 @@ def get_mask(sizes, max_size):
 def train():
     traindata = SetSequence(num_pixels=1000, var_set_len=True)
     for gal in galaxy_types:
-        model = SetNet(n_features=traindata.num_features, reduction='max').to(device)
+        model = SetNet(n_features=traindata.num_features, reduction='sum').to(device)
         optimiser = optim.Adam(model.parameters(), lr=learning_rate)
         print("GALAXY TYPE: ", gal)
         print()
