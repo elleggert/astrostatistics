@@ -11,7 +11,7 @@ from brick import Brick
 
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 5
+bricks_to_classify = 15000
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
@@ -76,12 +76,17 @@ print(df_stars.head())
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
 print("Time taken for: ", round(((time.time() - start) / 60), 2))
 
-exit()
-
+c = 0
+problem_bricks = []
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
-    wget.download(url, f'/Volumes/{device}/bricks_data/{area}/')
+    try:
+        wget.download(url, f'/Volumes/{device}/bricks_data/{area}/')
+    except:
+        c += 1
+        problem_bricks.append(brickname)
+        continue
 
     brickid = brickid_south[np.where(brickname_south == brickname)]
 
