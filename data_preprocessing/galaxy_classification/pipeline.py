@@ -6,12 +6,9 @@ import time
 import pandas as pd
 from brick import Brick
 
-# 2772p520 Last exported
-# 2776p527 Last downloaded
-
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 15000
+bricks_to_classify = 1500
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
@@ -133,9 +130,9 @@ for i, brickname in enumerate(bricknames_sample):
     df_stars = df_stars.append(support_df)
 
 
-    if i % 488 == 0:
+    if i % 200 == 0:
         print()
-        print(i / 488, '%')
+        print(i / 200, '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
@@ -151,7 +148,7 @@ for i, brickname in enumerate(bricknames_sample):
     if i > bricks_to_classify:
         break
 
-    print(f" Brick {area} processed: ", brickname, ", Brick ", i, " of ", len(bricknames_sample))
+    print(f" Brick {area} processed: ", brickname, ", Brick ", i, " of ", bricks_to_classify)
 
 
 
