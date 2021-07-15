@@ -69,7 +69,7 @@ class CCD:
         # self.humidity = np.concatenate((dataDecam.field('humidity'), dataMosaic.field('humidity'), dataBass.field('humidity')), axis = 0)
         # self.outtemp = np.concatenate((dataDecam.field('outtemp'), dataMosaic.field('outtemp'), dataBass.field('outtemp')), axis = 0)
         # self.tileebv = np.concatenate((dataDecam.field('tileebv'), dataMosaic.field('tileebv'), dataBass.field('tileebv')), axis = 0)
-        #self.ebv = np.concatenate((dataDecam.field('ebv'), dataMosaic.field('ebv'), dataBass.field('ebv')), axis = 0)
+        # self.ebv = np.concatenate((dataDecam.field('ebv'), dataMosaic.field('ebv'), dataBass.field('ebv')), axis = 0)
         # self.galdepth = np.concatenate((dataDecam.field('galdepth'), dataMosaic.field('galdepth'), dataBass.field('galdepth')), axis = 0)
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
@@ -92,7 +92,10 @@ class CCD:
                               self.galdepth,
                               self.ebv,
                               self.ccdnphotom),
-                              axis=1)
+                             axis=1)
 
     def get_ccds(self, ids):
         return self.data[ids]
+
+    def get_boundaries(self):
+        return self.ra0, self.dec0, self.ra1, self.dec1, self.ra2, self.dec2, self.ra3, self.dec3
