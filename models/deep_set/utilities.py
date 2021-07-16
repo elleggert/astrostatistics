@@ -3,10 +3,9 @@
 import torch
 import torch.nn as nn
 import time
-from models import SetNet
-from datasets import SetSequence
+from models import SetNet, MultiSetNet
+from datasets import SetSequence, MultiSetSequence
 from torch.utils.data import DataLoader
-
 import torch.optim as optim
 
 # Defining Loss
