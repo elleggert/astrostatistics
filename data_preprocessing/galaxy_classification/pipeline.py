@@ -9,7 +9,7 @@ from brick import Brick
 
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 1500
+bricks_to_classify = 8000
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
@@ -133,9 +133,9 @@ for i, brickname in enumerate(bricknames_sample):
     df_stars = df_stars.append(support_df)
 
 
-    if i % 200 == 0:
+    if i % 80 == 0:
         print()
-        print(i / 200, '%')
+        print(i / 80, '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
@@ -165,4 +165,4 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
-print("Time taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
+print("Hours taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
