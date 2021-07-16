@@ -15,6 +15,7 @@ criterion = nn.MSELoss()
 #Defining Hyperparemeters
 no_epochs = 100  #very low, but computational power not sufficient for more iterations
 batch = 4
+multi_batch = 1
 learning_rate = 0.001
 
 #Using the Adam Method for Stochastic Optimisation
@@ -28,8 +29,8 @@ def get_mask(sizes, max_size):
     return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.reshape(-1, 1))
 
 
-def train():
-    traindata = SetSequence(num_pixels=1000, var_set_len=True)
+def train(num_pixels = 1000):
+    traindata = SetSequence(num_pixels=num_pixels, var_set_len=True)
     for gal in galaxy_types:
         model = SetNet(n_features=traindata.num_features, reduction='sum').to(device)
         optimiser = optim.Adam(model.parameters(), lr=learning_rate)
@@ -75,6 +76,66 @@ def train():
             if epoch % 10 == 0:
                 print("Loss for Epoch", epoch, ": ", loss_per_epoch)
 
+        time_end = time.time()
+        time_passed = time_end - time_start
+        print()
+        print(f"{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to train the model")
+        print()
+
+def multi_train(num_pixels = 1000):
+
+    traindata = MultiSetSequence(num_pixels=num_pixels)
+
+    # %%
+
+    for gal in galaxy_types:
+        model = MultiSetNet(n_features=traindata.num_features, reduction='sum').to(device)
+        optimiser = optim.Adam(model.parameters(), lr=learning_rate)
+        print("GALAXY TYPE: ", gal)
+        print()
+        traindata.set_targets(gal_type=gal)
+
+        time_start = time.time()
+
+        for epoch in range(no_epochs):
+            loss_per_epoch = 0
+            # loading the training data from trainset and shuffling for each epoch
+            trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch, shuffle=True)
+
+            for i, (X, labels, set_sizes) in enumerate(trainloader):
+                # print(X.shape)
+                # print(labels.shape)
+                # print(set_sizes)
+                # Put Model into train mode
+                model.train()
+
+                # Extract inputs and associated labels from dataloader batch
+                X = X.squeeze().to(device)
+
+                labels = labels.to(device)
+                # set_sizes = set_sizes.to(device)
+
+                # mask = get_mask(set_sizes, X.shape[1])
+
+                # Predict outputs (forward pass)
+
+                # Not yet doing any masking
+                predictions = model(X)
+
+                # Compute Loss
+                loss = criterion(predictions, labels)
+
+                # Zero-out the gradients before backward pass (pytorch stores the gradients)
+                optimiser.zero_grad()
+                # Backpropagation
+                loss.backward()
+                # Perform one step of gradient descent
+                optimiser.step()
+                # Append loss to the general loss for this one epoch
+                loss_per_epoch += loss.item()
+
+            if epoch % 10 == 0:
+                print("Loss for Epoch", epoch, ": ", loss_per_epoch)
         time_end = time.time()
         time_passed = time_end - time_start
         print()
