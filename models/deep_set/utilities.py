@@ -86,8 +86,6 @@ def multi_train(num_pixels = 1000):
 
     traindata = MultiSetSequence(num_pixels=num_pixels)
 
-    # %%
-
     for gal in galaxy_types:
         model = MultiSetNet(n_features=traindata.num_features, reduction='sum').to(device)
         optimiser = optim.Adam(model.parameters(), lr=learning_rate)
@@ -100,19 +98,17 @@ def multi_train(num_pixels = 1000):
         for epoch in range(no_epochs):
             loss_per_epoch = 0
             # loading the training data from trainset and shuffling for each epoch
-            trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch, shuffle=True)
+            trainloader = torch.utils.data.DataLoader(traindata, batch_size=multi_batch, shuffle=True)
 
             for i, (X, labels, set_sizes) in enumerate(trainloader):
-                # print(X.shape)
-                # print(labels.shape)
-                # print(set_sizes)
-                # Put Model into train mode
+
                 model.train()
 
                 # Extract inputs and associated labels from dataloader batch
                 X = X.squeeze().to(device)
 
                 labels = labels.to(device)
+
                 # set_sizes = set_sizes.to(device)
 
                 # mask = get_mask(set_sizes, X.shape[1])
