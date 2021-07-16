@@ -129,3 +129,69 @@ class SetSequence(Dataset):
 3. Combine larger and smaller dataset
 4. Build 64 input channels instead of one, so one more dimension of tensors( NO of Pixels,no_of_subpixels,no_ccds, no_features)
 """
+
+
+
+# noinspection PyAttributeOutsideInit
+class MultiSetSequence(Dataset):
+    """Processes and Returns a Dataset of Variable Sized Input Sets of Dimensions
+    N = Number SubPixels of that are returned --> usually 64
+    M = Max Size of each Individual Set of CCDs
+    """
+    def __init__(self, num_pixels= 1000, num_subpixels = 64, max_ccds=30, num_features = 9):
+
+        with open('../../bricks_data/mini_multiset.pickle', 'rb') as f:
+            self.mini_multiset = pickle.load(f)
+            f.close()
+
+        # Initialise DataSet
+        self.num_pixels = num_pixels
+        self.num_features = num_features
+        self.input = np.zeros((num_pixels, num_subpixels, max_ccds, num_features))
+        self.lengths = np.zeros((num_pixels,num_subpixels), dtype=int)
+        self.lrg = np.zeros(num_pixels)
+        self.elg = np.zeros(num_pixels)
+        self.qso = np.zeros(num_pixels)
+
+        self.initialise_inputs()
+
+    def set_targets(self, gal_type):
+        # Features and inputs:
+        self.target = None
+        if gal_type == 'lrg':
+            self.target = self.lrg
+        if gal_type == 'elg':
+            self.target = self.elg
+        if gal_type == 'qso':
+            self.target = self.qso
+        self.scaler_out = preprocessing.MinMaxScaler()
+        self.target = self.scaler_out.fit_transform(self.target.reshape(-1, 1))
+
+    def initialise_inputs(self):
+        for i, pix in enumerate(self.mini_multiset):
+            if i >= self.num_pixels:
+                break
+            self.input[i] = self.mini_multiset[pix][0]
+            self.lengths[i] = self.mini_multiset[pix][1]
+            self.lrg[i] = self.mini_multiset[pix][2]
+            self.elg[i] = self.mini_multiset[pix][3]
+            self.qso[i] = self.mini_multiset[pix][4]
+
+
+    def __len__(self):
+        return self.num_pixels
+
+    def __getitem__(self, idx):
+        x = torch.from_numpy(self.input[idx]).float()
+        #x = x.unsqueeze(0)
+        y = torch.tensor(self.target[idx, 0]).float()
+        #print(y.shape)
+        y = y.unsqueeze(-1)
+        #print(y.shape)
+
+        #l = torch.tensor(self.lengths[idx])
+        l = self.lengths[idx]
+
+        return x, y, l
+
+
