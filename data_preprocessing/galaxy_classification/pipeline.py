@@ -5,11 +5,12 @@ import numpy as np
 import time
 import pandas as pd
 from brick import Brick
+import telegram_send
 
 
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 8000
+bricks_to_classify = 16000
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
@@ -133,9 +134,9 @@ for i, brickname in enumerate(bricknames_sample):
     df_stars = df_stars.append(support_df)
 
 
-    if i % 80 == 0:
+    if i % 130 == 0:
         print()
-        print(i / 80, '%')
+        print(i / 130, '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
@@ -144,6 +145,10 @@ for i, brickname in enumerate(bricknames_sample):
         # df_stars.to_csv('../../bricks_data/stellar_catalogue_sample_profiling.csv', index=False, header=False)
         df_galaxy = df_galaxy[0:0]
         df_stars = df_stars[0:0]
+
+    if i % 1500:
+        message = f'++++++ Processed {brickname} ({brickid}). Brick {i} of {bricks_to_classify}. Current Bandwidths: {round(((time.time() - start) / i), 2)} seconds per brick ++++++'
+        telegram_send.send(messages=[message])
 
     # Remove Downloaded Brick
     os.remove(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
