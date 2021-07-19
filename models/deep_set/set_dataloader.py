@@ -1,6 +1,6 @@
 import numpy as np
 from astropy.io import fits
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 
 # noinspection PyAttributeOutsideInit
@@ -17,9 +17,10 @@ class CCD:
 
         self.initalise_boundaries()
 
-        self.encode_categoricals()
+        self.stack_scale_systematics()
 
-        self.stack_systematics()
+        self.encode_add_categoricals()
+
 
     def initalise_boundaries(self):
         self.ra = self.concat_surveys('ra')
@@ -48,8 +49,9 @@ class CCD:
         self.seeing = self.concat_surveys('fwhm') * 0.262
         self.ccdskysb = self.concat_surveys('ccdskysb')
         self.galdepth = self.concat_surveys('galdepth')
-        self.ebv = self.concat_surveys('ebv')
+        #self.ebv = self.concat_surveys('ebv')
         self.ccdnphotom = self.concat_surveys('ccdnphotom')
+        self.sys_tuple = (self.exptime,self.airmass,self.seeing, self.ccdskysb, self.galdepth, self.ccdnphotom)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
@@ -76,26 +78,29 @@ class CCD:
         # self.galdepth = np.concatenate((dataDecam.field('galdepth'), dataMosaic.field('galdepth'), dataBass.field('galdepth')), axis = 0)
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
-    def encode_categoricals(self):
+    def encode_add_categoricals(self):
         encoder = LabelEncoder()
         encoder.fit(np.unique(self.camera))
         self.camera_encoded = encoder.transform(self.camera)
+        self.camera_encoded = self.camera_encoded[:,np.newaxis]
 
         encoder.fit(self.filter_colour)
         self.filter_colour_encoded = encoder.transform(self.filter_colour)
+        self.filter_colour_encoded = self.filter_colour_encoded[:,np.newaxis]
 
-    def stack_systematics(self):
-        self.num_features = 9
-        self.data = np.stack((self.filter_colour,
-                              self.camera,
-                              self.exptime,
-                              self.airmass,
-                              self.seeing,
-                              self.ccdskysb,
-                              self.galdepth,
-                              self.ebv,
-                              self.ccdnphotom),
+        # Add encoded categoricals
+        self.data = np.concatenate((self.data, self.camera_encoded, self.filter_colour_encoded), axis=1)
+        self.num_features = self.data.shape[1]
+
+
+    def stack_scale_systematics(self):
+
+        self.data = np.stack(self.sys_tuple,
                              axis=1)
+        self.scaler_in = MinMaxScaler()
+
+        self.data = self.scaler_in.fit_transform(self.data)
+        self.num_features = self.data.shape[1]
 
     def get_ccds(self, ids):
         return self.data[ids]
