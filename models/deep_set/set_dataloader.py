@@ -22,6 +22,8 @@ class CCD:
         self.stack_systematics()
 
     def initalise_boundaries(self):
+        self.ra = self.concat_surveys('ra')
+        self.dec = self.concat_surveys('dec')
         self.ra0 = self.concat_surveys('ra0')
         self.dec0 = self.concat_surveys('dec0')
         self.ra1 = self.concat_surveys('ra1')
@@ -48,6 +50,7 @@ class CCD:
         self.galdepth = self.concat_surveys('galdepth')
         self.ebv = self.concat_surveys('ebv')
         self.ccdnphotom = self.concat_surveys('ccdnphotom')
+        self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
         # self.ccdskycounts = np.concatenate((dataDecam.field('ccdskycounts'), dataMosaic.field('ccdskycounts'), dataBass.field('ccdskycounts')), axis = 0)
@@ -76,10 +79,10 @@ class CCD:
     def encode_categoricals(self):
         encoder = LabelEncoder()
         encoder.fit(np.unique(self.camera))
-        self.camera = encoder.transform(self.camera)
+        self.camera_encoded = encoder.transform(self.camera)
 
         encoder.fit(self.filter_colour)
-        self.filter_colour = encoder.transform(self.filter_colour)
+        self.filter_colour_encoded = encoder.transform(self.filter_colour)
 
     def stack_systematics(self):
         self.num_features = 9
@@ -99,3 +102,8 @@ class CCD:
 
     def get_boundaries(self):
         return self.ra0, self.dec0, self.ra1, self.dec1, self.ra2, self.dec2, self.ra3, self.dec3
+
+    def get_filter_mask(self, colour):
+        m = (self.filter_colour == colour)
+        return m
+

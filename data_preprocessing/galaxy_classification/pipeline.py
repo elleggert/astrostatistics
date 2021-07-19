@@ -10,7 +10,7 @@ import telegram_send
 
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 16000
+bricks_to_classify = 12000
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
@@ -79,6 +79,8 @@ print("Time taken for bricks left extraction: ", round(((time.time() - start) / 
 
 c = 0
 problem_bricks = []
+inter = time.time()
+
 for i, brickname in enumerate(bricknames_sample):
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
@@ -134,9 +136,9 @@ for i, brickname in enumerate(bricknames_sample):
     df_stars = df_stars.append(support_df)
 
 
-    if i % 130 == 0:
+    if i % 100 == 0:
         print()
-        print(i / 130, '%')
+        print(i / 160, '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
@@ -146,9 +148,10 @@ for i, brickname in enumerate(bricknames_sample):
         df_galaxy = df_galaxy[0:0]
         df_stars = df_stars[0:0]
 
-    if i % 1500:
-        message = f'++++++ Processed {brickname} ({brickid}). Brick {i} of {bricks_to_classify}. Current Bandwidths: {round(((time.time() - start) / i), 2)} seconds per brick ++++++'
+    """if i % 1000 == 0:
+        message = f'++++++ Processed {brickname} ({brickid}). Brick {i} of {bricks_to_classify}. Current Bandwidths: {round(((time.time() - inter) / i+1), 2)} seconds per brick ++++++'
         telegram_send.send(messages=[message])
+        inter = time.time()"""
 
     # Remove Downloaded Brick
     os.remove(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
@@ -171,5 +174,5 @@ print(f"=============================== Download {area} completed ==============
 print()
 
 print("Hours taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
-message = f'++++++ Finished {bricks_to_classify}. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
+#message = f'++++++ Finished {bricks_to_classify} bricks. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
 telegram_send.send(messages=[message])
