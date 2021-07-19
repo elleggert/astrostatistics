@@ -175,4 +175,4 @@ print()
 
 print("Hours taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
 #message = f'++++++ Finished {bricks_to_classify} bricks. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
-telegram_send.send(messages=[message])
+#telegram_send.send(messages=[message])
