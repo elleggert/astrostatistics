@@ -211,14 +211,13 @@ class MultiSetTrainer:
 
                     labels = labels.to(self.device)
 
-                    # set_sizes = set_sizes.to(device)
+                    set_sizes = torch.tensor(set_sizes).to(device)
 
-                    # mask = get_mask(set_sizes, X.shape[1])
 
+                    mask = get_mask(set_sizes, X.shape[1])
                     # Predict outputs (forward pass)
 
-                    # Not yet doing any masking
-                    predictions = model(X)
+                    predictions = model(X, mask=mask)
 
                     # Compute Loss
                     loss = criterion(predictions, labels)
@@ -231,7 +230,6 @@ class MultiSetTrainer:
                     optimiser.step()
                     # Append loss to the general loss for this one epoch
                     loss_per_epoch += loss.item()
-
                 if epoch % 10 == 0:
                     print("Loss for Epoch", epoch, ": ", loss_per_epoch)
             time_end = time.time()
