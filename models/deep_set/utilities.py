@@ -147,6 +147,12 @@ def multi_train(num_pixels = 1000):
 
 
 class MultiSetTrainer:
+    """ Class to Train and Test a given MultiSet, will work with the pre-provided dictionary already extracted, but
+    will be extended in the future.
+
+    Input: Number of Pixels that should be tested
+
+    Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
     def __init__(self, num_pixels = 1000):
         #if traindata is None and testdata is None:
@@ -158,8 +164,8 @@ class MultiSetTrainer:
 
 
 
-        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=num_pixels)
-        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=num_pixels)
+        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels*0.67))
+        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels*0.33))
 
         print(f"Training Samples: {self.traindata.num_pixels}")
         print(f"Test Samples: {self.testdata.num_pixels}")
@@ -242,7 +248,10 @@ class MultiSetTrainer:
             model = self.models[i]
             model.eval()
             y_pred = np.array([])
+            self.testdata.set_targets(gal_type=gal)
+
             testloader = torch.utils.data.DataLoader(self.testdata, batch_size=self.multi_batch, shuffle=False)
+
 
             for i, (X, labels, set_sizes) in enumerate(testloader):
 
