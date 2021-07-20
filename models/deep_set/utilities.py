@@ -156,11 +156,13 @@ class MultiSetTrainer:
         df = pd.DataFrame.from_dict(mini_multiset, orient='index')
         train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
 
-        print(f"Training Samples: {len(train_df)}")
-        print(f"Test Samples: {len(test_df)}")
+
 
         self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=num_pixels)
         self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=num_pixels)
+
+        print(f"Training Samples: {self.traindata.num_pixels}")
+        print(f"Test Samples: {self.testdata.num_pixels}")
 
         self.models = []
 
