@@ -16,7 +16,7 @@ from datasets import SetSequence, MultiSetSequence
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
-torch.autograd.set_detect_anomaly(True)
+#torch.autograd.set_detect_anomaly(True)
 
 # Defining Loss
 criterion = nn.MSELoss()
@@ -193,7 +193,10 @@ class MultiSetTrainer:
 
         for gal in self.galaxy_types:
             model = MultiSetNet(n_features=self.traindata.num_features, reduction=self.reduction).to(self.device)
+            print(f"Model {gal} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
+
             optimiser = optim.Adam(model.parameters(), lr=learning_rate)
+
             print("GALAXY TYPE: ", gal)
             print()
             self.traindata.set_targets(gal_type=gal)
@@ -207,6 +210,7 @@ class MultiSetTrainer:
                 trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
+
                     model.train()
 
                     # Extract inputs and associated labels from dataloader batch
@@ -225,6 +229,7 @@ class MultiSetTrainer:
 
                     predictions = model(X1,X2, mask=mask)
 
+                    """
                     if i == 40:
                         print()
                         print(40)
@@ -239,17 +244,20 @@ class MultiSetTrainer:
                         print()
                         print(200)
                         print("Predictions:", predictions, ". Label: ", labels)
-
+                    """
 
                     # Compute Loss
                     loss = criterion(predictions, labels)
 
                     # Zero-out the gradients before backward pass (pytorch stores the gradients)
                     optimiser.zero_grad()
+
                     # Backpropagation
                     loss.backward()
+
                     # Perform one step of gradient descent
                     optimiser.step()
+
                     # Append loss to the general loss for this one epoch
                     loss_per_epoch += loss.item()
                 if epoch % 10 == 0:
@@ -301,7 +309,7 @@ class MultiSetTrainer:
             print(f"MultiSetNet MSE for {gal} :  {metrics.mean_squared_error(y_gold, y_pred)}.")
 
     def count_parameters(self):
-        for i,model in enumerate(self.models):
+        for i, model in enumerate(self.models):
             print(f"Model {i} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
 
     def print_parameters(self):

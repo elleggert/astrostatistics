@@ -52,7 +52,7 @@ class MultiSetNet(nn.Module):
         self.adder = InvLinear(n_output, 1, reduction=reduction, bias=True)
 
         self.mlp = nn.Sequential(
-            nn.Linear(n_subpix + 2,32),
+            nn.Linear(n_subpix + 2, 32),
             nn.ReLU(inplace=True),
             nn.Linear(32, 16),
             nn.ReLU(inplace=True),
@@ -66,8 +66,6 @@ class MultiSetNet(nn.Module):
 
         # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN
 
-
-    # Make sure to pass another dimension featuring EBV & Stellar Density (maybe after transformation), concat with adder output and feed to NLP
 
     def forward(self, X1, X2, mask=None):
         y = self.feature_extractor(X1)
