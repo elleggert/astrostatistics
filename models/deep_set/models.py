@@ -35,6 +35,7 @@ class SetNet(nn.Module):
 class MultiSetNet(nn.Module):
     def __init__(self, n_features=9, n_output=3, n_subpix = 64, reduction='sum'):
         super(MultiSetNet, self).__init__()
+        print("HUHU")
 
         # Takes an Input Tensor and applies transformations to last layer --> features
         # Output of Feature Layer: Tensor with Max.CCDs elements, which can now be passed to Set Layer

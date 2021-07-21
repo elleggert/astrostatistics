@@ -1,6 +1,5 @@
 import pickle
 
-from sklearn.model_selection import train_test_split
 
 from set_dataloader import CCD
 from torch.utils.data import DataLoader, Dataset

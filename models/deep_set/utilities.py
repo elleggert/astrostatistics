@@ -193,7 +193,7 @@ class MultiSetTrainer:
 
         for gal in self.galaxy_types:
             model = MultiSetNet(n_features=self.traindata.num_features, reduction=self.reduction).to(self.device)
-            print(f"Model {gal} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
+            #print(f"Model {gal} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
 
             optimiser = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -221,13 +221,13 @@ class MultiSetTrainer:
 
                     labels = labels.to(self.device)
 
-                    set_sizes = torch.tensor(set_sizes).to(device)
+                    set_sizes = set_sizes.to(device)
 
 
                     mask = get_mask(set_sizes, X1.shape[1])
                     # Predict outputs (forward pass)
 
-                    predictions = model(X1,X2, mask=mask)
+                    predictions = model(X1, X2, mask=mask)
 
                     """
                     if i == 40:
