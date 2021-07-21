@@ -13,7 +13,10 @@ class SetNet(nn.Module):
         self.feature_extractor = nn.Sequential(
             nn.Linear(n_features, 7),
             nn.ReLU(inplace=True),
-            nn.Linear(7, 5),
+            nn.Linear(7, 6),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.7, inplace=True),
+            nn.Linear(6, 5),
             nn.ReLU(inplace=True),
             nn.Linear(5, n_output),
             nn.ReLU(inplace=True)
@@ -38,18 +41,22 @@ class MultiSetNet(nn.Module):
         self.feature_extractor = nn.Sequential(
             nn.Linear(n_features, 7),
             nn.ReLU(inplace=True),
-            nn.Linear(7, 5),
+            nn.Linear(7, 6),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.7, inplace=True),
+            nn.Linear(6, 5),
             nn.ReLU(inplace=True),
             nn.Linear(5, n_output),
             nn.ReLU(inplace=True)
         )
-        self.adder = InvLinear(3, 1, reduction=reduction, bias=True)
+        self.adder = InvLinear(n_output, 1, reduction=reduction, bias=True)
 
         self.mlp = nn.Sequential(
             nn.Linear(n_subpix + 2,32),
             nn.ReLU(inplace=True),
             nn.Linear(32, 16),
             nn.ReLU(inplace=True),
+            nn.Dropout(p=0.7, inplace=True),
             nn.Linear(16,8),
             nn.ReLU(inplace=True),
             nn.Linear(8, 1),
@@ -62,17 +69,6 @@ class MultiSetNet(nn.Module):
 
     # Make sure to pass another dimension featuring EBV & Stellar Density (maybe after transformation), concat with adder output and feed to NLP
 
-    """ Code Example_
-    def forward(self, image, data):
-        x1 = self.cnn(image)
-        x2 = data
-        
-        x = torch.cat((x1, x2), dim=1) # or dim = 0
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
-    
-    """
     def forward(self, X1, X2, mask=None):
         y = self.feature_extractor(X1)
         y = self.adder(y, mask=mask)
@@ -80,8 +76,3 @@ class MultiSetNet(nn.Module):
         y = self.mlp(y.T)
         return y
 
-""" TODO
-1. Train Loop with Batching
-2. Masking Procedure, need to mask out singular values on top of those that have no CCDs
-3. How to actually feed real data into the system to see if it can learn
-"""
