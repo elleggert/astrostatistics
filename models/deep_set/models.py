@@ -53,6 +53,20 @@ class MultiSetNet(nn.Module):
 
         # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN
 
+
+    # Make sure to pass another dimension featuring EBV & Stellar Density (maybe after transformation), concat with adder output and feed to NLP
+
+    """ Code Example_
+    def forward(self, image, data):
+        x1 = self.cnn(image)
+        x2 = data
+        
+        x = torch.cat((x1, x2), dim=1) # or dim = 0
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+    
+    """
     def forward(self, X, mask=None):
         y = self.feature_extractor(X)
         y = self.adder(y, mask=mask)
