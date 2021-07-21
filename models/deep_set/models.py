@@ -1,3 +1,5 @@
+import torch
+
 from deepset_layers import InvLinear
 import torch.nn as nn
 
@@ -44,9 +46,13 @@ class MultiSetNet(nn.Module):
         self.adder = InvLinear(3, 1, reduction=reduction, bias=True)
 
         self.mlp = nn.Sequential(
-            nn.Linear(n_subpix,2),
+            nn.Linear(n_subpix + 2,32),
             nn.ReLU(inplace=True),
-            nn.Linear(2,1),
+            nn.Linear(32, 16),
+            nn.ReLU(inplace=True),
+            nn.Linear(16,8),
+            nn.ReLU(inplace=True),
+            nn.Linear(8, 1),
             nn.ReLU(inplace=True)
         )
 
@@ -67,9 +73,10 @@ class MultiSetNet(nn.Module):
         return x
     
     """
-    def forward(self, X, mask=None):
-        y = self.feature_extractor(X)
+    def forward(self, X1, X2, mask=None):
+        y = self.feature_extractor(X1)
         y = self.adder(y, mask=mask)
+        y = torch.cat((y, X2), dim=0)
         y = self.mlp(y.T)
         return y
 

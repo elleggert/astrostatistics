@@ -196,7 +196,8 @@ class MultiSetSequence(Dataset):
         return self.num_pixels
 
     def __getitem__(self, idx):
-        x = torch.from_numpy(self.input[idx]).float()
+        x1 = torch.from_numpy(self.input[idx]).float()
+        x2 = torch.from_numpy(self.stage2_input[idx]).float()
         #x = x.unsqueeze(0)
         y = torch.tensor(self.target[idx, 0]).float()
         #print(y.shape)
@@ -206,7 +207,7 @@ class MultiSetSequence(Dataset):
         #l = torch.tensor(self.lengths[idx])
         l = self.lengths[idx]
 
-        return x, y, l
+        return x1,x2, y, l
 
 
 
