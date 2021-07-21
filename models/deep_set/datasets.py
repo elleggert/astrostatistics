@@ -161,6 +161,8 @@ class MultiSetSequence(Dataset):
         self.lrg = np.zeros(self.num_pixels)
         self.elg = np.zeros(self.num_pixels)
         self.qso = np.zeros(self.num_pixels)
+        self.stellar = np.zeros(self.num_pixels)
+        self.ebv = np.zeros(self.num_pixels)
 
         self.initialise_inputs()
 
@@ -185,7 +187,10 @@ class MultiSetSequence(Dataset):
             self.lrg[i] = self.mini_multiset[pix][2]
             self.elg[i] = self.mini_multiset[pix][3]
             self.qso[i] = self.mini_multiset[pix][4]
+            self.stellar[i] = self.mini_multiset[pix][5]
+            self.ebv[i] = self.mini_multiset[pix][6]
 
+        self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
 
     def __len__(self):
         return self.num_pixels
