@@ -16,6 +16,8 @@ from datasets import SetSequence, MultiSetSequence
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
+torch.autograd.set_detect_anomaly(True)
+
 # Defining Loss
 criterion = nn.MSELoss()
 
@@ -191,8 +193,6 @@ class MultiSetTrainer:
 
         for gal in self.galaxy_types:
             model = MultiSetNet(n_features=self.traindata.num_features, reduction=self.reduction).to(self.device)
-            self.models.append(model)
-            break
             optimiser = optim.Adam(model.parameters(), lr=learning_rate)
             print("GALAXY TYPE: ", gal)
             print()

@@ -44,9 +44,9 @@ class MultiSetNet(nn.Module):
             nn.Linear(7, 6),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.7, inplace=True),
-            nn.Linear(6, 5),
+            nn.Linear(6, 4),
             nn.ReLU(inplace=True),
-            nn.Linear(5, n_output),
+            nn.Linear(4, n_output),
             nn.ReLU(inplace=True)
         )
         self.adder = InvLinear(n_output, 1, reduction=reduction, bias=True)
@@ -57,7 +57,7 @@ class MultiSetNet(nn.Module):
             nn.Linear(32, 16),
             nn.ReLU(inplace=True),
             nn.Dropout(p=0.7, inplace=True),
-            nn.Linear(16,8),
+            nn.Linear(16, 8),
             nn.ReLU(inplace=True),
             nn.Linear(8, 1),
             nn.ReLU(inplace=True)
