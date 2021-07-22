@@ -54,11 +54,25 @@ class CCD:
         self.skyrms = self.concat_surveys('skyrms')
         self.ccdskycounts = self.concat_surveys('ccdskycounts')
         self.meansky = self.concat_surveys('meansky')
-        self.pixscale_mean, self.skyrms, self.skyrms = self.concat_surveys('pixscale_mean, self.skyrms, self.skyrms')
-        self.galdepth = self.concat_surveys('galdepth')
-        self.ccd_cuts = self.concat_surveys('ccd_cuts')
+        self.pixscale_mean = self.concat_surveys('pixscale_mean')
+        self.ccdnastrom = self.concat_surveys('ccdnastrom')
+        self.mjd_obs = self.concat_surveys('mjd_obs')
+        self.sig1 = self.concat_surveys('sig1')
+        #self.ccd_cuts = self.concat_surveys('ccd_cuts')
 
-        self.sys_tuple = (self.exptime,self.airmass,self.seeing, self.ccdskysb, self.galdepth, self.ccdnphotom, self.skyrms,self.ccdskycounts,self.meansky,self.pixscale_mean, self.galdepth)
+        self.sys_tuple = (self.exptime,
+                          self.airmass,
+                          self.seeing,
+                          self.ccdskysb,
+                          self.galdepth,
+                          self.ccdnphotom,
+                          self.skyrms,
+                          self.ccdskycounts,
+                          self.meansky,
+                          self.pixscale_mean,
+                          self.ccdnastrom,
+                          self.mjd_obs,
+                          self.sig1)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
@@ -96,13 +110,14 @@ class CCD:
         self.filter_colour_encoded = self.filter_colour_encoded[:,np.newaxis]
 
         #Tweak
-        self.ccd_cuts_encoded = self.ccd_cuts
-        self.ccd_cuts_encoded = self.ccd_cuts_encoded[:,np.newaxis]
+        #self.ccd_cuts_encoded = self.ccd_cuts
+        #self.ccd_cuts_encoded = self.ccd_cuts_encoded[:,np.newaxis]
 
 
         # Add encoded categoricals
-        self.data = np.concatenate((self.data, self.camera_encoded, self.filter_colour_encoded, self.ccd_cuts_encoded), axis=1)
+        self.data = np.concatenate((self.data, self.camera_encoded, self.filter_colour_encoded), axis=1)
         self.num_features = self.data.shape[1]
+        print(self.num_features)
 
 
     def stack_scale_systematics(self):

@@ -156,7 +156,7 @@ class MultiSetTrainer:
 
     def __init__(self, num_pixels=1000):
         # if traindata is None and testdata is None:
-        with open('../../bricks_data/mini_multiset.pickle', 'rb') as f:
+        with open('../../bricks_data/multiset.pickle', 'rb') as f:
             mini_multiset = pickle.load(f)
             f.close()
         df = pd.DataFrame.from_dict(mini_multiset, orient='index')
@@ -171,7 +171,7 @@ class MultiSetTrainer:
         self.models = []
 
         # Defining Loss
-        self.criterion = nn.L1Loss()
+        self.criterion = nn.MSELoss()
 
         # Defining Hyperparemeters
         self.no_epochs = 100  # very low, but computational power not sufficient for more iterations
