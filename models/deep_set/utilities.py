@@ -220,7 +220,6 @@ class MultiSetTrainer:
                     # Predict outputs (forward pass)
 
                     predictions = model(X1, X2, mask=mask)
-
                     """
                     if i == 100:
                         print()
