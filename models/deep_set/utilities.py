@@ -1,4 +1,3 @@
-
 ###  Hyperparameters and Training Loops
 import pickle
 
@@ -16,19 +15,19 @@ from datasets import SetSequence, MultiSetSequence
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
-#torch.autograd.set_detect_anomaly(True)
+# torch.autograd.set_detect_anomaly(True)
 
 # Defining Loss
 criterion = nn.MSELoss()
 
-#Defining Hyperparemeters
-no_epochs = 100  #very low, but computational power not sufficient for more iterations
+# Defining Hyperparemeters
+no_epochs = 100  # very low, but computational power not sufficient for more iterations
 batch = 4
 multi_batch = 1
 learning_rate = 0.001
 
-#Using the Adam Method for Stochastic Optimisation
-#optimiser = optim.Adam(model.parameters(), lr=learning_rate)
+# Using the Adam Method for Stochastic Optimisation
+# optimiser = optim.Adam(model.parameters(), lr=learning_rate)
 
 galaxy_types = ['lrg', 'elg', 'qso']
 device = 'cpu'
@@ -38,7 +37,7 @@ def get_mask(sizes, max_size):
     return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.reshape(-1, 1))
 
 
-def train(num_pixels = 1000):
+def train(num_pixels=1000):
     traindata = SetSequence(num_pixels=num_pixels, var_set_len=True)
     for gal in galaxy_types:
         model = SetNet(n_features=traindata.num_features, reduction='sum').to(device)
@@ -51,14 +50,14 @@ def train(num_pixels = 1000):
 
         for epoch in range(no_epochs):
             loss_per_epoch = 0
-            #loading the training data from trainset and shuffling for each epoch
+            # loading the training data from trainset and shuffling for each epoch
             trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch, shuffle=True)
 
             for i, (X, labels, set_sizes) in enumerate(trainloader):
-                #Put Model into train mode
+                # Put Model into train mode
                 model.train()
 
-                #Extract inputs and associated labels from dataloader batch
+                # Extract inputs and associated labels from dataloader batch
                 X = X.to(device)
 
                 labels = labels.to(device)
@@ -66,20 +65,20 @@ def train(num_pixels = 1000):
 
                 mask = get_mask(set_sizes, X.shape[1])
 
-                #Predict outputs (forward pass)
+                # Predict outputs (forward pass)
 
                 predictions = model(X, mask=mask)
 
-                #Compute Loss
+                # Compute Loss
                 loss = criterion(predictions, labels)
 
-                #Zero-out the gradients before backward pass (pytorch stores the gradients)
+                # Zero-out the gradients before backward pass (pytorch stores the gradients)
                 optimiser.zero_grad()
-                #Backpropagation
+                # Backpropagation
                 loss.backward()
-                #Perform one step of gradient descent
+                # Perform one step of gradient descent
                 optimiser.step()
-                #Append loss to the general loss for this one epoch
+                # Append loss to the general loss for this one epoch
                 loss_per_epoch += loss.item()
 
             if epoch % 10 == 0:
@@ -91,8 +90,8 @@ def train(num_pixels = 1000):
         print(f"{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to train the model")
         print()
 
-def multi_train(num_pixels = 1000):
 
+def multi_train(num_pixels=1000):
     traindata = MultiSetSequence(num_pixels=num_pixels)
 
     for gal in galaxy_types:
@@ -110,7 +109,6 @@ def multi_train(num_pixels = 1000):
             trainloader = torch.utils.data.DataLoader(traindata, batch_size=multi_batch, shuffle=True)
 
             for i, (X, labels, set_sizes) in enumerate(trainloader):
-
                 model.train()
 
                 # Extract inputs and associated labels from dataloader batch
@@ -156,18 +154,16 @@ class MultiSetTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels = 1000):
-        #if traindata is None and testdata is None:
+    def __init__(self, num_pixels=1000):
+        # if traindata is None and testdata is None:
         with open('../../bricks_data/mini_multiset.pickle', 'rb') as f:
             mini_multiset = pickle.load(f)
             f.close()
         df = pd.DataFrame.from_dict(mini_multiset, orient='index')
         train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
 
-
-
-        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels*0.67))
-        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels*0.33))
+        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67))
+        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33))
 
         print(f"Training Samples: {self.traindata.num_pixels}")
         print(f"Test Samples: {self.testdata.num_pixels}")
@@ -193,7 +189,7 @@ class MultiSetTrainer:
 
         for gal in self.galaxy_types:
             model = MultiSetNet(n_features=self.traindata.num_features, reduction=self.reduction).to(self.device)
-            #print(f"Model {gal} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
+            print(f"Model {gal} params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
 
             optimiser = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -204,18 +200,15 @@ class MultiSetTrainer:
             time_start = time.time()
 
             for epoch in range(self.no_epochs):
-                print()
                 loss_per_epoch = 0
                 # loading the training data from trainset and shuffling for each epoch
                 trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
-
                     model.train()
 
                     # Extract inputs and associated labels from dataloader batch
                     X1 = X1.squeeze().to(self.device)
-
 
                     X2 = X2.reshape(-1, 1).to(device)
 
@@ -223,18 +216,12 @@ class MultiSetTrainer:
 
                     set_sizes = set_sizes.to(device)
 
-
                     mask = get_mask(set_sizes, X1.shape[1])
                     # Predict outputs (forward pass)
 
                     predictions = model(X1, X2, mask=mask)
 
                     """
-                    if i == 40:
-                        print()
-                        print(40)
-                        print("Predictions:", predictions, ". Label: ", labels)
-
                     if i == 100:
                         print()
                         print(100)
@@ -261,16 +248,13 @@ class MultiSetTrainer:
                     # Append loss to the general loss for this one epoch
                     loss_per_epoch += loss.item()
                 if epoch % 10 == 0:
-                    print()
                     print("Loss for Epoch", epoch, ": ", loss_per_epoch)
-                    print()
             time_end = time.time()
             time_passed = time_end - time_start
             print()
             print(f"{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to train the model")
             print()
             self.models.append(model)
-
 
     def test(self):
 
@@ -282,16 +266,13 @@ class MultiSetTrainer:
 
             testloader = torch.utils.data.DataLoader(self.testdata, batch_size=self.multi_batch, shuffle=False)
 
-
             for i, (X1, X2, labels, set_sizes) in enumerate(testloader):
-
                 # Extract inputs and associated labels from dataloader batch
                 X1 = X1.squeeze().to(self.device)
 
                 X2 = X2.reshape(-1, 1).to(device)
 
-
-                set_sizes = torch.tensor(set_sizes).to(device)
+                set_sizes = set_sizes.to(device)
 
                 mask = get_mask(set_sizes, X1.shape[1])
                 # Predict outputs (forward pass)
@@ -321,4 +302,3 @@ class MultiSetTrainer:
                 if p.requires_grad:
                     print(p)
                     print(p.shape)
-
