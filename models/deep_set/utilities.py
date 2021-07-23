@@ -15,7 +15,7 @@ from datasets import SetSequence, MultiSetSequence
 from torch.utils.data import DataLoader
 import torch.optim as optim
 
-# torch.autograd.set_detect_anomaly(True)
+torch.autograd.set_detect_anomaly(True)
 
 # Defining Loss
 criterion = nn.MSELoss()
@@ -24,7 +24,7 @@ criterion = nn.MSELoss()
 no_epochs = 100  # very low, but computational power not sufficient for more iterations
 batch = 4
 multi_batch = 1
-learning_rate = 0.001
+learning_rate = 0.0001
 
 # Using the Adam Method for Stochastic Optimisation
 # optimiser = optim.Adam(model.parameters(), lr=learning_rate)
@@ -171,7 +171,7 @@ class MultiSetTrainer:
         self.models = []
 
         # Defining Loss
-        self.criterion = nn.MSELoss()
+        self.criterion = nn.L1Loss()
 
         # Defining Hyperparemeters
         self.no_epochs = 100  # very low, but computational power not sufficient for more iterations

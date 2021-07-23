@@ -2,7 +2,7 @@
 from utilities import MultiSetTrainer
 def main():
 
-    trainer = MultiSetTrainer(num_pixels=1500)
+    trainer = MultiSetTrainer(num_pixels=3000)
     trainer.train()
     trainer.test()
 

@@ -39,27 +39,27 @@ class MultiSetNet(nn.Module):
         # Takes an Input Tensor and applies transformations to last layer --> features
         # Output of Feature Layer: Tensor with Max.CCDs elements, which can now be passed to Set Layer
         self.feature_extractor = nn.Sequential(
-            nn.Linear(n_features, 14),
+            nn.Linear(n_features, 32),
             nn.ReLU(inplace=False),
-            nn.Linear(14, 10),
+            nn.Linear(32, 128),
             nn.ReLU(inplace=False),
             nn.Dropout(p=0.7, inplace=False),
-            nn.Linear(10, 10),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=False),
-            nn.Linear(10, 8),
+            nn.Linear(64, 16),
             nn.ReLU(inplace=False)
         )
-        self.adder = InvLinear(8, 1, reduction=reduction, bias=True)
+        self.adder = InvLinear(16, 1, reduction=reduction, bias=True)
 
         self.mlp = nn.Sequential(
-            nn.Linear(n_subpix + 2, 32),
+            nn.Linear(n_subpix + 2, 128),
             nn.ReLU(inplace=False),
-            nn.Linear(32, 16),
+            nn.Linear(128, 64),
             nn.ReLU(inplace=False),
             nn.Dropout(p=0.7, inplace=False),
-            nn.Linear(16, 8),
+            nn.Linear(64, 32),
             nn.ReLU(inplace=False),
-            nn.Linear(8, 1),
+            nn.Linear(32, 1),
             nn.ReLU(inplace=False)
         )
 

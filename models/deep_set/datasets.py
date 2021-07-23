@@ -165,6 +165,8 @@ class MultiSetSequence(Dataset):
 
         self.initialise_inputs()
 
+        self.clean_nans()
+
     def set_targets(self, gal_type):
         # Features and inputs:
         self.target = None
@@ -189,8 +191,6 @@ class MultiSetSequence(Dataset):
             self.stellar[i] = self.mini_multiset[pix][5]
             self.ebv[i] = self.mini_multiset[pix][6]
 
-        self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
-
     def __len__(self):
         return self.num_pixels
 
@@ -208,5 +208,23 @@ class MultiSetSequence(Dataset):
 
         return x1,x2, y, l
 
+    def clean_nans(self):
+        nan_list = []
+        for i in range(self.num_pixels):
+            cond = np.isnan(self.input[i])
+            c = cond.sum()
+            if c > 0:
+                nan_list.append(i)
 
+        self.input = np.delete(self.input, nan_list, axis=0)
+        self.lengths = np.delete(self.lengths, nan_list, axis=0)
+        self.lrg = np.delete(self.lrg, nan_list, axis=0)
+        self.elg = np.delete(self.elg, nan_list, axis=0)
+        self.qso = np.delete(self.qso, nan_list, axis=0)
+        self.stellar = np.delete(self.stellar, nan_list, axis=0)
+        self.ebv = np.delete(self.ebv, nan_list, axis=0)
+
+        self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
+
+        self.num_pixels = len(self.lrg)
 
