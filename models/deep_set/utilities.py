@@ -161,13 +161,12 @@ class MultiSetTrainer:
             f.close()
         df = pd.DataFrame.from_dict(mini_multiset, orient='index')
         train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
+        self.max_set_len = max_set_len
 
-        print(type(num_pixels))
-        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67), max_ccds=max_set_len)
-        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33), max_ccds=max_set_len)
+        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67), max_ccds=self.max_set_len)
+        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33), max_ccds=self.max_set_len)
 
-        print(f"Training Samples: {self.traindata.num_pixels}")
-        print(f"Test Samples: {self.testdata.num_pixels}")
+
 
         self.models = []
 
@@ -186,6 +185,24 @@ class MultiSetTrainer:
         self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
         self.reduction = reduction
 
+        self.print_model_info()
+
+    def print_model_info(self):
+        print('++++++++ Model Characteristics +++++++')
+        print(f"Training Samples: {self.traindata.num_pixels}")
+        print(f"Test Samples: {self.testdata.num_pixels}")
+        print(f"Maximum Set Lengths: {self.max_set_len}")
+        print(f"Loss: {self.criterion}")
+        print(f"Training Epochs: {self.no_epochs}")
+        print(f"Batch Size: {self.multi_batch}")
+        print(f"Learning Rate: {self.learning_rate}")
+        print(f"Reduction: {self.reduction}")
+        print(f"Device: {self.device}")
+        print()
+        print('+++++++++++++++++++++++++++++++++++++')
+
+
+
     def train(self):
 
         for gal in self.galaxy_types:
@@ -194,7 +211,7 @@ class MultiSetTrainer:
 
             optimiser = optim.Adam(model.parameters(), lr=learning_rate)
 
-            print("GALAXY TYPE: ", gal)
+            print("Galaxy Type: ", str.upper(gal))
             print()
             self.traindata.set_targets(gal_type=gal)
 
