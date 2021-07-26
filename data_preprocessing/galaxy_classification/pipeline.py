@@ -138,7 +138,7 @@ for i, brickname in enumerate(bricknames_sample):
 
     if i % 100 == 0:
         print()
-        print(i / 160, '%')
+        print(i / (bricks_to_classify/100), '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
