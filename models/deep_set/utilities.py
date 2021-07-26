@@ -154,7 +154,7 @@ class MultiSetTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels=1000):
+    def __init__(self, num_pixels=1500,max_set_len=30, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001, reduction='sum'):
         # if traindata is None and testdata is None:
         with open('../../bricks_data/multiset.pickle', 'rb') as f:
             mini_multiset = pickle.load(f)
@@ -162,8 +162,9 @@ class MultiSetTrainer:
         df = pd.DataFrame.from_dict(mini_multiset, orient='index')
         train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
 
-        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67))
-        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33))
+        print(type(num_pixels))
+        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67), max_ccds=max_set_len)
+        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33), max_ccds=max_set_len)
 
         print(f"Training Samples: {self.traindata.num_pixels}")
         print(f"Test Samples: {self.testdata.num_pixels}")
@@ -171,19 +172,19 @@ class MultiSetTrainer:
         self.models = []
 
         # Defining Loss
-        self.criterion = nn.L1Loss()
+        if MSEloss:
+            self.criterion = nn.MSELoss()
+        else:
+            self.criterion = nn.L1Loss
+
 
         # Defining Hyperparemeters
-        self.no_epochs = 100  # very low, but computational power not sufficient for more iterations
-        self.multi_batch = 1
-        self.learning_rate = 0.001
-
-        # Using the Adam Method for Stochastic Optimisation
-        # optimiser = optim.Adam(model.parameters(), lr=learning_rate)
-
+        self.no_epochs = no_epochs  # very low, but computational power not sufficient for more iterations
+        self.multi_batch = batch_size
+        self.learning_rate = lr
         self.galaxy_types = ['lrg', 'elg', 'qso']
-        self.device = 'cpu'
-        self.reduction = 'sum'
+        self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
+        self.reduction = reduction
 
     def train(self):
 
