@@ -269,7 +269,7 @@ class MultiSetTrainer:
             time_end = time.time()
             time_passed = time_end - time_start
             print()
-            print(f"{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to train the model")
+            print(f'{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to train the model')
             print()
             self.models.append(model)
 
