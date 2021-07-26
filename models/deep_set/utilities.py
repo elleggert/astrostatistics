@@ -188,7 +188,9 @@ class MultiSetTrainer:
         self.print_model_info()
 
     def print_model_info(self):
+        print()
         print('++++++++ Model Characteristics +++++++')
+        print()
         print(f"Training Samples: {self.traindata.num_pixels}")
         print(f"Test Samples: {self.testdata.num_pixels}")
         print(f"Maximum Set Lengths: {self.max_set_len}")
