@@ -183,7 +183,7 @@ class MultiSetTrainer:
         self.learning_rate = lr
         self.galaxy_types = ['lrg', 'elg', 'qso']
         self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
-        self.num_workers = 1 if device == 'cpu:0' else 8
+        self.num_workers = 0 if device == 'cpu:0' else 8
         self.reduction = reduction
 
         self.print_model_info()
