@@ -35,4 +35,29 @@ print(model2)
 def define_model(trial):
 
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=8, step=2)
+
+    fe_layers = []
+
+    in_features = 15 # --> make a function argument later
+
+    med_features = trial.suggest_int("n_units_l{}".format(1), 16, 64)
+
+    for i in range(n_layers_fe):
+        out_features = trial.suggest_int("n_units_l{}".format(i), 4, 128)
+        fe_layers.append(nn.Linear(in_features, out_features))
+        fe_layers.append(nn.ReLU())
+        p = trial.suggest_float("dropout_l{}".format(i), 0.0, 0.5)
+        fe_layers.append(nn.Dropout(p))
+
+        in_features = out_features
+
+    fe_layers.append(nn.Linear(in_features, med_features))
+    fe_layers.append(nn.ReLU())
+
+
+
+
+
+
     n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=8, step=2)
+    mlp_layers = []
