@@ -301,7 +301,7 @@ class MultiSetTrainer:
                 # Predict outputs (forward pass)
 
                 # Get predictions and append to label array + count number of correct and total
-                y_pred = np.append(y_pred, predictions.detach().numpy())
+                y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
 
             y_gold = self.testdata.target
 
