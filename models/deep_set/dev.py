@@ -19,7 +19,7 @@ MSEloss=True
 no_epochs=100
 batch_size = 4
 lr = 0.001
-reduction='mean'
+reduction='min'
 criterion = nn.MSELoss()
 
 
@@ -40,10 +40,6 @@ traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=r
                                   max_ccds=max_set_len, num_subpixels=num_subpixels)
 traindata.set_targets(gal_type='lrg')
 
-
-model = MultiSetNet(n_features=traindata.num_features, reduction=reduction)
-
-optimiser = optim.Adam(model.parameters(), lr=lr)
 
 
 trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=False)
@@ -132,12 +128,12 @@ class InvLinear(nn.Module):
         elif self.reduction == 'max':
             Z = X.clone()
             Z[~mask] = float('-Inf')
-            y = Z.max(dim=2)[1] @ self.beta
+            y = Z.max(dim=2)[0] @ self.beta
 
         else:  # min
             Z = X.clone()
             Z[~mask] = float('Inf')
-            y = Z.min(dim=2)[1] @ self.beta
+            y = Z.min(dim=2)[0] @ self.beta
 
         if self.bias is not None:
             y += self.bias
@@ -165,22 +161,49 @@ mlp = nn.Sequential(
         )
 
 
-for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
-    model.train()
+model = MultiSetNet(n_features=traindata.num_features, reduction=reduction)
+
+optimiser = optim.Adam(model.parameters(), lr=lr)
 
 
-    # Extract inputs and associated labels from dataloader batch
+def batch_training_loop():
+    for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
+        # Extract inputs and associated labels from dataloader batch
 
-    mask = get_mask(set_sizes, X1.shape[2])
+        mask = get_mask(set_sizes, X1.shape[2])
 
-    y = feature_extractor(X1)
-    y = adder.forward(y, mask=mask)
-    y = torch.cat((y, X2.unsqueeze(2)), dim=1)
-    y = y.squeeze()
-    y = mlp(y)
+        y = feature_extractor(X1)
+        y = adder.forward(y, mask=mask)
+        y = torch.cat((y, X2.unsqueeze(2)), dim=1)
+        y = y.squeeze()
+        y = mlp(y)
 
-    print(labels, y)
-    # Compute Loss
-    loss = criterion(y, labels)
+        print(labels, y)
+        # Compute Loss
+        loss = criterion(y, labels)
+
+
+def normal_loop():
+    def masked(sizes, max_size):
+        return (torch.arange(max_size).reshape(1, -1) < sizes.reshape(-1, 1))
+
+    for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
+
+        # Extract inputs and associated labels from dataloader batch
+        X1 = X1.squeeze()
+
+        X2 = X2.reshape(-1, 1)
+
+        mask = masked(set_sizes, X1.shape[1])
+        # Predict outputs (forward pass)
+
+        predictions = model(X1, X2, mask=mask)
+
+        print(labels, predictions)
+
+
+#normal_loop()
+
+batch_training_loop()
 
 print()
