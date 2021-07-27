@@ -30,7 +30,7 @@ learning_rate = 0.0001
 # optimiser = optim.Adam(model.parameters(), lr=learning_rate)
 
 galaxy_types = ['lrg', 'elg', 'qso']
-device = 'cpu'
+device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 
 
 def get_mask(sizes, max_size):
@@ -203,7 +203,8 @@ class MultiSetTrainer:
         print()
         print('+++++++++++++++++++++++++++++++++++++')
 
-
+    def get_mask(self,sizes, max_size):
+        return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.reshape(-1, 1))
 
     def train(self):
 
@@ -236,7 +237,7 @@ class MultiSetTrainer:
 
                     set_sizes = set_sizes.to(device)
 
-                    mask = get_mask(set_sizes, X1.shape[1])
+                    mask = self.get_mask(set_sizes, X1.shape[1])
                     # Predict outputs (forward pass)
 
                     predictions = model(X1, X2, mask=mask)
