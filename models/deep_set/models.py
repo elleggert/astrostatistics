@@ -33,7 +33,7 @@ class SetNet(nn.Module):
 
 
 class MultiSetNet(nn.Module):
-    def __init__(self, n_features=9, n_output=3, n_subpix = 64, reduction='sum'):
+    def __init__(self, n_features=15, n_output=3, n_subpix = 64, reduction='sum'):
         super(MultiSetNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features
@@ -62,6 +62,30 @@ class MultiSetNet(nn.Module):
             nn.Linear(32, 1),
             nn.ReLU(inplace=False)
         )
+
+
+        # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN, + added a new dimension for subpix
+
+
+    def forward(self, X1, X2, mask=None):
+        y = self.feature_extractor(X1)
+        y = self.adder(y, mask=mask)
+        y = torch.cat((y, X2.unsqueeze(2)), dim=1).squeeze()
+        y = self.mlp(y)
+        return y
+
+
+class VarMultiSetNet(nn.Module):
+    def __init__(self, feature_extractor, mlp, n_features=9, n_output=3, n_subpix = 64, reduction='sum', ):
+        super(VarMultiSetNet, self).__init__()
+
+        # Takes an Input Tensor and applies transformations to last layer --> features
+        # Output of Feature Layer: Tensor with Max.CCDs elements, which can now be passed to Set Layer
+
+        self.feature_extractor = feature_extractor
+        self.adder = InvLinear(16, 1, reduction=reduction, bias=True)
+
+        self.mlp = mlp
 
 
         # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN, + added a new dimension for subpix
