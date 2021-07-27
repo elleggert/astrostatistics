@@ -71,7 +71,6 @@ class MultiSetNet(nn.Module):
         y = self.feature_extractor(X1)
         y = self.adder(y, mask=mask)
         y = torch.cat((y, X2.unsqueeze(2)), dim=1).squeeze()
-        #y = y.squeeze()
         y = self.mlp(y)
         return y
 
