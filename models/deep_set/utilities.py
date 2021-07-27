@@ -183,6 +183,7 @@ class MultiSetTrainer:
         self.learning_rate = lr
         self.galaxy_types = ['lrg', 'elg', 'qso']
         self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
+        self.num_workers = 1 if device == 'cpu:0' else 8
         self.reduction = reduction
 
         self.print_model_info()
@@ -200,6 +201,8 @@ class MultiSetTrainer:
         print(f"Learning Rate: {self.learning_rate}")
         print(f"Reduction: {self.reduction}")
         print(f"Device: {self.device}")
+        print(f"Number of Workers: {self.num_workers}")
+
         print()
         print('+++++++++++++++++++++++++++++++++++++')
 
@@ -223,7 +226,7 @@ class MultiSetTrainer:
             for epoch in range(self.no_epochs):
                 loss_per_epoch = 0
                 # loading the training data from trainset and shuffling for each epoch
-                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True, num_workers=8)
+                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True, num_workers=self.num_workers)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
                     model.train()
