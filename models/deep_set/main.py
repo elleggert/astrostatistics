@@ -8,7 +8,7 @@ def main():
     parser.add_argument( '-d', '--path_to_data', default='../../bricks_data/multiset.pickle',metavar='', type=str,help='path to the data directory' )
     parser.add_argument( '-n', '--num_pixels', default=1500,metavar='', type=int,help='number of training examples' )
     parser.add_argument( '-c','--max_ccds', default=30,metavar='',type=int, help='Maximum set lengths for individual CCDs')
-    parser.add_argument( '-l','--mse_loss', default=True,metavar='',type=bool, help='Which Loss function to use: True for MSE, False for L1')
+    parser.add_argument( '-l1','--l1_loss', default=False, metavar='',type=bool, help='Which Loss function to use: True for MSE, False for L1')
     parser.add_argument( '-e','--no_epochs', default=100,metavar='', type=int,help='No of Epochs')
     parser.add_argument( '-b','--batch_size', default=1,metavar='', type=int,help='BatchSize: Currently only supports 1')
     parser.add_argument( '-lr','--learning_rate', default=0.001,metavar='',type=float, help='Learning Rate')
@@ -31,5 +31,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 

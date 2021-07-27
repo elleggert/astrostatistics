@@ -223,7 +223,7 @@ class MultiSetTrainer:
             for epoch in range(self.no_epochs):
                 loss_per_epoch = 0
                 # loading the training data from trainset and shuffling for each epoch
-                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True)
+                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True, num_workers=8)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
                     model.train()
