@@ -109,17 +109,19 @@ class InvLinear(nn.Module):
         Outputs:
         Y: N vectors of dimension out_features (tensor with shape (N, SP, out_features))
         """
-        # print("INVLAYER:", X.shape)
+
         N, SP, M, _ = X.shape
-        y = torch.zeros(N, SP, self.out_features)
+        device = X.device
+
+        y = torch.zeros(N, SP, self.out_features).to(device)
+
         if mask is None:
-            mask = torch.ones(N, SP, M).byte()
+            mask = torch.ones(N, SP, M).byte().to(device)
 
         if self.reduction == 'mean':
             sizes = mask.float().sum(dim=2).unsqueeze(2)
             Z = X * mask.unsqueeze(3).float()
             y = (Z.sum(dim=2) @ self.beta) / sizes
-
 
         elif self.reduction == 'sum':
             Z = X * mask.unsqueeze(3).float()

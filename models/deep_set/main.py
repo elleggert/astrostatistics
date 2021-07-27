@@ -11,7 +11,7 @@ def main():
     parser.add_argument( '-mse','--mse_loss', default=True, dest='mse_loss',action='store_true', help='Use MSE Loss')
     parser.add_argument( '-l1','--l1_loss', dest='mse_loss',action='store_false', help='Use L1 Loss')
     parser.add_argument( '-e','--no_epochs', default=100,metavar='', type=int,help='No of Epochs')
-    parser.add_argument( '-b','--batch_size', default=1,metavar='', type=int,help='BatchSize: Currently only supports 1')
+    parser.add_argument( '-b','--batch_size', default=4,metavar='', type=int,help='BatchSize: Currently only supports 1')
     parser.add_argument( '-lr','--learning_rate', default=0.001,metavar='',type=float, help='Learning Rate')
     parser.add_argument( '-r','--reduction', default='sum',metavar='', type=str,help='Reduction to use in permutation invariant layer: Choose from sum, max, min, mean')
 

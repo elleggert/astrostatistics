@@ -206,8 +206,9 @@ class MultiSetTrainer:
         print()
         print('+++++++++++++++++++++++++++++++++++++')
 
-    def get_mask(self,sizes, max_size):
-        return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.reshape(-1, 1))
+    def get_mask(self, sizes, max_size):
+        return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.unsqueeze(2))
+
 
     def train(self):
 
@@ -232,15 +233,15 @@ class MultiSetTrainer:
                     model.train()
 
                     # Extract inputs and associated labels from dataloader batch
-                    X1 = X1.squeeze().to(self.device)
+                    X1 = X1.to(self.device)
 
-                    X2 = X2.reshape(-1, 1).to(device)
+                    X2 = X2.to(self.device)
 
                     labels = labels.to(self.device)
 
                     set_sizes = set_sizes.to(device)
 
-                    mask = self.get_mask(set_sizes, X1.shape[1])
+                    mask = self.get_mask(set_sizes, X1.shape[2])
                     # Predict outputs (forward pass)
 
                     predictions = model(X1, X2, mask=mask)
@@ -291,13 +292,15 @@ class MultiSetTrainer:
 
             for i, (X1, X2, labels, set_sizes) in enumerate(testloader):
                 # Extract inputs and associated labels from dataloader batch
-                X1 = X1.squeeze().to(self.device)
+                X1 = X1.to(self.device)
 
-                X2 = X2.reshape(-1, 1).to(device)
+                X2 = X2.to(self.device)
+
+                labels = labels.to(self.device)
 
                 set_sizes = set_sizes.to(device)
 
-                mask = get_mask(set_sizes, X1.shape[1])
+                mask = self.get_mask(set_sizes, X1.shape[2])
                 # Predict outputs (forward pass)
 
                 predictions = model(X1, X2, mask=mask)

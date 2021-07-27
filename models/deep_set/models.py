@@ -64,13 +64,14 @@ class MultiSetNet(nn.Module):
         )
 
 
-        # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN
+        # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN, + added a new dimension for subpix
 
 
     def forward(self, X1, X2, mask=None):
         y = self.feature_extractor(X1)
         y = self.adder(y, mask=mask)
-        y = torch.cat((y, X2), dim=0)
-        y = self.mlp(y.T)
+        y = torch.cat((y, X2.unsqueeze(2)), dim=1).squeeze()
+        #y = y.squeeze()
+        y = self.mlp(y)
         return y
 
