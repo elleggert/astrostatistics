@@ -13,6 +13,10 @@ from torch.utils.data import DataLoader
 from models import VarMultiSetNet
 from util import get_dataset, get_mask
 
+device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
+num_workers = 0 if device == 'cpu:0' else 8
+
+"""
 gal = 'qso'
 #gal = 'elg'
 #gal = 'qso'
@@ -26,7 +30,7 @@ path_to_data = '../../bricks_data/multiset.pickle'
 #path_to_data = '/vol/bitbucket/ele20/astrostatistics/bricks_data/multiset.pickle'
 traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
 
-
+"""
 
 def main():
     parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network - HyperParameter Tuning',
@@ -73,13 +77,14 @@ def main():
 
 
 def parse_command_line_args(args):
-    hp = globals()
-
+    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata
     # Fix to use variable number of pixels in the future
-    hp['num_pixels'] = args['num_pixels']
-    hp['path_to_data'] = args['path_to_data']
-    hp['max_set_len'] = args['max_ccds']
-    hp['gal'] = args['gal_type']
+    num_pixels = args['num_pixels']
+    path_to_data = args['path_to_data']
+    max_set_len = args['max_ccds']
+    gal = args['gal_type']
+    traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
+
 
 
 def print_session_stats(args):
