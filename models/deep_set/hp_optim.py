@@ -1,23 +1,28 @@
 import random
 
+import numpy as np
 import optuna
 import torch
 from optuna.trial import TrialState
+from sklearn import metrics
 from torch import nn, optim
+from torch.utils.data import DataLoader
+
 
 from models import VarMultiSetNet
 from util import get_dataset, get_mask
 
-gal = 'lrg'
+gal = 'qso'
 #gal = 'elg'
 #gal = 'qso'
 
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
-num_pixels = 10
+num_workers = 0 if device == 'cpu:0' else 8
+num_pixels = 1000
 max_set_len = 30
 path_to_data='../../bricks_data/multiset.pickle'
-traindata, testdata = get_dataset(gal, path_to_data)
+traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
 
 
 def define_model(trial):
@@ -28,16 +33,18 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("n_units_l{}".format(i), 4, 128)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
-        p = trial.suggest_float("dropout_l{}".format(i), 0.0, 0.5)
+        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5)
         fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
+
+
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format(1), 16, 64)
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 16, 64)
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
@@ -47,10 +54,10 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("n_units_l{}".format(i), 4, 128)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 4, 128)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        p = trial.suggest_float("dropout_l{}".format(i), 0.0, 0.5)
+        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
         mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -58,34 +65,112 @@ def define_model(trial):
     mlp_layers.append(nn.Linear(in_features, 1))
     mlp_layers.append(nn.ReLU())
 
-    reduction = trial.suggest_categorical("reduction", ["sum", "mean", "min", "max"])
+    reduce = trial.suggest_categorical("reduction", ["sum", "mean"])
     return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
-                          med_layer=med_layer, reduction=reduction)
+                          med_layer=med_layer, reduction=reduce)
 
 
 def objective(trial):
     model = define_model(trial).to(device)
+    print(f"Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
+    print(model)
+
+
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
+    criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
+    criterion = getattr(nn, criterion_name)()
 
-    if MSEloss:
-        self.criterion = nn.MSELoss()
-    else:
-        self.criterion = nn.L1Loss()
+    batch_size = trial.suggest_categorical("batch_size", [8,16,32,128,256])
+    no_epochs = trial.suggest_int("no_epochs", 10, 300, log=True)
 
-    self.num_workers = 0 if device == 'cpu:0' else 8
+    trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
+                                              num_workers=num_workers)
 
-    return random.uniform(0, 1)
+    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False)
+
+    mse, r2 = 0, 0
+
+    for epoch in range(no_epochs):
+
+        model.train()
+
+        for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
 
 
+            # Extract inputs and associated labels from dataloader batch
+            X1 = X1.to(device)
 
+            X2 = X2.to(device)
+
+            labels = labels.to(device)
+
+            set_sizes = set_sizes.to(device)
+
+            mask = get_mask(set_sizes, X1.shape[2])
+            # Predict outputs (forward pass)
+
+
+            predictions = model(X1, X2, mask=mask)
+
+
+            # Zero-out the gradients before backward pass (pytorch stores the gradients)
+
+            optimiser.zero_grad()
+
+            # Compute Loss
+            loss = criterion(predictions, labels)
+
+
+            # Backpropagation
+            loss.backward()
+
+            # Perform one step of gradient descent
+            optimiser.step()
+
+        model.eval()
+        y_pred = np.array([])
+        y_gold = np.array([])
+
+        with torch.no_grad():
+            for i, (X1, X2, labels, set_sizes) in enumerate(valloader):
+                # Extract inputs and associated labels from dataloader batch
+                X1 = X1.to(device)
+
+                X2 = X2.to(device)
+
+                labels = labels.to(device)
+
+                set_sizes = set_sizes.to(device)
+
+                mask = get_mask(set_sizes, X1.shape[2])
+                # Predict outputs (forward pass)
+
+                predictions = model(X1, X2, mask=mask)
+                # Predict outputs (forward pass)
+
+                # Get predictions and append to label array + count number of correct and total
+                y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
+                y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+
+
+        r2 =  metrics.r2_score(y_gold, y_pred)
+        mse = metrics.mean_squared_error(y_gold, y_pred)
+
+        trial.report(r2, epoch)
+
+        # Handle pruning based on the intermediate value.
+        if trial.should_prune():
+            raise optuna.exceptions.TrialPruned()
+
+    return r2
 
 
 if __name__ == "__main__":
-    study = optuna.create_study(direction="maximize", study_name="DeepSet")
+    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
 
 
-    study.optimize(objective, n_trials=5, timeout=600)
+    study.optimize(objective, n_trials=10, timeout=600)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
@@ -102,5 +187,8 @@ if __name__ == "__main__":
     print("  Value: ", trial.value)
 
     print("  Params: ")
+
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
+
+    optuna.visualization.plot_pareto_front(study, target_names=["mse", "r2"])

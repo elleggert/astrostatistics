@@ -76,7 +76,7 @@ class MultiSetNet(nn.Module):
 
 
 class VarMultiSetNet(nn.Module):
-    def __init__(self, feature_extractor, mlp, med_layer, reduction ):
+    def __init__(self, feature_extractor, mlp, med_layer, reduction):
         super(VarMultiSetNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features

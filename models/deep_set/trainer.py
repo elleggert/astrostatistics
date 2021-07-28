@@ -227,6 +227,7 @@ class MultiSetTrainer:
             for epoch in range(self.no_epochs):
                 loss_per_epoch = 0
                 # loading the training data from trainset and shuffling for each epoch
+                # ToDo check whether DataLoader needs to be reloaded every epoch --> will not do so in HP and try
                 trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True, num_workers=self.num_workers)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
