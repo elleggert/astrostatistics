@@ -1,5 +1,5 @@
 
-from utilities import MultiSetTrainer
+from trainer import MultiSetTrainer
 import argparse
 
 def main():

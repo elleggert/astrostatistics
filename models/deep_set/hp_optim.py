@@ -3,11 +3,21 @@ import random
 import optuna
 import torch
 from optuna.trial import TrialState
-from torch import nn
+from torch import nn, optim
 
 from models import VarMultiSetNet
+from util import get_dataset, get_mask
+
+gal = 'lrg'
+#gal = 'elg'
+#gal = 'qso'
+
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
+num_pixels = 10
+max_set_len = 30
+path_to_data='../../bricks_data/multiset.pickle'
+traindata, testdata = get_dataset(gal, path_to_data)
 
 
 def define_model(trial):
@@ -55,12 +65,25 @@ def define_model(trial):
 
 def objective(trial):
     model = define_model(trial).to(device)
+    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    optimiser = optim.Adam(model.parameters(), lr=lr)
+
+    if MSEloss:
+        self.criterion = nn.MSELoss()
+    else:
+        self.criterion = nn.L1Loss()
+
+    self.num_workers = 0 if device == 'cpu:0' else 8
 
     return random.uniform(0, 1)
 
 
+
+
+
 if __name__ == "__main__":
     study = optuna.create_study(direction="maximize", study_name="DeepSet")
+
 
     study.optimize(objective, n_trials=5, timeout=600)
 
@@ -71,3 +94,13 @@ if __name__ == "__main__":
     print("  Number of finished trials: ", len(study.trials))
     print("  Number of pruned trials: ", len(pruned_trials))
     print("  Number of complete trials: ", len(complete_trials))
+
+
+    print("Best trial:")
+    trial = study.best_trial
+
+    print("  Value: ", trial.value)
+
+    print("  Params: ")
+    for key, value in trial.params.items():
+        print("    {}: {}".format(key, value))
