@@ -14,23 +14,8 @@ from models import VarMultiSetNet
 from util import get_dataset, get_mask
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
-num_workers = 0 #if device == 'cpu:0' else 8
-
-"""
-gal = 'qso'
-#gal = 'elg'
-#gal = 'qso'
-
-
-device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
-num_pixels = 30
-max_set_len = 30
-path_to_data = '../../bricks_data/multiset.pickle'
-#path_to_data = '/vol/bitbucket/ele20/astrostatistics/bricks_data/multiset.pickle'
-traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
 
-"""
 
 def main():
     parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network - HyperParameter Tuning',
@@ -56,11 +41,12 @@ def main():
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
 
+    print()
     print("Study statistics: ")
     print("  Number of finished trials: ", len(study.trials))
     print("  Number of pruned trials: ", len(pruned_trials))
     print("  Number of complete trials: ", len(complete_trials))
-
+    print()
     print("Best trial:")
     trial = study.best_trial
 
@@ -72,13 +58,11 @@ def main():
         print("    {}: {}".format(key, value))
 
     fig1 = optuna.visualization.plot_optimization_history(study)
-    # fig2 = optuna.visualization.plot_intermediate_values(study)
     fig1.write_image("logs_figs/hp_search.png")
 
 
 def parse_command_line_args(args):
     global gal, num_pixels, path_to_data, max_set_len, traindata, valdata
-    # Fix to use variable number of pixels in the future
     num_pixels = args['num_pixels']
     path_to_data = args['path_to_data']
     max_set_len = args['max_ccds']
@@ -149,8 +133,7 @@ def define_model(trial):
 def objective(trial):
     model = define_model(trial).to(device)
     print(f"Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
-    #print(model)
-
+    
 
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
