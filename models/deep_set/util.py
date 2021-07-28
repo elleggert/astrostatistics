@@ -20,6 +20,7 @@ def get_dataset(num_pixels, max_set_len,gal, path_to_data='../../bricks_data/mul
     traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67),
                                  max_ccds=max_set_len)
     traindata.set_targets(gal_type=gal)
+
     testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33),
                                 max_ccds=max_set_len)
     testdata.set_targets(gal_type=gal)

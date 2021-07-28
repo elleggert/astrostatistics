@@ -19,7 +19,7 @@ gal = 'qso'
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
-num_pixels = 1000
+num_pixels = 25
 max_set_len = 30
 path_to_data='../../bricks_data/multiset.pickle'
 traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
@@ -33,10 +33,10 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 64)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
-        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5)
+        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3)
         fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -57,7 +57,7 @@ def define_model(trial):
         out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 4, 128)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
+        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
         mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -73,7 +73,7 @@ def define_model(trial):
 def objective(trial):
     model = define_model(trial).to(device)
     print(f"Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
-    print(model)
+    #print(model)
 
 
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
@@ -85,9 +85,9 @@ def objective(trial):
     no_epochs = trial.suggest_int("no_epochs", 10, 300, log=True)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
-                                              num_workers=num_workers)
+                                              num_workers=num_workers,drop_last=True)
 
-    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False)
+    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=True)
 
     mse, r2 = 0, 0
 
@@ -153,9 +153,13 @@ def objective(trial):
                 y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
                 y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-
-        r2 =  metrics.r2_score(y_gold, y_pred)
-        mse = metrics.mean_squared_error(y_gold, y_pred)
+        try:
+            r2 =  metrics.r2_score(y_gold, y_pred)
+            mse = metrics.mean_squared_error(y_gold, y_pred)
+        except:
+            print("NaN in epoch", epoch)
+            trial.report(-100, epoch)
+            raise optuna.exceptions.TrialPruned()
 
         trial.report(r2, epoch)
 
@@ -170,7 +174,7 @@ if __name__ == "__main__":
     study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
 
 
-    study.optimize(objective, n_trials=10, timeout=600)
+    study.optimize(objective, n_trials=200, timeout=600)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
@@ -191,4 +195,8 @@ if __name__ == "__main__":
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    optuna.visualization.plot_pareto_front(study, target_names=["mse", "r2"])
+    fig1 = optuna.visualization.plot_optimization_history(study)
+    fig2 = optuna.visualization.plot_intermediate_values(study)
+
+    fig1.show()
+    fig2.show()
