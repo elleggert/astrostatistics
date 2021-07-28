@@ -35,7 +35,7 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 64)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3)
@@ -56,7 +56,7 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 4, 128)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 128)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
@@ -84,7 +84,6 @@ def objective(trial):
     criterion = getattr(nn, criterion_name)()
 
     batch_size = trial.suggest_categorical("batch_size", [8,16,32,128,256])
-    batch_size = 64
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = trial.suggest_int("no_epochs", 10, 300, log=True)
@@ -184,7 +183,7 @@ if __name__ == "__main__":
     study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
 
 
-    study.optimize(objective, n_trials=2, timeout=None)
+    study.optimize(objective, n_trials=3, timeout=None)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
@@ -207,8 +206,7 @@ if __name__ == "__main__":
 
     fig1 = optuna.visualization.plot_optimization_history(study)
     #fig2 = optuna.visualization.plot_intermediate_values(study)
-    print(type(fig1))
-    fig1.write_image("hp_search.png")
+    fig1.write_image("logs_figs/hp_search.png")
 
-    fig1.show()
+    #fig1.show()
     #fig2.show()
