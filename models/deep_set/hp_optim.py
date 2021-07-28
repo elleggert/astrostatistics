@@ -3,6 +3,7 @@ import random
 import numpy as np
 import optuna
 import torch
+from matplotlib import pyplot as plt
 from optuna.trial import TrialState
 from sklearn import metrics
 from torch import nn, optim
@@ -23,7 +24,8 @@ num_pixels = 25
 max_set_len = 30
 path_to_data='../../bricks_data/multiset.pickle'
 traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
-
+print(f"Training Samples: {traindata.num_pixels}")
+print(f"Test Samples: {valdata.num_pixels}")
 
 def define_model(trial):
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=8, step=2)
@@ -82,12 +84,15 @@ def objective(trial):
     criterion = getattr(nn, criterion_name)()
 
     batch_size = trial.suggest_categorical("batch_size", [8,16,32,128,256])
+    batch_size = 64
+
+    drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = trial.suggest_int("no_epochs", 10, 300, log=True)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
-                                              num_workers=num_workers,drop_last=True)
+                                              num_workers=num_workers, drop_last=drop_last)
 
-    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=True)
+    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=drop_last)
 
     mse, r2 = 0, 0
 
@@ -112,7 +117,6 @@ def objective(trial):
 
 
             predictions = model(X1, X2, mask=mask)
-
 
             # Zero-out the gradients before backward pass (pytorch stores the gradients)
 
@@ -157,7 +161,13 @@ def objective(trial):
             r2 =  metrics.r2_score(y_gold, y_pred)
             mse = metrics.mean_squared_error(y_gold, y_pred)
         except:
+            print("++++++++++++++++++++")
+            print()
             print("NaN in epoch", epoch)
+            print()
+            print(model)
+            print()
+            print("++++++++++++++++++++")
             trial.report(-100, epoch)
             raise optuna.exceptions.TrialPruned()
 
@@ -174,7 +184,7 @@ if __name__ == "__main__":
     study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
 
 
-    study.optimize(objective, n_trials=200, timeout=600)
+    study.optimize(objective, n_trials=2, timeout=None)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
@@ -196,7 +206,9 @@ if __name__ == "__main__":
         print("    {}: {}".format(key, value))
 
     fig1 = optuna.visualization.plot_optimization_history(study)
-    fig2 = optuna.visualization.plot_intermediate_values(study)
+    #fig2 = optuna.visualization.plot_intermediate_values(study)
+    print(type(fig1))
+    fig1.write_image("hp_search.png")
 
     fig1.show()
-    fig2.show()
+    #fig2.show()
