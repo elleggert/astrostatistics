@@ -1,9 +1,9 @@
+import argparse
 import random
 
 import numpy as np
 import optuna
 import torch
-from matplotlib import pyplot as plt
 from optuna.trial import TrialState
 from sklearn import metrics
 from torch import nn, optim
@@ -24,8 +24,76 @@ num_pixels = 25
 max_set_len = 30
 path_to_data='../../bricks_data/multiset.pickle'
 traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
-print(f"Training Samples: {traindata.num_pixels}")
-print(f"Test Samples: {valdata.num_pixels}")
+
+
+
+def main():
+    parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network - HyperParameter Tuning',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-d', '--path_to_data', default='../../bricks_data/multiset.pickle', metavar='', type=str,
+                        help='path to the data directory')
+    parser.add_argument('-n', '--num_pixels', default=1500, metavar='', type=int, help='number of training examples')
+    parser.add_argument('-c', '--max_ccds', default=30, metavar='', type=int,
+                        help='Maximum set lengths for individual CCDs')
+    parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str, help='Galaxy Type to optimise model for')
+    parser.add_argument('-t', '--trials', default=200, metavar='', type=int, help='number of trials to tune HP for')
+
+    args = vars(parser.parse_args())
+
+    parse_command_line_args(args)
+
+    print_session_stats(args)
+
+    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
+
+    study.optimize(objective, n_trials=args['trials'], timeout=None)
+
+    pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
+    complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
+
+    print("Study statistics: ")
+    print("  Number of finished trials: ", len(study.trials))
+    print("  Number of pruned trials: ", len(pruned_trials))
+    print("  Number of complete trials: ", len(complete_trials))
+
+    print("Best trial:")
+    trial = study.best_trial
+
+    print("  Value: ", trial.value)
+
+    print("  Params: ")
+
+    for key, value in trial.params.items():
+        print("    {}: {}".format(key, value))
+
+    fig1 = optuna.visualization.plot_optimization_history(study)
+    # fig2 = optuna.visualization.plot_intermediate_values(study)
+    fig1.write_image("logs_figs/hp_search.png")
+
+
+def parse_command_line_args(args):
+    hp = globals()
+
+    # Fix to use variable number of pixels in the future
+    hp['num_pixels'] = args['num_pixels']
+    hp['path_to_data'] = args['path_to_data']
+    hp['max_set_len'] = args['max_ccds']
+    hp['gal'] = args['gal_type']
+
+
+def print_session_stats(args):
+    print('++++++++ Session Characteristics +++++++')
+    print()
+    print(f"Gal Type: {gal}")
+    print(f"Training Samples: {traindata.num_pixels}")
+    print(f"Validation Samples: {valdata.num_pixels}")
+    print(f"Maximum Set Lengths: {max_set_len}")
+    print(f"Device: {device}")
+    print(f"Number of Workers: {num_workers}")
+    print(f"Number of Trials: {args['trials']}")
+    print()
+    print('+++++++++++++++++++++++++++++++++++++++')
+
 
 def define_model(trial):
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=8, step=2)
@@ -179,34 +247,8 @@ def objective(trial):
     return r2
 
 
+
+
 if __name__ == "__main__":
-    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
+    main()
 
-
-    study.optimize(objective, n_trials=3, timeout=None)
-
-    pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
-    complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
-
-    print("Study statistics: ")
-    print("  Number of finished trials: ", len(study.trials))
-    print("  Number of pruned trials: ", len(pruned_trials))
-    print("  Number of complete trials: ", len(complete_trials))
-
-
-    print("Best trial:")
-    trial = study.best_trial
-
-    print("  Value: ", trial.value)
-
-    print("  Params: ")
-
-    for key, value in trial.params.items():
-        print("    {}: {}".format(key, value))
-
-    fig1 = optuna.visualization.plot_optimization_history(study)
-    #fig2 = optuna.visualization.plot_intermediate_values(study)
-    fig1.write_image("logs_figs/hp_search.png")
-
-    #fig1.show()
-    #fig2.show()
