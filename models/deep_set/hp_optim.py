@@ -20,7 +20,7 @@ gal = 'qso'
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
-num_pixels = 25
+num_pixels = 30
 max_set_len = 30
 path_to_data='../../bricks_data/multiset.pickle'
 traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
