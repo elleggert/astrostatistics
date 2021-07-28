@@ -76,14 +76,14 @@ class MultiSetNet(nn.Module):
 
 
 class VarMultiSetNet(nn.Module):
-    def __init__(self, feature_extractor, mlp, n_features=9, n_output=3, n_subpix = 64, reduction='sum', ):
+    def __init__(self, feature_extractor, mlp, med_layer, reduction ):
         super(VarMultiSetNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features
         # Output of Feature Layer: Tensor with Max.CCDs elements, which can now be passed to Set Layer
 
         self.feature_extractor = feature_extractor
-        self.adder = InvLinear(16, 1, reduction=reduction, bias=True)
+        self.adder = InvLinear(med_layer, 1, reduction=reduction, bias=True)
 
         self.mlp = mlp
 
