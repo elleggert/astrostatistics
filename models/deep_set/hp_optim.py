@@ -1,5 +1,4 @@
 import argparse
-import random
 
 import numpy as np
 import optuna
@@ -57,7 +56,7 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    fig1 = optuna.visualization.plot_optimization_history(study)
+    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/hp_search_{gal}.png")
 
 

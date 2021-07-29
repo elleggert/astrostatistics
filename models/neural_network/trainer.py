@@ -20,7 +20,7 @@ class BaseNNTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels=1500, kit = False, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001):
+    def __init__(self, num_pixels=None, kit = False, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001):
 
         if kit:
             self.df = pd.read_csv('../../bricks_data/dataset_kitanidis.csv')
@@ -29,7 +29,8 @@ class BaseNNTrainer:
 
         # ToDo: At later stage you can pass a list of pixel indeces to filter test and train sets
 
-        self.df = self.df.sample(n=num_pixels, replace=False,random_state=44,axis=0)
+        if num_pixels is not None:
+            self.df = self.df.sample(n=num_pixels, replace=False,random_state=44,axis=0)
 
         self.df.drop('pixel_id', axis=1, inplace=True)
 
