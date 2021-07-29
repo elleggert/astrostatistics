@@ -135,7 +135,6 @@ def objective(trial):
     model = define_model(trial).to(device)
     print(f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     
-    print(model)
     print()
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
