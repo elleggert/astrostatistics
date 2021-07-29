@@ -96,8 +96,9 @@ def define_model(trial):
         out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
-        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3)
-        fe_layers.append(nn.Dropout(p))
+        if n_layers_fe // 2 == i:
+            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3)
+            fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
@@ -117,8 +118,9 @@ def define_model(trial):
         out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 128)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
-        mlp_layers.append(nn.Dropout(p))
+        if n_layers_mlp // 2 == i:
+            p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
+            mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
@@ -134,7 +136,8 @@ def objective(trial):
     model = define_model(trial).to(device)
     print(f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     
-
+    print(model)
+    print()
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
