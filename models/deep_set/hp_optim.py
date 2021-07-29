@@ -132,7 +132,7 @@ def define_model(trial):
 
 def objective(trial):
     model = define_model(trial).to(device)
-    print(f"Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}.")
+    print(f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     
 
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
@@ -218,11 +218,7 @@ def objective(trial):
             mse = metrics.mean_squared_error(y_gold, y_pred)
         except:
             print("++++++++++++++++++++")
-            print()
-            print("NaN in epoch", epoch)
-            print()
-            print(model)
-            print()
+            print("        NaN         ")
             print("++++++++++++++++++++")
             trial.report(-100, epoch)
             raise optuna.exceptions.TrialPruned()
