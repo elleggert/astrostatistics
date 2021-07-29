@@ -92,11 +92,11 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128) # ToDo Larger --> experiment
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 256) # ToDo Larger --> experiment
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         if n_layers_fe // 2 == i:
-            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3) # Experiment with more dropout
+            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5) # Experiment with more dropout
             fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -114,11 +114,11 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 128)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 32, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         if n_layers_mlp // 2 == i:
-            p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
+            p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
             mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
