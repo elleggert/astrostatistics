@@ -58,7 +58,7 @@ def main():
         print("    {}: {}".format(key, value))
 
     fig1 = optuna.visualization.plot_optimization_history(study)
-    fig1.write_image("logs_figs/hp_search.png")
+    fig1.write_image(f"logs_figs/hp_search_{gal}.png")
 
 
 def parse_command_line_args(args):
@@ -140,10 +140,10 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = trial.suggest_categorical("batch_size", [8,16,32,128,256])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128,256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 10, 300, log=True)
+    no_epochs = trial.suggest_int("no_epochs", 30, 300)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
