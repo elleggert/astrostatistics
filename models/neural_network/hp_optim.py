@@ -36,6 +36,7 @@ def main():
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
 
+    print(study.trials)
     print()
     print("Study statistics: ")
     print("  Number of finished trials: ", len(study.trials))
@@ -103,6 +104,12 @@ def objective(trial):
     print(
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     print()
+
+    print(trial._state.TrialState)
+
+
+
+
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
@@ -119,6 +126,7 @@ def objective(trial):
     valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=drop_last)
 
     mse, r2 = 0, 0
+
 
     for epoch in range(no_epochs):
 
@@ -182,7 +190,6 @@ def objective(trial):
         # Handle pruning based on the intermediate value.
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
-
     return r2
 
 

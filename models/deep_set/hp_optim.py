@@ -92,11 +92,11 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128) # ToDo Larger --> experiment
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         if n_layers_fe // 2 == i:
-            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3)
+            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.3) # Experiment with more dropout
             fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -134,24 +134,28 @@ def define_model(trial):
 def objective(trial):
     model = define_model(trial).to(device)
     print(f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
-    
+
+
+
     print()
-    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128,256])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 30, 300)
+    no_epochs = trial.suggest_int("no_epochs", 30, 300) # --> Get rid of it , Early stopping ToDo
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
 
-    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=drop_last)
+    valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=False)
 
     mse, r2 = 0, 0
+
+
 
     for epoch in range(no_epochs):
 
