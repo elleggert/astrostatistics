@@ -25,9 +25,11 @@ class BaseNNTrainer:
         if kit:
             self.df = pd.read_csv('../../bricks_data/dataset_kitanidis.csv')
         else:
-            self.df =  pd.read_csv('../../bricks_data/dataset_geometric.csv')
+            self.df = pd.read_csv('../../bricks_data/dataset_geometric.csv')
 
         # ToDo: At later stage you can pass a list of pixel indeces to filter test and train sets
+
+        self.df = self.df.sample(n=num_pixels, replace=False,random_state=44,axis=0)
 
         self.df.drop('pixel_id', axis=1, inplace=True)
 
@@ -43,13 +45,13 @@ class BaseNNTrainer:
             self.criterion = nn.L1Loss()
 
             # Defining Hyperparemeters
-            self.no_epochs = no_epochs  # very low, but computational power not sufficient for more iterations
-            self.batch = batch_size
-            self.learning_rate = lr
-            self.galaxy_types = ['lrg', 'elg', 'qso']
-            self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
-            self.num_workers = 0 if self.device == 'cpu:0' else 8
-            self.print_model_info()
+        self.no_epochs = no_epochs  # very low, but computational power not sufficient for more iterations
+        self.batch = batch_size
+        self.learning_rate = lr
+        self.galaxy_types = ['lrg', 'elg', 'qso']
+        self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
+        self.num_workers = 0 if self.device == 'cpu:0' else 8
+        self.print_model_info()
 
 
 
