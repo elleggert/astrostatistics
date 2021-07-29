@@ -17,9 +17,9 @@ model = LinearRegression().to(device)
 
 
 
-class Net(nn.Module):
+class BaseNet(nn.Module):
     def __init__(self, n_feature = 16, n_hidden = 10, n_output = 1):
-        super(Net, self).__init__()
+        super(BaseNet, self).__init__()
         self.fc1 = nn.Linear(n_feature,n_hidden)
         #self.fc2 = nn.Linear(n_hidden,n_hidden)
         self.predict = nn.Linear(n_hidden,n_output)
