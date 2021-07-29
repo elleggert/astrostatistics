@@ -105,9 +105,6 @@ def objective(trial):
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     print()
 
-    print(trial._state.TrialState)
-
-
 
 
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
