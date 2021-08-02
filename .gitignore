@@ -6,3 +6,4 @@
 *.tmp
 *.sh
 /bricks_data
+*__pycache__
