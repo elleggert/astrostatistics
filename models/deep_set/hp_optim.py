@@ -1,4 +1,5 @@
 import argparse
+import pickle
 
 import numpy as np
 import optuna
@@ -233,6 +234,10 @@ def objective(trial):
         # Handle pruning based on the intermediate value.
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
+
+    #Exporting Trained models
+    with open("trained_models/{}.pickle".format(trial.number), "wb") as fout:
+        pickle.dump(model, fout)
 
     return r2
 
