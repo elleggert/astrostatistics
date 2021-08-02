@@ -6,4 +6,4 @@
 *.tmp
 *.sh
 /bricks_data
-*__pycache__
+models/deep_set/__pycache__

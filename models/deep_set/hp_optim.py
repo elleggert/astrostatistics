@@ -235,9 +235,8 @@ def objective(trial):
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
 
-    #Exporting Trained models
-    with open("trained_models/{}.pickle".format(trial.number), "wb") as fout:
-        pickle.dump(model, fout)
+
+    torch.save(model, "trained_models/{}.pt".format(trial.number))
 
     return r2
 
