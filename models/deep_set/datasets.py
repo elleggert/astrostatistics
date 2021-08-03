@@ -167,7 +167,8 @@ class MultiSetSequence(Dataset):
 
         self.clean_nans()
 
-    def set_targets(self, gal_type):
+    def set_targets(self, gal_type, scaler = None):
+        self.scaler = scaler
         # Features and inputs:
         self.target = None
         if gal_type == 'lrg':
@@ -176,8 +177,10 @@ class MultiSetSequence(Dataset):
             self.target = self.elg
         if gal_type == 'qso':
             self.target = self.qso
-        self.scaler_out = preprocessing.MinMaxScaler()
-        self.target = self.scaler_out.fit_transform(self.target.reshape(-1, 1))
+        self.target = self.target.reshape(-1, 1)
+        if self.scaler is None:
+            self.scaler = preprocessing.MinMaxScaler()
+        self.target = self.scaler.fit_transform(self.target.reshape(-1, 1))
 
     def initialise_inputs(self):
         for i, pix in enumerate(self.mini_multiset):

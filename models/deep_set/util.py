@@ -16,14 +16,25 @@ def get_dataset(num_pixels, max_set_len,gal, path_to_data='../../bricks_data/mul
         mini_multiset = pickle.load(f)
         f.close()
     df = pd.DataFrame.from_dict(mini_multiset, orient='index')
-    train_df, test_df = train_test_split(df, test_size=0.33, random_state=666, shuffle=True)
-    traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67),
+    zscore = lambda x: abs((x - x.median()) / x.std())
+    df['Z_LRG'] = df[2].transform(zscore)
+    df['Z_ELG'] = df[3].transform(zscore)
+    df['Z_QSO'] = df[4].transform(zscore)
+    df = df[(df['Z_LRG'] < 3)]
+    df = df[(df['Z_ELG'] < 3)]
+    df = df[(df['Z_QSO'] < 3)]
+    num = num_pixels
+    if num > len(df):
+        num = len(df)
+    df.drop(columns=['Z_ELG', 'Z_LRG','Z_QSO'], inplace=True)
+    train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
+    traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num * 0.67),
                                  max_ccds=max_set_len)
     traindata.set_targets(gal_type=gal)
 
-    testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33),
+    testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num * 0.33),
                                 max_ccds=max_set_len)
-    testdata.set_targets(gal_type=gal)
+    testdata.set_targets(gal_type=gal, scaler=traindata.scaler)
 
 
     return traindata, testdata

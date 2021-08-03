@@ -76,20 +76,23 @@ class DeepDataModule(pl.LightningDataModule):
         self.max_set_len = max_set_len
         self.gal = gal
         self.path_to_data = path_to_data
-
-    def setup(self, stage: Optional[str] = None) -> None:
-        self.traindata, self.valdata = get_dataset(num_pixels=self.num_pixels, max_set_len=self.max_set_len, gal=self.gal,
+        self.traindata, self.valdata = get_dataset(num_pixels=self.num_pixels, max_set_len=self.max_set_len,
+                                                   gal=self.gal,
                                                    path_to_data=self.path_to_data)
+
+    """
+    def setup(self, stage: Optional[str] = None) -> None:
+        """
 
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.traindata, batch_size=self.batch_size, shuffle=True, pin_memory=True, drop_last=False
+            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True
         )
 
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.valdata, batch_size=self.batch_size, shuffle=False, pin_memory=True
+            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True
         )
 
 

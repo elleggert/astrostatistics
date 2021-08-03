@@ -80,7 +80,8 @@ def print_session_stats(args):
     print('++++++++ Session Characteristics +++++++')
     print()
     print(f"Gal Type: {gal}")
-    print(f"Sample Size: {num_pixels}")
+    print(f"Training Set: {datamodule.traindata.num_pixels}")
+    print(f"Validation Set: {datamodule.valdata.num_pixels}")
     print(f"Maximum Set Lengths: {max_set_len}")
     print(f"Device: {device}")
     print(f"Number of Workers: {num_workers}")
@@ -149,13 +150,13 @@ def objective(trial):
     print()
 
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = 4 #trial.suggest_categorical("batch_size", [16,32,128])
 
     no_epochs = 300 # --> Get rid of it , Early stopping ToDo
 
     datamodule.batch_size = batch_size
 
-    trainer = pl.Trainer(logger=True,
+    trainer = pl.Trainer(logger=False,
         checkpoint_callback=False,
         max_epochs=no_epochs,
         gpus=1 if torch.cuda.is_available() else None,
