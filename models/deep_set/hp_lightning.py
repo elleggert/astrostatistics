@@ -1,6 +1,7 @@
 
 
 import argparse
+import os
 
 import numpy as np
 import optuna
@@ -52,7 +53,7 @@ def main():
     print("  Number of pruned trials: ", len(pruned_trials))
     print("  Number of complete trials: ", len(complete_trials))
     print()
-    print("Best trial:")
+    print("Best trial by Validation Set MSE:")
     trial = study.best_trial
 
     print("  Value: ", trial.value)
@@ -62,7 +63,68 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
+    print()
+    traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len,
+                                     gal=gal,
+                                     path_to_data=path_to_data)
+
+    valloader = DataLoader(
+        valdata, batch_size=128, shuffle=False, drop_last=True, num_workers=0)
+    print("Best trial by Validation Set R-Squared:")
+    best_score = -100
+    best_file = ""
+    for filename in os.listdir(f'trained_models/{gal}/'):
+        if "nan" in filename:
+            os.remove(f'trained_models/{gal}/{filename}')
+            continue
+
+        model = LitVarDeepSet.load_from_checkpoint(checkpoint_path=f'trained_models/{gal}/{filename}',
+                                                   hmap_location=torch.device(device))
+        model.eval()
+        y_pred = np.array([])
+        y_gold = np.array([])
+
+        with torch.no_grad():
+            for i, (X1, X2, labels, set_sizes) in enumerate(valloader):
+                # Extract inputs and associated labels from dataloader batch
+                X1 = X1.to(device)
+
+                X2 = X2.to(device)
+
+                labels = labels.to(device)
+
+                set_sizes = set_sizes.to(device)
+
+                mask = get_mask(set_sizes, X1.shape[2])
+                # Predict outputs (forward pass)
+
+                predictions = model(X1, X2, mask=mask)
+                # Predict outputs (forward pass)
+
+                # Get predictions and append to label array + count number of correct and total
+                y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
+                y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+
+            r2 = metrics.r2_score(y_gold, y_pred)
+            if r2 > best_score:
+                best_score = r2
+                best_file = filename
+            print("Filename: ", filename, " |  R^2: ", r2)
+
+    print("Best Validation Set R-Squared: ", best_score)
+    print("Filename: ", best_file)
+    print("Best Model: ")
+
+    checkpoint = torch.load(f'trained_models/{gal}/{best_file}')
+    print(checkpoint['hyper_parameters']['model'])
+
+    # Clean-Up all unnecessary models
+    for filename in os.listdir(f'trained_models/{gal}/'):
+        if filename == best_file:
+            continue
+        os.remove(f'trained_models/{gal}/{filename}')
+
+    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'MSE for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/hp_search_{gal}.png")
 
 
@@ -150,7 +212,7 @@ def objective(trial):
     print()
 
 
-    batch_size = 4#trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
 
     no_epochs = 10 # --> Get rid of it , Early stopping ToDo
 
