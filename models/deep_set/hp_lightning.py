@@ -39,7 +39,7 @@ def main():
 
     print_session_stats(args)
 
-    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
+    study = optuna.create_study(directions=["minimize"], study_name="DeepSet")
 
     study.optimize(objective, n_trials=args['trials'], timeout=None)
 
