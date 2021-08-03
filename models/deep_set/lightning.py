@@ -80,12 +80,12 @@ class DeepDataModule(pl.LightningDataModule):
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True, num_workers=0
+            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True, num_workers=8
         )
 
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=0
+            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=8
         )
 
 
