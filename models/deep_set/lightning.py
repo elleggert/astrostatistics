@@ -64,8 +64,6 @@ class LitVarDeepSet(pl.LightningModule):
 
         return val_loss
 
-    def validation_epoch_end(self, validation_step_outputs):
-        self.val_dataloader()
 
 
 class DeepDataModule(pl.LightningDataModule):
@@ -87,12 +85,12 @@ class DeepDataModule(pl.LightningDataModule):
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True
+            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True, num_workers=0
         )
 
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True
+            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=0
         )
 
 

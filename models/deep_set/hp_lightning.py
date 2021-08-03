@@ -19,7 +19,7 @@ from lightning import LitVarDeepSet, DeepDataModule
 from util import get_dataset, get_mask
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
-num_workers = 0 if device == 'cpu:0' else 8
+num_workers = 8 if device == 'cpu:0' else 8
 
 
 def main():
@@ -150,7 +150,7 @@ def objective(trial):
     print()
 
 
-    batch_size = 4 #trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
 
     no_epochs = 300 # --> Get rid of it , Early stopping ToDo
 
