@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 import torch
 from optuna.integration import PyTorchLightningPruningCallback
 from optuna.trial import TrialState
-from pytorch_lightning.callbacks import EarlyStopping
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn import metrics
 from torch import nn, optim
 from torch.utils.data import DataLoader
@@ -150,17 +150,26 @@ def objective(trial):
     print()
 
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = 4#trial.suggest_categorical("batch_size", [16,32,128])
 
-    no_epochs = 300 # --> Get rid of it , Early stopping ToDo
+    no_epochs = 10 # --> Get rid of it , Early stopping ToDo
 
     datamodule.batch_size = batch_size
 
+    checkpoint_callback = ModelCheckpoint(monitor='Val_loss',
+                                          dirpath=f'trained_models/{gal}/',
+                                          filename='{Val_loss:.4f}',
+                                          save_top_k=1,
+                                          mode='min',
+                                          every_n_epochs=1)
+
+
+    # Have left pretty high patience since all the best models are stored
     trainer = pl.Trainer(logger=False,
-        checkpoint_callback=False,
+        checkpoint_callback=True,
         max_epochs=no_epochs,
         gpus=1 if torch.cuda.is_available() else None,
-        callbacks=[PyTorchLightningPruningCallback(trial, monitor="Val_loss"), EarlyStopping(monitor='Val_loss', patience=10)])
+        callbacks=[checkpoint_callback, PyTorchLightningPruningCallback(trial, monitor="Val_loss"), EarlyStopping(monitor='Val_loss', patience=15)])
 
     trainer.fit(model, datamodule=datamodule)
 
