@@ -1,15 +1,9 @@
-import os
-from typing import Optional
 
 import torch
 from torch import nn
-import torch.nn.functional as F
-from torchvision import transforms
-from torchvision.datasets import MNIST
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from deepset_layers import InvLinear
 from util import get_mask, get_dataset
 
 
