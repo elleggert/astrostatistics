@@ -19,6 +19,7 @@ class LitVarDeepSet(pl.LightningModule):
         # Output of Feature Layer: Tensor with Max.CCDs elements, which can now be passed to Set Layer
 
         self.model = model
+        self.save_hyperparameters()
 
     def forward(self, X1, X2, mask=None):
         return self.model(X1, X2, mask)
@@ -79,12 +80,12 @@ class DeepDataModule(pl.LightningDataModule):
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True, num_workers=8
+            self.traindata, batch_size=self.batch_size, shuffle=True, drop_last=True, num_workers=0
         )
 
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
-            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=8
+            self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=0
         )
 
 
