@@ -144,7 +144,7 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = trial.suggest_int("no_epochs", 30, 300) # --> Get rid of it , Early stopping ToDo
