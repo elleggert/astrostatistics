@@ -78,6 +78,7 @@ def main():
             os.remove(f'trained_models/{gal}/{filename}')
             continue
 
+        device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
         model = LitVarDeepSet.load_from_checkpoint(checkpoint_path=f'trained_models/{gal}/{filename}',
                                                    hmap_location=torch.device(device))
         model.eval()
@@ -160,12 +161,12 @@ def define_model(trial):
     in_features = 15  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 256) # ToDo Larger --> experiment
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 400) # ToDo Larger --> experiment
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
-        if n_layers_fe // 2 == i:
-            p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5) # Experiment with more dropout
-            fe_layers.append(nn.Dropout(p))
+        #if n_layers_fe // 2 == i:
+        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5) # Experiment with more dropout
+        fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
@@ -182,12 +183,12 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 32, 256)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 32, 400)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        if n_layers_mlp // 2 == i:
-            p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
-            mlp_layers.append(nn.Dropout(p))
+        #if n_layers_mlp // 2 == i:
+        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
+        mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
@@ -212,7 +213,7 @@ def objective(trial):
     print()
 
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = 4 #trial.suggest_categorical("batch_size", [16,32,128])
 
     no_epochs = 300 # --> Get rid of it , Early stopping ToDo
 
