@@ -12,7 +12,7 @@ class LinearRegression(nn.Module):
 
 
 class BaseNet(nn.Module):
-    def __init__(self, n_feature=16, mlp=None):
+    def __init__(self, n_feature=21, mlp=None):
         super(BaseNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features
