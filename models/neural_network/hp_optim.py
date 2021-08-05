@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 
 
 from models import BaseNet
-from util import get_dataset
+from util import get_dataset, get_full_dataset
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
@@ -56,11 +56,43 @@ def main():
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/hp_search_{gal}.png")
 
+
+    model = torch.load(f'trained_models/{gal}/{trial.value}.pt', map_location=torch.device('cpu')) # Delete later
+
+    testloader = torch.utils.data.DataLoader(valdata, batch_size=128, shuffle=False)
+
+    mse, r2 = 0, 0
+
+    model.eval()
+    y_pred = np.array([])
+    y_gold = np.array([])
+
+    with torch.no_grad():
+
+        for i, (inputs, labels) in enumerate(testloader):
+            # Split dataloader
+            inputs = inputs.to(device)
+            # Forward pass through the trained network
+            outputs = model(inputs)
+
+            # Get predictions and append to label array + count number of correct and total
+            y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
+            y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+
+        r2 = metrics.r2_score(y_gold, y_pred)
+        mse = metrics.mean_squared_error(y_gold, y_pred)
+
+        print("Test Set - R-squared: ", r2)
+        print("Test Set - MSE: ", mse)
+
+
+
+
 def parse_command_line_args(args):
-    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata
+    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata, testdata
     num_pixels = args['num_pixels']
     gal = args['gal_type']
-    traindata, valdata = get_dataset(gal=gal, num_pixels=num_pixels, kit=False)
+    traindata, valdata, testdata = get_full_dataset(gal=gal)
 
 
 
@@ -70,6 +102,7 @@ def print_session_stats(args):
     print(f"Gal Type: {gal}")
     print(f"Training Samples: {len(traindata)}")
     print(f"Validation Samples: {len(valdata)}")
+    print(f"Test Samples: {len(testdata)}")
     print(f"Device: {device}")
     print(f"Number of Workers: {num_workers}")
     print(f"Number of Trials: {args['trials']}")
@@ -81,15 +114,15 @@ def define_model(trial):
     n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=8, step=2)
     mlp_layers = []
 
-    in_features = 16  # --> make a function argument later
+    in_features = 21 # --> make a function argument later
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 128)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 400)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        if n_layers_mlp // 2 == i:
-            p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
-            mlp_layers.append(nn.Dropout(p))
+        #if n_layers_mlp // 2 == i:
+        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
+        mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
 
@@ -112,7 +145,7 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
+    batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256, 1028])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = trial.suggest_int("no_epochs", 30, 300)
@@ -187,6 +220,8 @@ def objective(trial):
         # Handle pruning based on the intermediate value.
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
+
+        torch.save(model, f"trained_models/{gal}/{trial.number}.pt")
     return r2
 
 

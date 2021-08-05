@@ -24,3 +24,20 @@ def get_dataset(gal ='lrg', num_pixels=None, kit=False):
     testdata = DensitySurvey(test_df, gal, scaler_in, scaler_out)
 
     return traindata, testdata
+
+def get_full_dataset(gal ='lrg'):
+
+    df_train = pd.read_csv('../../bricks_data/train.csv')
+    df_val = pd.read_csv('../../bricks_data/val.csv')
+    df_test = pd.read_csv('../../bricks_data/test.csv')
+
+    df_train.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
+    df_val.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
+    df_test.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
+
+
+    traindata = DensitySurvey(df_train, gal)
+    valdata = DensitySurvey(df_val, gal)
+    testdata = DensitySurvey(df_test, gal)
+
+    return traindata, valdata, testdata
