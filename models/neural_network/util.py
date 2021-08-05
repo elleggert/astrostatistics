@@ -27,9 +27,9 @@ def get_dataset(gal ='lrg', num_pixels=None, kit=False):
 
 def get_full_dataset(gal ='lrg'):
 
-    df_train = pd.read_csv('../../bricks_data/train.csv')
-    df_val = pd.read_csv('../../bricks_data/val.csv')
-    df_test = pd.read_csv('../../bricks_data/test.csv')
+    df_train = pd.read_csv('data/train.csv')
+    df_val = pd.read_csv('data/val.csv')
+    df_test = pd.read_csv('data/test.csv')
 
     df_train.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
     df_val.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
