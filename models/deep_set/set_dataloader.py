@@ -94,11 +94,12 @@ class CCD:
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
     def encode_add_categoricals(self):
-        """encoder = LabelEncoder()
-        encoder.fit(np.unique(self.camera))
+
+        """encoder.fit(np.unique(self.camera))
         self.camera_encoded = encoder.transform(self.camera)
         self.camera_encoded = self.camera_encoded[:,np.newaxis]"""
 
+        encoder = LabelEncoder()
         encoder.fit(self.filter_colour)
         self.filter_colour_encoded = encoder.transform(self.filter_colour)
         self.filter_colour_encoded = self.filter_colour_encoded[:,np.newaxis]
