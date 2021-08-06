@@ -7,4 +7,5 @@
 *.sh
 /bricks_data
 models/deep_set/__pycache__
+models/deep_set/data
 models/neural_network/__pycache__

@@ -26,7 +26,7 @@ class MultiSetTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels=1500, path_to_data='../../bricks_data/multiset.pickle', max_set_len=30, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001, reduction='sum'):
+    def __init__(self, num_pixels=1500, path_to_data='data/multiset.pickle', max_set_len=30, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001, reduction='sum'):
         # if traindata is None and testdata is None:
         with open(path_to_data, 'rb') as f:
             mini_multiset = pickle.load(f)

@@ -33,7 +33,7 @@ class SetNet(nn.Module):
 
 
 class MultiSetNet(nn.Module):
-    def __init__(self, n_features=15, n_output=3, n_subpix = 64, reduction='sum'):
+    def __init__(self, n_features=8, n_output=3, n_subpix = 64, reduction='sum'):
         super(MultiSetNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features

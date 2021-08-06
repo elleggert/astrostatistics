@@ -26,7 +26,7 @@ num_workers = 8 if device == 'cpu:0' else 8
 def main():
     parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-d', '--path_to_data', default='../../bricks_data/multiset.pickle', metavar='', type=str,
+    parser.add_argument('-d', '--path_to_data', default='data/multiset.pickle', metavar='', type=str,
                         help='path to the data directory')
     parser.add_argument('-n', '--num_pixels', default=1500, metavar='', type=int, help='number of training examples')
     parser.add_argument('-c', '--max_ccds', default=30, metavar='', type=int,
@@ -63,7 +63,7 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    print()
+    """print()
     traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len,
                                      gal=gal,
                                      path_to_data=path_to_data)
@@ -72,12 +72,13 @@ def main():
         valdata, batch_size=128, shuffle=False, drop_last=True, num_workers=0)
     print("Best trial by Validation Set R-Squared:")
     best_score = -100
-    best_file = ""
+    best_file = ""   """
+
     for filename in os.listdir(f'trained_models/{gal}/'):
         if "nan" in filename:
             os.remove(f'trained_models/{gal}/{filename}')
             continue
-
+    """
         device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
         model = LitVarDeepSet.load_from_checkpoint(checkpoint_path=f'trained_models/{gal}/{filename}',
                                                    hmap_location=torch.device(device))
@@ -124,19 +125,19 @@ def main():
         if filename == best_file:
             continue
         os.remove(f'trained_models/{gal}/{filename}')
-
+    """
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'MSE for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/hp_search_{gal}.png")
 
 
 def parse_command_line_args(args):
-    global gal, num_pixels, path_to_data, max_set_len, datamodule
+    global gal, num_pixels, path_to_data, max_set_len, datamodule, features
     num_pixels = args['num_pixels']
     path_to_data = args['path_to_data']
     max_set_len = args['max_ccds']
     gal = args['gal_type']
     datamodule = DeepDataModule(num_pixels=num_pixels, max_set_len=max_set_len,gal=gal,path_to_data=path_to_data)
-
+    features = datamodule.num_features
 
 
 def print_session_stats(args):
@@ -158,10 +159,10 @@ def define_model(trial):
 
     fe_layers = []
 
-    in_features = 15  # --> make a function argument later
+    in_features = features # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 400) # ToDo Larger --> experiment
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 256) # ToDo Larger --> experiment
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         #if n_layers_fe // 2 == i:
@@ -183,7 +184,7 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 32, 400)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 32, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         #if n_layers_mlp // 2 == i:
@@ -213,7 +214,7 @@ def objective(trial):
     print()
 
 
-    batch_size = 4 #trial.suggest_categorical("batch_size", [16,32,128])
+    batch_size = trial.suggest_categorical("batch_size", [16,32,128,256])
 
     no_epochs = 300 # --> Get rid of it , Early stopping ToDo
 
@@ -235,6 +236,10 @@ def objective(trial):
         callbacks=[checkpoint_callback, PyTorchLightningPruningCallback(trial, monitor="Val_loss"), EarlyStopping(monitor='Val_loss', patience=15)])
 
     trainer.fit(model, datamodule=datamodule)
+
+
+    # automatically auto-loads the best weights
+    trainer.test(datamodule=datamodule)
 
     #torch.save(model, "trained_models/{}.pt".format(trial.number))
 

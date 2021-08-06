@@ -20,7 +20,7 @@ num_workers = 0 if device == 'cpu:0' else 8
 def main():
     parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-d', '--path_to_data', default='../../bricks_data/multiset.pickle', metavar='', type=str,
+    parser.add_argument('-d', '--path_to_data', default='data/multiset.pickle', metavar='', type=str,
                         help='path to the data directory')
     parser.add_argument('-n', '--num_pixels', default=1500, metavar='', type=int, help='number of training examples')
     parser.add_argument('-c', '--max_ccds', default=30, metavar='', type=int,
@@ -62,13 +62,13 @@ def main():
 
 
 def parse_command_line_args(args):
-    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata
+    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata, features
     num_pixels = args['num_pixels']
     path_to_data = args['path_to_data']
     max_set_len = args['max_ccds']
     gal = args['gal_type']
     traindata, valdata = get_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, path_to_data=path_to_data)
-
+    features = traindata.num_features
 
 
 def print_session_stats(args):
@@ -90,7 +90,7 @@ def define_model(trial):
 
     fe_layers = []
 
-    in_features = 15  # --> make a function argument later
+    in_features = features # --> make a function argument later
 
     for i in range(n_layers_fe):
         out_features = trial.suggest_int("fe_n_units_l{}".format(i), 32, 400) # ToDo Larger --> experiment

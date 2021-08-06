@@ -5,7 +5,7 @@ import argparse
 def main():
 
     parser = argparse.ArgumentParser(description='MultiSetSequence DeepSet-Network', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument( '-d', '--path_to_data', default='../../bricks_data/multiset.pickle',metavar='', type=str,help='path to the data directory' )
+    parser.add_argument( '-d', '--path_to_data', default='data/multiset.pickle',metavar='', type=str,help='path to the data directory' )
     parser.add_argument( '-n', '--num_pixels', default=1500,metavar='', type=int,help='number of training examples' )
     parser.add_argument( '-c','--max_ccds', default=30,metavar='',type=int, help='Maximum set lengths for individual CCDs')
     parser.add_argument( '-mse','--mse_loss', default=True, dest='mse_loss',action='store_true', help='Use MSE Loss')

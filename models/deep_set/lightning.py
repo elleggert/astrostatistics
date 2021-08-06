@@ -4,7 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from util import get_mask, get_dataset
+from util import get_mask, get_dataset, get_full_dataset
 
 
 class LitVarDeepSet(pl.LightningModule):
@@ -69,9 +69,9 @@ class DeepDataModule(pl.LightningDataModule):
         self.max_set_len = max_set_len
         self.gal = gal
         self.path_to_data = path_to_data
-        self.traindata, self.valdata = get_dataset(num_pixels=self.num_pixels, max_set_len=self.max_set_len,
-                                                   gal=self.gal,
-                                                   path_to_data=self.path_to_data)
+        self.traindata, self.valdata, self.testdata = get_full_dataset(num_pixels=self.num_pixels, max_set_len=self.max_set_len,
+                                                   gal=self.gal)
+        self.num_features = self.traindata.num_features
 
     """
     def setup(self, stage: Optional[str] = None) -> None:
@@ -86,6 +86,11 @@ class DeepDataModule(pl.LightningDataModule):
     def val_dataloader(self) -> DataLoader:
         return DataLoader(
             self.valdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=8
+        )
+
+    def test_dataloader(self) -> DataLoader:
+        return DataLoader(
+            self.testdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=8
         )
 
 

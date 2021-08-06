@@ -11,7 +11,7 @@ from torch.nn import init
 import math
 
 num_pixels=6
-path_to_data='../../bricks_data/multiset.pickle'
+path_to_data= 'data/multiset.pickle'
 max_set_len=30
 num_subpixels = 64
 MSEloss=True
