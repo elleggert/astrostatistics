@@ -59,6 +59,22 @@ class LitVarDeepSet(pl.LightningModule):
 
         return val_loss
 
+    def test_step(self, batch, batch_idx):
+        X1, X2, labels, set_sizes = batch
+
+        mask = get_mask(set_sizes, X1.shape[2])
+        # Predict outputs (forward pass)
+
+        predictions = self(X1, X2, mask=mask)
+
+        # Compute Loss
+        test_loss = self.criterion(predictions, labels)
+
+        self.log("Test_loss", test_loss, on_epoch=True, prog_bar=True)
+
+
+        return test_loss
+
 
 
 class DeepDataModule(pl.LightningDataModule):
