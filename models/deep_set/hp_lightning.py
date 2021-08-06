@@ -214,9 +214,9 @@ def objective(trial):
     print()
 
 
-    batch_size = trial.suggest_categorical("batch_size", [16,32,128,256])
+    batch_size = 4# trial.suggest_categorical("batch_size", [16,32,128,256])
 
-    no_epochs = 300 # --> Get rid of it , Early stopping ToDo
+    no_epochs = 200 # --> Get rid of it , Early stopping ToDo
 
     datamodule.batch_size = batch_size
 
