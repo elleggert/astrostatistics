@@ -10,7 +10,7 @@ import telegram_send
 
 area = 'south'
 device = 'Astrodisk'
-bricks_to_classify = 9000
+bricks_to_classify = 30000
 
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
