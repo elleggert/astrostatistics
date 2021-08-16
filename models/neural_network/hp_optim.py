@@ -10,7 +10,6 @@ from sklearn import metrics
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
-
 from models import BaseNet
 from util import get_dataset, get_full_dataset
 
@@ -18,15 +17,14 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
 
 
-
-
-
 def main():
     parser = argparse.ArgumentParser(description='MBase-Network using Average Systematics - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int, help='number of training examples')
-    parser.add_argument('-a', '--area', default='des', metavar='', type=str, help='The area of the sky that should be trained on')
-    parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str, help='Galaxy Type to optimise model for')
+    parser.add_argument('-a', '--area', default='des', metavar='', type=str,
+                        help='The area of the sky that should be trained on')
+    parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str,
+                        help='Galaxy Type to optimise model for')
     parser.add_argument('-t', '--trials', default=200, metavar='', type=int, help='number of trials to tune HP for')
 
     args = vars(parser.parse_args())
@@ -62,9 +60,10 @@ def main():
 
     # Adapt this so it runs regardless of platform --> potentially retrain the model on the same machine on full dataset
     if device == 'cpu:0':
-        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt", map_location=torch.device('cpu')) # Delete later
+        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",
+                           map_location=torch.device('cpu'))  # Delete later
     else:
-        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt" ) # Delete later
+        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt")  # Delete later
     delete_models()
 
     testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
@@ -103,10 +102,11 @@ def parse_command_line_args(args):
     traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, area=area, gal=gal)
     num_features = traindata.num_features
 
+
 def delete_models():
     for model in os.listdir(f"trained_models/{area}/{gal}"):
-
         os.remove(f"trained_models/{area}/{gal}/{model}")
+
 
 def print_session_stats(args):
     print('++++++++ Session Characteristics +++++++')
@@ -134,7 +134,7 @@ def define_model(trial):
         out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        #if n_layers_mlp // 2 == i:
+        # if n_layers_mlp // 2 == i:
         p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
         mlp_layers.append(nn.Dropout(p))
 
@@ -152,8 +152,6 @@ def objective(trial):
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     print()
 
-
-
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
@@ -170,7 +168,6 @@ def objective(trial):
     valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=drop_last)
 
     rmse, r2 = 0, 0
-
 
     for epoch in range(no_epochs):
 
@@ -204,26 +201,22 @@ def objective(trial):
         y_pred = np.array([])
         y_gold = np.array([])
 
-
         with torch.no_grad():
 
             for i, (inputs, labels) in enumerate(valloader):
-
-                #Split dataloader
+                # Split dataloader
                 inputs = inputs.to(device)
-                #Forward pass through the trained network
+                # Forward pass through the trained network
                 outputs = model(inputs)
 
-                #Get predictions and append to label array + count number of correct and total
+                # Get predictions and append to label array + count number of correct and total
                 y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
                 y_gold = np.append(y_gold, labels.cpu().detach().numpy())
-
-
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
-            print(        "epoch", epoch, r2, rmse        )
+            print("epoch", epoch, r2, rmse)
         except:
             print("++++++++++++++++++++")
             print("        NaN         ")
@@ -243,4 +236,3 @@ def objective(trial):
 
 if __name__ == "__main__":
     main()
-
