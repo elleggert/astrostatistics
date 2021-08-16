@@ -1,4 +1,5 @@
 import argparse
+import math
 import os
 
 import numpy as np
@@ -60,12 +61,15 @@ def main():
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
 
     # Adapt this so it runs regardless of platform --> potentially retrain the model on the same machine on full dataset
-    model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt", map_location=torch.device('cpu')) # Delete later
+    if device == 'cpu:0':
+        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt", map_location=torch.device('cpu')) # Delete later
+    else:
+        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt" ) # Delete later
     delete_models()
 
     testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
 
-    mse, r2 = 0, 0
+    rmse, r2 = 0, 0
 
     model.eval()
     y_pred = np.array([])
@@ -84,11 +88,11 @@ def main():
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
         r2 = metrics.r2_score(y_gold, y_pred)
-        mse = metrics.mean_squared_error(y_gold, y_pred)
+        rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
 
         print()
         print("Test Set - R-squared: ", r2)
-        print("Test Set - MSE: ", mse)
+        print("Test Set - RMSE: ", rmse)
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
@@ -129,7 +133,7 @@ def define_model(trial):
     in_features = num_features
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 48)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         #if n_layers_mlp // 2 == i:
@@ -167,7 +171,7 @@ def objective(trial):
 
     valloader = torch.utils.data.DataLoader(valdata, batch_size=batch_size, shuffle=False, drop_last=drop_last)
 
-    mse, r2 = 0, 0
+    rmse, r2 = 0, 0
 
 
     for epoch in range(no_epochs):
@@ -217,9 +221,11 @@ def objective(trial):
                 y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
 
+
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
-            mse = metrics.mean_squared_error(y_gold, y_pred)
+            rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+            print(        "epoch", epoch, r2, rmse        )
         except:
             print("++++++++++++++++++++")
             print("        NaN         ")
