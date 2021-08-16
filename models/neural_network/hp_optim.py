@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import numpy as np
 import optuna
@@ -16,6 +17,9 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
 
 
+
+
+
 def main():
     parser = argparse.ArgumentParser(description='MBase-Network using Average Systematics - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -30,15 +34,13 @@ def main():
 
     print_session_stats(args)
 
-    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
+    study = optuna.create_study(directions=["maximize"], study_name="NeuralNetwork")
 
     study.optimize(objective, n_trials=args['trials'], timeout=None)
 
     pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
     complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
 
-    print(study.trials)
-    print()
     print("Study statistics: ")
     print("  Number of finished trials: ", len(study.trials))
     print("  Number of pruned trials: ", len(pruned_trials))
@@ -55,12 +57,13 @@ def main():
         print("    {}: {}".format(key, value))
 
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
-    fig1.write_image(f"logs_figs/hp_search_{gal}.png")
+    fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
 
+    # Adapt this so it runs regardless of platform --> potentially retrain the model on the same machine on full dataset
+    model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt", map_location=torch.device('cpu')) # Delete later
+    delete_models()
 
-    model = torch.load(f'trained_models/{gal}/{trial.number}.pt', map_location=torch.device('cpu')) # Delete later
-
-    testloader = torch.utils.data.DataLoader(valdata, batch_size=128, shuffle=False)
+    testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
 
     mse, r2 = 0, 0
 
@@ -87,7 +90,7 @@ def main():
         print("Test Set - R-squared: ", r2)
         print("Test Set - MSE: ", mse)
 
-
+    torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
 
 def parse_command_line_args(args):
@@ -95,10 +98,13 @@ def parse_command_line_args(args):
     num_pixels = args['num_pixels']
     gal = args['gal_type']
     area = args['area']
-    traindata, valdata, testdata = get_full_dataset(area=area, gal=gal)
+    traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, area=area, gal=gal)
     num_features = traindata.num_features
 
+def delete_models():
+    for model in os.listdir(f"trained_models/{area}/{gal}"):
 
+        os.remove(f"trained_models/{area}/{gal}/{model}")
 
 def print_session_stats(args):
     print('++++++++ Session Characteristics +++++++')
@@ -117,13 +123,13 @@ def print_session_stats(args):
 
 
 def define_model(trial):
-    n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=8, step=2)
+    n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=6, step=2)
     mlp_layers = []
 
-    in_features = num_features # --> make a function argument later
+    in_features = num_features
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 16)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 48)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         #if n_layers_mlp // 2 == i:
@@ -154,7 +160,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 4, 10)
+    no_epochs = trial.suggest_int("no_epochs", 40, 100)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
@@ -227,7 +233,7 @@ def objective(trial):
         if trial.should_prune():
             raise optuna.exceptions.TrialPruned()
 
-        torch.save(model, f"trained_models/{gal}/{trial.number}.pt")
+        torch.save(model, f"trained_models/{area}/{gal}/{trial.number}.pt")
     return r2
 
 
