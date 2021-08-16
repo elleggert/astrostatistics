@@ -2,7 +2,7 @@
 *.fits
 .ipynb_checkpoints
 #*.pickle
-*.csv
+#*.csv
 *.tmp
 *.sh
 /bricks_data
