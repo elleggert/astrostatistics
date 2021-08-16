@@ -69,8 +69,6 @@ def main():
 
     testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
 
-    rmse, r2 = 0, 0
-
     model.eval()
     y_pred = np.array([])
     y_gold = np.array([])
