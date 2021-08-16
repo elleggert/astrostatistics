@@ -25,16 +25,16 @@ def get_dataset(gal ='lrg', num_pixels=None, kit=False):
 
     return traindata, testdata
 
-def get_full_dataset(gal ='lrg'):
+def get_full_dataset(num_pixels = None, area = 'des', gal ='lrg'):
+    df_train = pd.read_csv(f'../../bricks_data/{area}.csv')
+    df_train = df_train.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
-    df_train = pd.read_csv('data/train.csv')
-    df_val = pd.read_csv('data/val.csv')
-    df_test = pd.read_csv('data/test.csv')
+    if num_pixels is not None:
+        df_train = df_train.sample(n=num_pixels, replace=False, random_state=666, axis=0)
+    df_test = pd.read_csv(f'../../bricks_data/{area}_test.csv')
+    df_test = df_test.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
-    df_train.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
-    df_val.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
-    df_test.drop(columns=['pixel_id', 'exposures', 'Z'], axis=1, inplace=True)
-
+    df_train, df_val = train_test_split(df_train, test_size=0.2, random_state=666, shuffle=True)
 
     traindata = DensitySurvey(df_train, gal)
     valdata = DensitySurvey(df_val, gal)

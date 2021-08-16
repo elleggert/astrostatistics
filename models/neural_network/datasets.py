@@ -11,6 +11,7 @@ class DensitySurvey(Dataset):
         # Extracting Targets and Input
         self.target = self.data[galaxy_type].to_numpy(copy=True).reshape(-1, 1)
         self.input = self.data.drop(columns=['lrg','elg','qso']).to_numpy(copy=True)
+        self.num_features = self.input.shape[1]
 
         """
         # Scaling, when scaler is passed (test-set) use the existing scaler

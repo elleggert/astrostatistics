@@ -20,6 +20,7 @@ def main():
     parser = argparse.ArgumentParser(description='MBase-Network using Average Systematics - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int, help='number of training examples')
+    parser.add_argument('-a', '--area', default='des', metavar='', type=str, help='The area of the sky that should be trained on')
     parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str, help='Galaxy Type to optimise model for')
     parser.add_argument('-t', '--trials', default=200, metavar='', type=int, help='number of trials to tune HP for')
 
@@ -90,20 +91,24 @@ def main():
 
 
 def parse_command_line_args(args):
-    global gal, num_pixels, path_to_data, max_set_len, traindata, valdata, testdata
+    global gal, area, num_pixels, num_features, path_to_data, max_set_len, traindata, valdata, testdata
     num_pixels = args['num_pixels']
     gal = args['gal_type']
-    traindata, valdata, testdata = get_full_dataset(gal=gal)
+    area = args['area']
+    traindata, valdata, testdata = get_full_dataset(area=area, gal=gal)
+    num_features = traindata.num_features
 
 
 
 def print_session_stats(args):
     print('++++++++ Session Characteristics +++++++')
     print()
+    print(f"Area: {area}")
     print(f"Gal Type: {gal}")
     print(f"Training Samples: {len(traindata)}")
     print(f"Validation Samples: {len(valdata)}")
     print(f"Test Samples: {len(testdata)}")
+    print(f"Number of features: {num_features}")
     print(f"Device: {device}")
     print(f"Number of Workers: {num_workers}")
     print(f"Number of Trials: {args['trials']}")
@@ -115,10 +120,10 @@ def define_model(trial):
     n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=8, step=2)
     mlp_layers = []
 
-    in_features = 21 # --> make a function argument later
+    in_features = num_features # --> make a function argument later
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 16, 256)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 16)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         #if n_layers_mlp // 2 == i:
@@ -146,10 +151,10 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256, 1028])
+    batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 30, 200)
+    no_epochs = trial.suggest_int("no_epochs", 4, 10)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
