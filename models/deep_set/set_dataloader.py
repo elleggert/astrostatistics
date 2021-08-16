@@ -48,7 +48,7 @@ class CCD:
         self.airmass = self.concat_surveys('airmass')
         self.seeing = self.concat_surveys('fwhm') * 0.262
         self.ccdskysb = self.concat_surveys('ccdskysb')
-        self.galdepth = self.concat_surveys('galdepth')
+        #self.galdepth = self.concat_surveys('galdepth')
         #self.ebv = self.concat_surveys('ebv')
         #self.ccdnphotom = self.concat_surveys('ccdnphotom')
         #self.skyrms = self.concat_surveys('skyrms')
@@ -56,7 +56,7 @@ class CCD:
         self.meansky = self.concat_surveys('meansky')
         #self.pixscale_mean = self.concat_surveys('pixscale_mean')
         #self.ccdnastrom = self.concat_surveys('ccdnastrom')
-        self.mjd_obs = self.concat_surveys('mjd_obs')
+        #self.mjd_obs = self.concat_surveys('mjd_obs')
         #self.sig1 = self.concat_surveys('sig1')
         #self.ccd_cuts = self.concat_surveys('ccd_cuts')
 
@@ -64,9 +64,7 @@ class CCD:
                           self.airmass,
                           self.seeing,
                           self.ccdskysb,
-                          self.galdepth,
-                          self.meansky,
-                          self.mjd_obs)
+                          self.meansky)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
