@@ -11,7 +11,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models import BaseNet
-from util import get_dataset, get_full_dataset
+from util import get_full_dataset
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
@@ -58,12 +58,11 @@ def main():
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
 
-    # Adapt this so it runs regardless of platform --> potentially retrain the model on the same machine on full dataset
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",
-                           map_location=torch.device('cpu'))  # Delete later
+                           map_location=torch.device('cpu'))
     else:
-        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt")  # Delete later
+        model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt")
     delete_models()
 
     testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
@@ -134,7 +133,6 @@ def define_model(trial):
         out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        # if n_layers_mlp // 2 == i:
         p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
         mlp_layers.append(nn.Dropout(p))
 
