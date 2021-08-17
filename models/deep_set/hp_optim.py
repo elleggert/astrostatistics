@@ -109,10 +109,11 @@ def main():
         print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
 
-        r2, rmse = 0,0
+        r2, rmse, mae = 0,0
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+            mae = metrics.mean_absolute_error(y_gold,y_pred)
 
         except:
             print("++++++++++++++++++++")
@@ -122,6 +123,7 @@ def main():
         print()
         print("Test Set - R-squared: ", r2)
         print("Test Set - RMSE: ", rmse)
+        print("Test Set - MAE: ", mae)
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
@@ -172,7 +174,7 @@ def define_model(trial):
     in_features = features  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 16)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         # if n_layers_fe // 2 == i:
@@ -192,7 +194,7 @@ def define_model(trial):
     in_features = 66
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 16)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         # if n_layers_mlp // 2 == i:
@@ -224,7 +226,7 @@ def objective(trial):
     batch_size = 4  # trial.suggest_categorical("batch_size", [16,32,128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 4, 10)
+    no_epochs = trial.suggest_int("no_epochs", 4, 20)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
