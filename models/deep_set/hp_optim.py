@@ -103,8 +103,14 @@ def main():
         print(y_gold)
         print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
-        r2 = metrics.r2_score(y_gold, y_pred)
-        rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+        try:
+            r2 = metrics.r2_score(y_gold, y_pred)
+            rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+
+        except:
+            print("++++++++++++++++++++")
+            print("   NaN Predicted    ")
+            print("++++++++++++++++++++")
 
         print()
         print("Test Set - R-squared: ", r2)
