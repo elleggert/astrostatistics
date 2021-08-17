@@ -70,7 +70,7 @@ def get_dataset(num_pixels, max_set_len,gal, path_to_data='data/multiset.pickle'
 
 
 def get_full_dataset(area, num_pixels, max_set_len, gal):
-    print("Starting Dataset Loading")
+    print(f"Starting Loading {area}")
     with open(f'data/{area}/{area}.pickle', 'rb') as f:
         trainset = pickle.load(f)
         f.close()
@@ -78,7 +78,7 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
         testset = pickle.load(f)
         f.close()
 
-    print("Finished Dataset Loading")
+    print(f"Finished Loading {area}")
 
 
     df_train = pd.DataFrame.from_dict(trainset, orient='index')
@@ -101,6 +101,6 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
                                max_ccds=max_set_len, num_features=6)
     testdata.set_targets(gal_type=gal)
 
-    print("Finished Multiset setup")
+    print(f"Finished {area} setup")
 
     return traindata, valdata, testdata

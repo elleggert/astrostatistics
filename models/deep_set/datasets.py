@@ -139,19 +139,12 @@ class MultiSetSequence(Dataset):
     N = Number SubPixels of that are returned --> usually 64
     M = Max Size of each Individual Set of CCDs
     """
-    def __init__(self, dict = None, path_to_data = 'data/multiset.pickle', num_pixels= 1000, num_subpixels = 64, max_ccds=30, num_features = 15):
-
-        if dict is None:
-            with open(path_to_data, 'rb') as f:
-                self.mini_multiset = pickle.load(f)
-                f.close()
+    def __init__(self, dict, num_pixels,  max_ccds, num_features, num_subpixels = 64,):
+        self.mini_multiset = dict
+        if num_pixels < len(self.mini_multiset):
             self.num_pixels = num_pixels
         else:
-            self.mini_multiset = dict
-            if num_pixels < len(self.mini_multiset):
-                self.num_pixels = num_pixels
-            else:
-                self.num_pixels = len(self.mini_multiset)
+            self.num_pixels = len(self.mini_multiset)
 
         # Initialise DataSet
         self.num_features = num_features
