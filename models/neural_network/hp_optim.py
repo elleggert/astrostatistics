@@ -25,7 +25,7 @@ def main():
                         help='The area of the sky that should be trained on')
     parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str,
                         help='Galaxy Type to optimise model for')
-    parser.add_argument('-t', '--trials', default=200, metavar='', type=int, help='number of trials to tune HP for')
+    parser.add_argument('-t', '--trials', default=10, metavar='', type=int, help='number of trials to tune HP for')
 
     args = vars(parser.parse_args())
 

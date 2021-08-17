@@ -78,14 +78,22 @@ class LitVarDeepSet(pl.LightningModule):
 
 
 class DeepDataModule(pl.LightningDataModule):
-    def __init__(self, num_pixels, max_set_len, gal, path_to_data, batch_size = 128):
+    def __init__(self, area, num_pixels, gal, path_to_data, batch_size = 128):
         super().__init__()
         self.batch_size = batch_size
         self.num_pixels = num_pixels
-        self.max_set_len = max_set_len
+        self.area = area
+        if self.area == "north":
+            self.max_set_len = 30
+        elif self.area == "south":
+            self.max_set_len = 25
+        else:
+            self.max_set_len = 50
+
         self.gal = gal
         self.path_to_data = path_to_data
-        self.traindata, self.valdata, self.testdata = get_full_dataset(num_pixels=self.num_pixels, max_set_len=self.max_set_len,
+
+        self.traindata, self.valdata, self.testdata = get_full_dataset(area=self.area, num_pixels=self.num_pixels, max_set_len=self.max_set_len,
                                                    gal=self.gal)
         self.num_features = self.traindata.num_features
 

@@ -58,7 +58,7 @@ def main():
         print("    {}: {}".format(key, value))
 
     #fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
-    #fig1.write_image(f"logs_figs/hp_search_{gal}.png")
+    #fig1.write_image(f"dee/hp_search_{gal}.png")
 
 
 def parse_command_line_args(args):
@@ -236,7 +236,7 @@ def objective(trial):
             raise optuna.exceptions.TrialPruned()
 
 
-    #torch.save(model, "trained_models/{}.pt".format(trial.number))
+    #torch.save(model, "rer/{}.pt".format(trial.number))
 
     return r2
 
