@@ -171,9 +171,9 @@ class MultiSetSequence(Dataset):
         if gal_type == 'qso':
             self.target = self.qso
         self.target = self.target.reshape(-1, 1)
-        if self.scaler is None:
+        """if self.scaler is None:
             self.scaler = preprocessing.MinMaxScaler()
-        self.target = self.scaler.fit_transform(self.target.reshape(-1, 1))
+        self.target = self.scaler.fit_transform(self.target.reshape(-1, 1))"""
 
     def initialise_inputs(self):
         for i, pix in enumerate(self.mini_multiset):

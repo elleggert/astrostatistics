@@ -95,6 +95,7 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
                                  max_ccds=max_set_len,num_features=6)
     traindata.set_targets(gal_type=gal)
 
+
     valdata = MultiSetSequence(dict=df_val.to_dict(orient='index'), num_pixels=round(num * 0.2),
                                  max_ccds=max_set_len, num_features=6)
     valdata.set_targets(gal_type=gal)

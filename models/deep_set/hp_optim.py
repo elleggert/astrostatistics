@@ -99,10 +99,17 @@ def main():
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
 
+            if np.isnan(outputs).sum() > 0:
+                print("Nan predicted for:")
+                print(X1, X2, labels, set_sizes)
+
+
         print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
         print(y_gold)
         print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
+
+        r2, rmse = 0,0
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
@@ -141,6 +148,7 @@ def parse_command_line_args(args):
 
 
 def print_session_stats(args):
+    print()
     print('++++++++ Session Characteristics +++++++')
     print()
     print(f"Area: {area}")
