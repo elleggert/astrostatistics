@@ -70,6 +70,7 @@ def get_dataset(num_pixels, max_set_len,gal, path_to_data='data/multiset.pickle'
 
 
 def get_full_dataset(area, num_pixels, max_set_len, gal):
+    print("Starting Dataset Loading")
     with open(f'data/{area}/{area}.pickle', 'rb') as f:
         trainset = pickle.load(f)
         f.close()
@@ -77,15 +78,18 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
         testset = pickle.load(f)
         f.close()
 
+    print("Finished Dataset Loading")
+
+
     df_train = pd.DataFrame.from_dict(trainset, orient='index')
     df_train, df_val = train_test_split(df_train, test_size=0.2, random_state=666, shuffle=True)
 
     df_test = pd.DataFrame.from_dict(testset, orient='index')
 
     num = num_pixels
-    if num > (len(df_train) + len(df_val) + len(df_test)):
-        num = len(df_train) + len(df_val) + len(df_test)
-    traindata = MultiSetSequence(dict=df_train.to_dict(orient='index'), num_pixels=round(num * 0.6),
+    if num > (len(df_train) + len(df_val)):
+        num = len(df_train) + len(df_val)
+    traindata = MultiSetSequence(dict=df_train.to_dict(orient='index'), num_pixels=round(num * 0.8),
                                  max_ccds=max_set_len,num_features=6)
     traindata.set_targets(gal_type=gal)
 
@@ -93,9 +97,10 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
                                  max_ccds=max_set_len, num_features=6)
     valdata.set_targets(gal_type=gal)
 
-    testdata = MultiSetSequence(dict=df_test.to_dict(orient='index'), num_pixels=round(num * 0.2),
+    testdata = MultiSetSequence(dict=df_test.to_dict(orient='index'), num_pixels=len(df_test),
                                max_ccds=max_set_len, num_features=6)
     testdata.set_targets(gal_type=gal)
 
+    print("Finished Multiset setup")
 
     return traindata, valdata, testdata
