@@ -22,7 +22,7 @@ def main():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     """parser.add_argument('-d', '--path_to_data', default='data/multiset.pickle', metavar='', type=str,
                         help='path to the data directory')"""
-    parser.add_argument('-n', '--num_pixels', default=1500, metavar='', type=int, help='number of training examples')
+    parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int, help='number of training examples')
     """parser.add_argument('-c', '--max_ccds', default=30, metavar='', type=int,
                         help='Maximum set lengths for individual CCDs')"""
     parser.add_argument('-a', '--area', default='north', metavar='', type=str,
@@ -97,6 +97,9 @@ def main():
             # Get predictions and append to label array + count number of correct and total
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+
+        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
+        print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
 
         r2 = metrics.r2_score(y_gold, y_pred)
         rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
