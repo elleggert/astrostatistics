@@ -4,7 +4,7 @@
 #*.pickle
 #*.csv
 *.tmp
-*.sh
+#*.sh
 /bricks_data
 models/deep_set/__pycache__
 models/deep_set/data
