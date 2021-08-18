@@ -1,6 +1,7 @@
 .DS_Store
 *.fits
 .ipynb_checkpoints
+*.pyc
 #*.pickle
 #*.csv
 *.tmp

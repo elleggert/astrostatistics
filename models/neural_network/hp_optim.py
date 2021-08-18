@@ -101,9 +101,14 @@ def main():
             print("++++++++++++++++++++")
 
         print()
+        print(f" XXXXXX======== TRIAL {area} - {gal} ended")
+        print()
         print("Test Set - R-squared: ", r2)
         print("Test Set - RMSE: ", rmse)
         print("Test Set - MAE: ", mae)
+        print()
+        print()
+        print()
 
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
