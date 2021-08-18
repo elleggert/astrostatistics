@@ -109,7 +109,7 @@ def main():
         print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
 
-        r2, rmse, mae = 0,0
+        r2, rmse, mae = 0,0,0
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
@@ -121,9 +121,14 @@ def main():
             print("++++++++++++++++++++")
 
         print()
+        print(f" XXXXXX======== TRIAL {area} - {gal} ended")
+        print()
         print("Test Set - R-squared: ", r2)
         print("Test Set - RMSE: ", rmse)
         print("Test Set - MAE: ", mae)
+        print()
+        print()
+        print()
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
