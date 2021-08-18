@@ -99,9 +99,9 @@ def main():
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
 
-            if np.isnan(outputs).sum() > 0:
+            """if np.isnan(outputs).sum() > 0:
                 print("Nan predicted for:")
-                print(X1, X2, labels, set_sizes)
+                print(X1, X2, labels, set_sizes)"""
 
 
         print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
@@ -172,14 +172,14 @@ def print_session_stats(args):
 
 
 def define_model(trial):
-    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=8, step=2)
+    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=6, step=2)
 
     fe_layers = []
 
     in_features = features  # --> make a function argument later
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 128)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         # if n_layers_fe // 2 == i:
@@ -228,10 +228,10 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size = 4  # trial.suggest_categorical("batch_size", [16,32,128, 256])
+    batch_size =   trial.suggest_categorical("batch_size", [16,32,128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 4, 20)
+    no_epochs = trial.suggest_int("no_epochs", 40, 100)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
@@ -300,7 +300,8 @@ def objective(trial):
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
-            print("epoch", epoch, r2, rmse)
+            if epoch % 5 == 0:
+                print("epoch", epoch, r2, rmse)
 
         except:
             print("++++++++++++++++++++")
