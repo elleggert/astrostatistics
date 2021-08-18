@@ -83,12 +83,28 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-        r2 = metrics.r2_score(y_gold, y_pred)
-        rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
+        print(y_gold)
+        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
+        print(y_pred)
+
+        r2, rmse, mae = 0, 0,0
+
+        try:
+            r2 = metrics.r2_score(y_gold, y_pred)
+            rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
+            mae = metrics.mean_absolute_error(y_gold, y_pred)
+
+        except:
+            print("++++++++++++++++++++")
+            print("   NaN Predicted    ")
+            print("++++++++++++++++++++")
 
         print()
         print("Test Set - R-squared: ", r2)
         print("Test Set - RMSE: ", rmse)
+        print("Test Set - MAE: ", mae)
+
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
@@ -214,7 +230,8 @@ def objective(trial):
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
-            print("epoch", epoch, r2, rmse)
+            if epoch % 5 == 0:
+                print("epoch", epoch, r2, rmse)
         except:
             print("++++++++++++++++++++")
             print("        NaN         ")
