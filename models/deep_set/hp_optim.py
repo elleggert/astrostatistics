@@ -172,11 +172,11 @@ def print_session_stats(args):
 
 
 def define_model(trial):
-    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=6, step=2)
+    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=8, step=2)
 
     fe_layers = []
 
-    in_features = features  # --> make a function argument later
+    in_features = features 
 
     for i in range(n_layers_fe):
         out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
@@ -189,7 +189,7 @@ def define_model(trial):
         in_features = out_features
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 16, 64)
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 16, 256)
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
