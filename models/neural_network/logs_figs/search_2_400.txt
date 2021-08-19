@@ -1,0 +1,17 @@
+[32m[I 2021-08-19 11:01:03,172][0m A new study created in memory with name: NeuralNetwork[0m
+[32m[I 2021-08-19 11:04:40,992][0m Trial 0 finished with value: -0.049725938680237336 and parameters: {'n_layers_mlp': 6, 'mlp_n_units_l0': 37, 'mlp_dropout_l0': 0.41582358012284576, 'mlp_n_units_l1': 9, 'mlp_dropout_l1': 0.21757237108486316, 'mlp_n_units_l2': 118, 'mlp_dropout_l2': 0.2426368077196911, 'mlp_n_units_l3': 101, 'mlp_dropout_l3': 0.21084128271054742, 'mlp_n_units_l4': 41, 'mlp_dropout_l4': 0.2669799361371661, 'mlp_n_units_l5': 207, 'mlp_dropout_l5': 0.4972531375563262, 'lr': 0.006312075842026665, 'criterion': 'L1Loss', 'batch_size': 32, 'no_epochs': 136}. Best is trial 0 with value: -0.049725938680237336.[0m
+Terminated
+[32m[I 2021-08-19 11:05:14,876][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated
+[32m[I 2021-08-19 11:05:34,379][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated
+[32m[I 2021-08-19 11:05:59,681][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated
+Terminated
+[32m[I 2021-08-19 11:06:56,886][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated
+[32m[I 2021-08-19 11:07:13,684][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated
+Terminated
+[32m[I 2021-08-19 11:07:42,975][0m A new study created in memory with name: NeuralNetwork[0m
+Terminated

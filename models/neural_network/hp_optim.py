@@ -151,7 +151,7 @@ def define_model(trial):
     in_features = num_features
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 10, 256)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
@@ -179,7 +179,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 40, 200)
+    no_epochs = trial.suggest_int("no_epochs", 40, 100)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
