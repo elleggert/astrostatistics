@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #for area in north south des
-for area in south
+for area in north
 do
   for gal in qso
     do

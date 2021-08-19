@@ -145,7 +145,7 @@ def print_session_stats(args):
 
 
 def define_model(trial):
-    n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=6, step=2)
+    n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=4, step=2)
     mlp_layers = []
 
     in_features = num_features
@@ -179,7 +179,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 40, 100)
+    no_epochs = trial.suggest_int("no_epochs", 40, 80)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
