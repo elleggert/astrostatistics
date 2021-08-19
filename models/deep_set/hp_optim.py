@@ -172,7 +172,7 @@ def print_session_stats(args):
 
 
 def define_model(trial):
-    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=6, step=2)
+    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=4, step=2)
 
     fe_layers = []
 
@@ -228,10 +228,10 @@ def objective(trial):
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()
 
-    batch_size =   trial.suggest_categorical("batch_size", [16,32,128, 256])
+    batch_size =   trial.suggest_categorical("batch_size", [32,128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 40, 150)
+    no_epochs = trial.suggest_int("no_epochs", 40, 100)
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
