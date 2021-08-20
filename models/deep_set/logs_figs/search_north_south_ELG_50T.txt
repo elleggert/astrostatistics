@@ -1,0 +1,101 @@
+Starting Loading north,
+Traceback (most recent call last):
+  File "hp_optim.py", line 325, in <module>
+    main()
+  File "hp_optim.py", line 36, in main
+    parse_command_line_args(args)
+  File "hp_optim.py", line 153, in parse_command_line_args
+    traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
+  File "/vol/bitbucket/ele20/astrostatistics/models/deep_set/util.py", line 74, in get_full_dataset
+    with open(f'data/{area}/{area}.pickle', 'rb') as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'data/north,/north,.pickle'
+[32m[I 2021-08-20 12:07:55,557][0m A new study created in memory with name: DeepSet[0m
+Starting Loading south
+Finished Loading south
+Finished south setup
+
+++++++++ Session Characteristics +++++++
+
+Area: south
+Gal Type: elg
+Training Set: 118848
+Validation Set: 29712
+Test Samples: 37139
+Number of features: 6
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 50
+
++++++++++++++++++++++++++++++++++++++++
+
+Trial Id: 0 | Model params: 184475 | Timestamp: 2021-08-20 12:07:55.557980
+
+epoch 0 -31.557299582518752 132.22431770994723
+epoch 5 -31.557299582518752 132.22431770994723
+epoch 10 -31.557299582518752 132.22431770994723
+epoch 15 -31.557299582518752 132.22431770994723
+epoch 20 -31.557299582518752 132.22431770994723
+epoch 25 -31.557299582518752 132.22431770994723
+epoch 30 -31.557299582518752 132.22431770994723
+epoch 35 -31.557299582518752 132.22431770994723
+epoch 40 -31.557299582518752 132.22431770994723
+epoch 45 -31.557299582518752 132.22431770994723
+epoch 50 -31.557299582518752 132.22431770994723
+epoch 55 -31.557299582518752 132.22431770994723
+epoch 60 -31.557299582518752 132.22431770994723
+epoch 65 -31.557299582518752 132.22431770994723
+epoch 70 -31.557299582518752 132.22431770994723
+epoch 75 -31.557299582518752 132.22431770994723
+epoch 80 -31.557299582518752 132.22431770994723
+epoch 85 -31.557299582518752 132.22431770994723
+epoch 90 -31.557299582518752 132.22431770994723
+[32m[I 2021-08-20 14:07:11,161][0m Trial 0 finished with value: -31.557299582518752 and parameters: {'n_layers_fe': 2, 'fe_n_units_l0': 249, 'fe_dropout_l0': 0.052101970983518875, 'fe_n_units_l1': 184, 'fe_dropout_l1': 0.20426721599679432, 'n_units_l(Invariant)': 204, 'n_layers_mlp': 4, 'mlp_n_units_l0': 30, 'mlp_dropout_l0': 0.19662091917473212, 'mlp_n_units_l1': 122, 'mlp_dropout_l1': 0.383033797032219, 'mlp_n_units_l2': 250, 'mlp_dropout_l2': 0.008334715020685057, 'mlp_n_units_l3': 247, 'mlp_dropout_l3': 0.05785678509560921, 'reduction': 'sum', 'lr': 0.0001423453935618699, 'criterion': 'MSELoss', 'batch_size': 256, 'no_epochs': 92}. Best is trial 0 with value: -31.557299582518752.[0m
+
+Trial Id: 1 | Model params: 119536 | Timestamp: 2021-08-20 14:07:11.161723
+
+[32m[I 2021-08-20 14:08:47,463][0m Trial 1 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 2 | Model params: 33578 | Timestamp: 2021-08-20 14:08:47.464065
+
+[32m[I 2021-08-20 14:09:30,793][0m Trial 2 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 3 | Model params: 74600 | Timestamp: 2021-08-20 14:09:30.793805
+
+[32m[I 2021-08-20 14:10:21,884][0m Trial 3 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 4 | Model params: 145804 | Timestamp: 2021-08-20 14:10:21.884499
+
+epoch 0 -0.840635598598056 31.43916879353067
+epoch 5 0.017212352783039897 22.972961849884452
+epoch 10 0.010775372672256478 23.04807225211296
+epoch 15 0.04475157920797901 22.648805957423598
+epoch 20 0.10312294268077338 21.94591051977368
+epoch 25 0.09264119757590239 22.07377823947735
+epoch 30 0.09637285063769163 22.028340564713194
+epoch 35 0.0911063892382391 22.09243938223985
+epoch 40 0.0991502646161857 21.994461045940756
+epoch 45 0.0959279409428122 22.033762832196533
+epoch 50 0.09684380359499134 22.02259944448698
+epoch 55 0.05148346675427706 22.56885880187347
+epoch 60 0.09546050460907407 22.039458202534586
+epoch 65 0.10213068704915174 21.958047040340066
+[32m[I 2021-08-20 15:59:08,316][0m Trial 4 finished with value: 0.10355177160083029 and parameters: {'n_layers_fe': 4, 'fe_n_units_l0': 189, 'fe_dropout_l0': 0.4333062710222861, 'fe_n_units_l1': 130, 'fe_dropout_l1': 0.39223584082890545, 'fe_n_units_l2': 213, 'fe_dropout_l2': 0.07146586367790075, 'fe_n_units_l3': 190, 'fe_dropout_l3': 0.005958572427041731, 'n_units_l(Invariant)': 39, 'n_layers_mlp': 2, 'mlp_n_units_l0': 239, 'mlp_dropout_l0': 0.4246609929358189, 'mlp_n_units_l1': 115, 'mlp_dropout_l1': 0.08847079402246993, 'reduction': 'sum', 'lr': 0.004927259779431133, 'criterion': 'MSELoss', 'batch_size': 32, 'no_epochs': 67}. Best is trial 4 with value: 0.10355177160083029.[0m
+
+Trial Id: 5 | Model params: 22223 | Timestamp: 2021-08-20 15:59:08.317127
+
+[32m[I 2021-08-20 15:59:54,267][0m Trial 5 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 6 | Model params: 132927 | Timestamp: 2021-08-20 15:59:54.267682
+
