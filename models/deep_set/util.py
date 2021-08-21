@@ -97,7 +97,7 @@ def get_full_dataset(area, num_pixels, max_set_len, gal):
         num = len(df_train)
     else:
         num = num_pixels
-    traindata = MultiSetSequence(dict=df_train.to_dict(orient='index'), num_pixels=round(num * 0.8),
+    traindata = MultiSetSequence(dict=df_train.to_dict(orient='index'), num_pixels=round(num),
                                  max_ccds=max_set_len,num_features=6)
     traindata.set_targets(gal_type=gal)
 
