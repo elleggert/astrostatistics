@@ -37,7 +37,7 @@ def main():
 
     print_session_stats(args)
 
-    study = optuna.create_study(directions=["maximize"], study_name="DeepSet")
+    study = optuna.create_study(directions=["minimize"], study_name="DeepSet")
 
     study.optimize(objective, n_trials=args['trials'], timeout=None)
 
@@ -61,7 +61,9 @@ def main():
         print("    {}: {}".format(key, value))
 
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
+    fig2 = optuna.visualization.plot_param_importances(study)
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
+    fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
 
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",
@@ -318,7 +320,7 @@ def objective(trial):
 
         torch.save(model, f"trained_models/{area}/{gal}/{trial.number}.pt")
 
-    return r2
+    return rmse
 
 
 if __name__ == "__main__":
