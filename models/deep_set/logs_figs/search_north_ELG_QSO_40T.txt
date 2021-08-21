@@ -1,0 +1,50 @@
+[32m[I 2021-08-21 22:05:35,627][0m A new study created in memory with name: DeepSet[0m
+Starting Loading north
+Finished Loading north
+Finished north setup
+
+++++++++ Session Characteristics +++++++
+
+Area: north
+Gal Type: elg
+Training Set: 78007
+Validation Set: 19505
+Test Samples: 19505
+Number of features: 6
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 40
+
++++++++++++++++++++++++++++++++++++++++
+
+Trial Id: 0 | Model params: 34401 | Timestamp: 2021-08-21 22:05:35.628457
+
+epoch 0 -1.2608001927688366 33.674778083816584
+epoch 5 -1.1549206716635099 32.87678149598693
+epoch 10 -0.8669813492926275 30.60156528182034
+epoch 15 -0.30686517264540747 25.60289315449858
+epoch 20 -0.4061384711401721 26.55753098635592
+epoch 25 -0.13910290402285064 23.903149688638923
+epoch 30 -0.10685445310240249 23.562366665435846
+epoch 35 0.0506949406420758 21.821095469033324
+epoch 40 -0.015073848255320321 22.56433148397305
+[32m[I 2021-08-21 22:12:21,053][0m Trial 0 finished with value: 22.343902022252653 and parameters: {'n_layers_fe': 2, 'fe_n_units_l0': 15, 'fe_dropout_l0': 0.32461111121742103, 'fe_n_units_l1': 156, 'fe_dropout_l1': 0.02676905148023917, 'n_units_l(Invariant)': 74, 'n_layers_mlp': 2, 'mlp_n_units_l0': 218, 'mlp_dropout_l0': 0.27210561645929077, 'mlp_n_units_l1': 25, 'mlp_dropout_l1': 0.364905624730648, 'reduction': 'sum', 'lr': 0.0007903250852040774, 'criterion': 'L1Loss', 'batch_size': 128, 'no_epochs': 42}. Best is trial 0 with value: 22.343902022252653.[0m
+
+Trial Id: 1 | Model params: 99430 | Timestamp: 2021-08-21 22:12:21.053818
+
+[32m[I 2021-08-21 22:12:35,877][0m Trial 1 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 2 | Model params: 71085 | Timestamp: 2021-08-21 22:12:35.878074
+
+[32m[I 2021-08-21 22:12:56,565][0m Trial 2 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 3 | Model params: 67286 | Timestamp: 2021-08-21 22:12:56.566017
+
+epoch 0 -1.4122495657401144 34.78442030589459
+epoch 5 -0.6807327524424853 29.035077077901317

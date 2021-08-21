@@ -153,10 +153,10 @@ def define_model(trial):
     in_features = num_features
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 10, 256)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 10, 80)
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
+        p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.3)
         mlp_layers.append(nn.Dropout(p))
 
         in_features = out_features
@@ -173,7 +173,7 @@ def objective(trial):
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} | Timestamp: {trial.datetime_start}")
     print()
 
-    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
     optimiser = optim.Adam(model.parameters(), lr=lr)
     criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
     criterion = getattr(nn, criterion_name)()

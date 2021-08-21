@@ -1,0 +1,37 @@
+[32m[I 2021-08-21 22:04:26,123][0m A new study created in memory with name: DeepSet[0m
+Starting Loading south
+Finished Loading south
+Finished south setup
+
+++++++++ Session Characteristics +++++++
+
+Area: south
+Gal Type: elg
+Training Set: 148560
+Validation Set: 37139
+Test Samples: 37139
+Number of features: 6
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 40
+
++++++++++++++++++++++++++++++++++++++++
+
+Trial Id: 0 | Model params: 54032 | Timestamp: 2021-08-21 22:04:26.124540
+
+[32m[I 2021-08-21 22:05:22,798][0m Trial 0 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 1 | Model params: 46932 | Timestamp: 2021-08-21 22:05:22.798851
+
+[32m[I 2021-08-21 22:06:12,268][0m Trial 1 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 2 | Model params: 46039 | Timestamp: 2021-08-21 22:06:12.268634
+
+epoch 0 -6.079450670617607 61.87767946332222
+epoch 5 -2.058959523096737 40.67439516356519
