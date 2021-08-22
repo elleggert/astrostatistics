@@ -213,7 +213,7 @@ def define_model(trial):
     mlp_layers.append(nn.Linear(in_features, 1))
     mlp_layers.append(nn.ReLU())
 
-    reduce = trial.suggest_categorical("reduction", ["sum", "mean"])
+    reduce = trial.suggest_categorical("reduction", ["sum", "mean","max"])
     return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
                           med_layer=med_layer, reduction=reduce)
 
