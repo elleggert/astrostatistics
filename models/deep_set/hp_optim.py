@@ -60,7 +60,7 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
+    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
     fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
