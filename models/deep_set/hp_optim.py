@@ -226,14 +226,14 @@ def objective(trial):
         f"| Timestamp: {trial.datetime_start}")
     print()
     lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
-    optimiser = optim.Adam(model.parameters(), lr=lr)
-    criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "L1Loss"])
-    criterion = getattr(nn, criterion_name)()
+    weight_decay = trial.suggest_float("weight_decay", 0.0, 0.3)
+    optimiser = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+    criterion = nn.MSELoss()
 
-    batch_size =   trial.suggest_categorical("batch_size", [32,128, 256])
+    batch_size = trial.suggest_categorical("batch_size", [32,128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_int("no_epochs", 40, 100)
+    no_epochs = 100
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
