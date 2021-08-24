@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/search_north_ELG_QSO_40T.txt 
+./hp_optim.sh |& tee logs_figs/search_south_ALL_50T_incl_max.txt 

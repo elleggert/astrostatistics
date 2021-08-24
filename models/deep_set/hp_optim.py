@@ -191,7 +191,7 @@ def define_model(trial):
         in_features = out_features
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 16, 256)
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
