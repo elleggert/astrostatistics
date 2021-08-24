@@ -219,6 +219,7 @@ def define_model(trial):
 
 
 def objective(trial):
+
     model = define_model(trial).to(device)
     print()
     print(
