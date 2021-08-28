@@ -105,7 +105,7 @@ def main():
             else:
                 patience += 1
 
-            if patience > 6:
+            if patience > 7:
                 break
         except:
             print("++++++++++++++++++++")
@@ -186,79 +186,79 @@ def get_hparams(galaxy, area):
     if area == "north":
         if galaxy == 'lrg':
             #return 0.1, 0.11966102805969332, 256
-            return 0.00012625840029965784, 0.11966102805969332, 256
+            return 0.00042966343711901, 0.0, 128
         elif galaxy == 'elg':
-            return 0.0004377981116963404, 0,  32
+            return 0.0022168493798361945, 0,  16
         else:
-            return 0.0033982461411864624, 0.006718087764096936, 128
+            return 0.0059739578840763, 0.0, 16
 
     elif area == "south":
         if galaxy == 'lrg':
-            return 7.458723170594822e-05, 0, 128
+            return 4.8538834002443876e-05, 0, 128
         elif galaxy == 'elg':
-            return 0.0012133886263240518, 0, 256
+            return 0.0007693503935423424, 0, 32
         else:
-            return 0.0008379365544368044, 0, 256
+            return 0.0011912772207786039, 15312074922163604, 32
     else:
         if galaxy == 'lrg':
-            return 0.00471120213385988, 0, 128
+            return 0.0005231431812476474, 0, 32
         elif galaxy == 'elg':
-            return  0.00471120213385988, 0, 128
+            return  0.003155992400443771, 0, 128
         else:
-            return  0.00471120213385988, 0, 128
+            return  0.00011377624891759982, 0, 32
 
 def define_model(area, galaxy):
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 50
+            p = 0.2
 
         elif galaxy == 'elg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 2
+            out_features_mlp = 50
+            p = 0.2
 
         else:
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 2
+            out_features_mlp = 45
+            p = 0.125
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 50
+            p = .2
 
 
         elif galaxy == 'elg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 40
+            p = 0.15
 
         else:
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 35
+            p = 0.25
 
     else:
 
         if galaxy == 'lrg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 60
+            p = 0.2
 
         elif galaxy == 'elg':
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 50
+            p = 0.2
 
         else:
-            n_layers_mlp = 0
-            out_features_mlp = 0
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 60
+            p = 0.15
 
 
     mlp_layers = []

@@ -34,6 +34,7 @@ def main():
     model = define_model(galaxy=gal, area=area).to(device)
     print(model)
     lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
+    print(f"Learning Rate: {lr}, weight decay: {weight_decay}, batch_size: {batch_size}")
     print()
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     print()
@@ -117,7 +118,7 @@ def main():
             else:
                 patience += 1
 
-            if patience > 6:
+            if patience > 7:
                 break
 
         except:
