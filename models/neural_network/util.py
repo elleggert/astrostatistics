@@ -34,7 +34,7 @@ def get_full_dataset(num_pixels = None, area = 'des', gal ='lrg'):
     df_test = pd.read_csv(f'data/{area}/{area}_test.csv')
     df_test = df_test.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
-    df_train, df_val = train_test_split(df_train, test_size=0.2, random_state=666, shuffle=True)
+    df_train, df_val = train_test_split(df_train, test_size=0.1, random_state=666, shuffle=True)
 
     traindata = DensitySurvey(df_train, gal)
     valdata = DensitySurvey(df_val, gal)

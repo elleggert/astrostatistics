@@ -2,9 +2,9 @@
 
 for area in north
 do
-  for gal in qso
+  for gal in lrg elg qso
     do
-      python hp_optim.py -g $gal -a $area -t 1
+      python final_run.py -g $gal -a $area -n 400
     done
 done
 

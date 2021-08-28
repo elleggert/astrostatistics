@@ -1,1 +1,0 @@
-./hp_optim.sh: line 6: 2877532 Killed                  python hp_optim.py -g $gal -a $area -t 30
