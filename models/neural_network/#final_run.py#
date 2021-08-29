@@ -213,52 +213,51 @@ def define_model(area, galaxy):
         if galaxy == 'lrg':
             n_layers_mlp = 2
             out_features_mlp = 20
-            p = 0.0
-
+            p = 0
         elif galaxy == 'elg':
             n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            out_features_mlp = 50
+            p = 0.2
 
         else:
             n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            out_features_mlp = 45
+            p = 0.125
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 50
+            p = .2
 
 
         elif galaxy == 'elg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 40
+            p = 0.15
 
         else:
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 35
+            p = 0.25
 
     else:
 
         if galaxy == 'lrg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 60
+            p = 0.2
 
         elif galaxy == 'elg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 50
+            p = 0.2
 
         else:
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 60
+            p = 0.15
 
 
     mlp_layers = []

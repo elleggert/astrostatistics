@@ -1,6 +1,6 @@
 #!/bin/bash
 
 
-./hp_search.sh |& tee logs_figs/search_60T_ALL_ALL.txt
+./hp_search.sh |& tee logs_figs/final_run_small_net.txt
 
 

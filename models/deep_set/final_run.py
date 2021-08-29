@@ -224,12 +224,12 @@ def define_model(galaxy, area):
     if area == "north":
         if galaxy == 'lrg':
             n_layers_fe = 2
-            out_features_fe = 140
-            p1 = 0.25
-            p2 = 0.2
-            med_layer = 240
-            n_layers_mlp = 4
-            out_features_mlp = 150
+            out_features_fe = 60
+            p1 = 0.0
+            p2 = 0.0
+            med_layer = 120
+            n_layers_mlp = 2
+            out_features_mlp = 60
             """n_layers_fe = 1
             out_features_fe = 3
             p1 = 0.25
@@ -240,81 +240,81 @@ def define_model(galaxy, area):
 
         elif galaxy == 'elg':
             n_layers_fe = 2
-            out_features_fe = 190
-            p1 = 0.25
-            p2 = 0.35
+            out_features_fe = 60
+            p1 = 0.0
+            p2 = 0.0
             med_layer = 60
-            n_layers_mlp = 4
-            out_features_mlp = 190
+            n_layers_mlp = 2
+            out_features_mlp = 60
 
         else:
             n_layers_fe = 2
-            out_features_fe = 100
-            p1 = 0.3
-            p2 = 0.225
-            med_layer = 490
-            n_layers_mlp = 4
-            out_features_mlp = 130
+            out_features_fe = 60
+            p1 = 0.0
+            p2 = 0.0
+            med_layer = 60
+            n_layers_mlp = 2
+            out_features_mlp = 60
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_fe = 4
-            out_features_fe = 130
-            p1 = .25
-            p2 = .2
-            med_layer = 270
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0
+            p2 = 0
+            med_layer = 60
             n_layers_mlp = 2
-            out_features_mlp = 230
+            out_features_mlp = 60
 
 
         elif galaxy == 'elg':
-            n_layers_fe = 4
-            out_features_fe = 120
-            p1 = 0.18
-            p2 = .25
-            med_layer = 210
-            n_layers_mlp = 4
-            out_features_mlp = 200
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0.0
+            p2 = 0
+            med_layer = 60
+            n_layers_mlp = 2
+            out_features_mlp = 60
 
         else:
             n_layers_fe = 2
-            out_features_fe = 110
-            p1 = 0.25
-            p2 = 0.35
-            med_layer = 200
-            n_layers_mlp = 4
-            out_features_mlp = 110
+            out_features_fe = 60
+            p1 = 0.0
+            p2 = 0.0
+            med_layer = 60
+            n_layers_mlp = 2
+            out_features_mlp = 60
 
     else:
 
 
         if galaxy == 'lrg':
-            n_layers_fe = 4
-            out_features_fe = 110
-            p1 = .35
-            p2 = .3
-            med_layer = 156
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0
+            p2 = 0
+            med_layer = 60
             n_layers_mlp = 2
-            out_features_mlp = 160
+            out_features_mlp = 60
 
         elif galaxy == 'elg':
-            n_layers_fe = 4
-            out_features_fe = 110
-            p1 = .35
-            p2 = .3
-            med_layer = 156
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0
+            p2 = 0
+            med_layer = 60
             n_layers_mlp = 2
-            out_features_mlp = 160
+            out_features_mlp = 60
 
         else:
-            n_layers_fe = 4
-            out_features_fe = 110
-            p1 = .35
-            p2 = .3
-            med_layer = 156
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0
+            p2 = 0
+            med_layer = 60
             n_layers_mlp = 2
-            out_features_mlp = 160
+            out_features_mlp = 60
 
     reduce = 'sum'
     fe_layers = []
