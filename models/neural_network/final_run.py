@@ -198,7 +198,7 @@ def get_hparams(galaxy, area):
         elif galaxy == 'elg':
             return 0.0007693503935423424, 0, 32
         else:
-            return 0.0011912772207786039, 15312074922163604, 32
+            return 0.0011912772207786039, 0.15312074922163604, 32
     else:
         if galaxy == 'lrg':
             return 0.0005231431812476474, 0, 32
@@ -240,8 +240,8 @@ def define_model(area, galaxy):
 
         else:
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.0
 
     else:
 
