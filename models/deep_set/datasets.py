@@ -139,7 +139,7 @@ class MultiSetSequence(Dataset):
     N = Number SubPixels of that are returned --> usually 64
     M = Max Size of each Individual Set of CCDs
     """
-    def __init__(self, dict, num_pixels,  max_ccds, num_features, num_subpixels = 64,):
+    def __init__(self, dict, num_pixels,  max_ccds, num_features, num_subpixels = 64, test=False):
         self.mini_multiset = dict
         if num_pixels < len(self.mini_multiset):
             self.num_pixels = num_pixels
@@ -155,6 +155,9 @@ class MultiSetSequence(Dataset):
         self.qso = np.zeros(self.num_pixels)
         self.stellar = np.zeros(self.num_pixels)
         self.ebv = np.zeros(self.num_pixels)
+        self.test = test
+        if self.test is True:
+            self.pixel_id = np.zeros(self.num_pixels)
 
         self.initialise_inputs()
 
@@ -186,6 +189,9 @@ class MultiSetSequence(Dataset):
             self.qso[i] = self.mini_multiset[pix][4]
             self.stellar[i] = self.mini_multiset[pix][5]
             self.ebv[i] = self.mini_multiset[pix][6]
+            if self.test is True:
+                self.pixel_id[i] = self.mini_multiset[pix][7]
+
 
     def __len__(self):
         return self.num_pixels
@@ -219,6 +225,8 @@ class MultiSetSequence(Dataset):
         self.qso = np.delete(self.qso, nan_list, axis=0)
         self.stellar = np.delete(self.stellar, nan_list, axis=0)
         self.ebv = np.delete(self.ebv, nan_list, axis=0)
+        if self.test is True:
+            self.pixel_id = np.delete(self.pixel_id, nan_list, axis=0)
 
         self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
 
