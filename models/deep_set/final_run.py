@@ -223,13 +223,13 @@ def define_model(galaxy, area):
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0.0
-            p2 = 0.0
-            med_layer = 120
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
             """n_layers_fe = 1
             out_features_fe = 3
             p1 = 0.25
@@ -239,82 +239,81 @@ def define_model(galaxy, area):
             out_features_mlp = 2"""
 
         elif galaxy == 'elg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0.0
-            p2 = 0.0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
         else:
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0.0
-            p2 = 0.0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0
-            p2 = 0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
 
         elif galaxy == 'elg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0.0
-            p2 = 0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
         else:
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0.0
-            p2 = 0.0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
     else:
 
-
         if galaxy == 'lrg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0
-            p2 = 0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
         elif galaxy == 'elg':
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0
-            p2 = 0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
         else:
-            n_layers_fe = 2
-            out_features_fe = 60
-            p1 = 0
-            p2 = 0
-            med_layer = 60
-            n_layers_mlp = 2
-            out_features_mlp = 60
+            n_layers_fe = 4
+            out_features_fe = 256
+            p1 = 0.25
+            p2 = 0.25
+            med_layer = 350
+            n_layers_mlp = 4
+            out_features_mlp = 256
 
     reduce = 'sum'
     fe_layers = []

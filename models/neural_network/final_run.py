@@ -234,8 +234,8 @@ def define_model(area, galaxy):
 
 
         elif galaxy == 'elg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
+            n_layers_mlp = 4
+            out_features_mlp = 200
             p = 0.0
 
         else:
