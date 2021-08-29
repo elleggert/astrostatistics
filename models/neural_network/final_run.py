@@ -211,54 +211,54 @@ def define_model(area, galaxy):
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
         elif galaxy == 'elg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
         else:
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
 
         elif galaxy == 'elg':
             n_layers_mlp = 4
-            out_features_mlp = 200
-            p = 0.0
+            out_features_mlp = 256
+            p = 0.3
 
         else:
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
     else:
 
         if galaxy == 'lrg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
         elif galaxy == 'elg':
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
         else:
-            n_layers_mlp = 2
-            out_features_mlp = 20
-            p = 0.0
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
 
 
     mlp_layers = []
