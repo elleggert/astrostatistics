@@ -1,3 +1,5 @@
+"""Hyperparameter Search function using Optuna, called by bash scripts on GPUs"""
+
 import argparse
 import math
 import os
@@ -55,7 +57,8 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
+    fig1 = optuna.visualization.plot_optimization_history(study,
+                                                          target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
     fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
@@ -90,7 +93,7 @@ def main():
         print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
 
-        r2, rmse, mae = 0, 0,0
+        r2, rmse, mae = 0, 0, 0
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
@@ -111,7 +114,6 @@ def main():
         print()
         print()
         print()
-
 
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
@@ -183,7 +185,6 @@ def objective(trial):
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = 100
-
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)

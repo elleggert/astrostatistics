@@ -1,11 +1,12 @@
+"""Factored out utility functions to load and preprocess datasets."""
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from datasets import DensitySurvey
 
 
-def get_dataset(gal ='lrg', num_pixels=None, kit=False):
-
+def get_dataset(gal='lrg', num_pixels=None, kit=False):
     if kit:
         df = pd.read_csv('../../bricks_data/dataset_kitanidis.csv')
     else:
@@ -25,7 +26,8 @@ def get_dataset(gal ='lrg', num_pixels=None, kit=False):
 
     return traindata, testdata
 
-def get_full_dataset(num_pixels = None, area = 'des', gal ='lrg'):
+
+def get_full_dataset(num_pixels=None, area='des', gal='lrg'):
     df_train = pd.read_csv(f'data/{area}/{area}.csv')
     df_train = df_train.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
@@ -34,7 +36,7 @@ def get_full_dataset(num_pixels = None, area = 'des', gal ='lrg'):
     df_test = pd.read_csv(f'data/{area}/{area}_test.csv')
     df_test = df_test.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
-    df_train, df_val = train_test_split(df_train, test_size=0.1, random_state=666, shuffle=True)
+    df_train, df_val = train_test_split(df_train, test_size=0.2, random_state=666, shuffle=True)
 
     traindata = DensitySurvey(df_train, gal)
     valdata = DensitySurvey(df_val, gal)

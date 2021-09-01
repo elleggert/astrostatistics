@@ -1,3 +1,5 @@
+"""Defining Models for Neural Network Architecture. Feed forward Neural Network in PyTorch."""
+
 from torch import nn
 import torch.nn.functional as F
 

@@ -1,3 +1,5 @@
+"""Final Run for the best hyperparameter configurations of the Neural Network"""
+
 import argparse
 import math
 
@@ -15,7 +17,7 @@ num_workers = 0 if device == 'cpu:0' else 8
 
 
 def main():
-    parser = argparse.ArgumentParser(description='MBase-Network using Average Systematics - Final Run',
+    parser = argparse.ArgumentParser(description='Base-Network using Average Systematics - Final Run',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int, help='number of training examples')
     parser.add_argument('-a', '--area', default='des', metavar='', type=str,
@@ -181,14 +183,15 @@ def print_session_stats(args):
     print()
     print('+++++++++++++++++++++++++++++++++++++++')
 
+
 def get_hparams(galaxy, area):
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
         if galaxy == 'lrg':
-            #return 0.1, 0.11966102805969332, 256
+            # return 0.1, 0.11966102805969332, 256
             return 0.00042966343711901, 0.0, 128
         elif galaxy == 'elg':
-            return 0.0022168493798361945, 0,  16
+            return 0.0022168493798361945, 0, 16
         else:
             return 0.0059739578840763, 0.0, 16
 
@@ -203,9 +206,10 @@ def get_hparams(galaxy, area):
         if galaxy == 'lrg':
             return 0.0005231431812476474, 0, 32
         elif galaxy == 'elg':
-            return  0.003155992400443771, 0, 128
+            return 0.003155992400443771, 0, 128
         else:
-            return  0.00011377624891759982, 0, 32
+            return 0.00011377624891759982, 0, 32
+
 
 def define_model(area, galaxy):
     # defines and returns the best models from HP Tuning
@@ -260,7 +264,6 @@ def define_model(area, galaxy):
             out_features_mlp = 256
             p = 0.3
 
-
     mlp_layers = []
 
     in_features = num_features
@@ -272,7 +275,6 @@ def define_model(area, galaxy):
         in_features = out_features_mlp
     mlp_layers.append(nn.Linear(in_features, int(in_features / 2)))
     mlp_layers.append(nn.Linear(int(in_features / 2), 1))
-
 
     return BaseNet(mlp=nn.Sequential(*mlp_layers))
 

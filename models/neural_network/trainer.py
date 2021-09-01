@@ -1,3 +1,5 @@
+"""Trainer Utility for Neural Network. Called by main.py development function."""
+
 import time
 
 import numpy as np
@@ -7,7 +9,6 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from torch import nn, optim
 from torch.utils.data import DataLoader, Dataset
-
 
 from models import BaseNet
 from datasets import DensitySurvey
@@ -20,7 +21,7 @@ class BaseNNTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels=None, kit = False, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001):
+    def __init__(self, num_pixels=None, kit=False, MSEloss=True, no_epochs=100, batch_size=1, lr=0.001):
 
         if kit:
             self.df = pd.read_csv('../../bricks_data/dataset_kitanidis.csv')
@@ -30,12 +31,11 @@ class BaseNNTrainer:
         # ToDo: At later stage you can pass a list of pixel indeces to filter test and train sets
 
         if num_pixels is not None:
-            self.df = self.df.sample(n=num_pixels, replace=False,random_state=44,axis=0)
+            self.df = self.df.sample(n=num_pixels, replace=False, random_state=44, axis=0)
 
         self.df.drop('pixel_id', axis=1, inplace=True)
 
         self.train_df, self.test_df = train_test_split(self.df, test_size=0.33, random_state=44, shuffle=True)
-
 
         self.models = []
 
@@ -54,24 +54,21 @@ class BaseNNTrainer:
         self.num_workers = 0 if self.device == 'cpu:0' else 8
         self.print_model_info()
 
-
-
     def print_model_info(self):
-            print()
-            print('++++++++ Model Characteristics +++++++')
-            print()
-            print(f"Training Samples: {len(self.train_df)}")
-            print(f"Test Samples: {len(self.test_df)}")
-            print(f"Loss: {self.criterion}")
-            print(f"Training Epochs: {self.no_epochs}")
-            print(f"Batch Size: {self.batch}")
-            print(f"Learning Rate: {self.learning_rate}")
-            print(f"Device: {self.device}")
-            print(f"Number of Workers: {self.num_workers}")
+        print()
+        print('++++++++ Model Characteristics +++++++')
+        print()
+        print(f"Training Samples: {len(self.train_df)}")
+        print(f"Test Samples: {len(self.test_df)}")
+        print(f"Loss: {self.criterion}")
+        print(f"Training Epochs: {self.no_epochs}")
+        print(f"Batch Size: {self.batch}")
+        print(f"Learning Rate: {self.learning_rate}")
+        print(f"Device: {self.device}")
+        print(f"Number of Workers: {self.num_workers}")
 
-            print()
-            print('+++++++++++++++++++++++++++++++++++++')
-
+        print()
+        print('+++++++++++++++++++++++++++++++++++++')
 
     def train_test(self):
 
@@ -130,24 +127,20 @@ class BaseNNTrainer:
             print()
             self.models.append(model)
 
-
             model.eval()
             y_pred = np.array([])
             testloader = torch.utils.data.DataLoader(testdata, batch_size=self.batch, shuffle=False)
 
-
             for i, (inputs, labels) in enumerate(testloader):
-
-                #Split dataloader
+                # Split dataloader
                 inputs = inputs.to(self.device)
-                #Forward pass through the trained network
+                # Forward pass through the trained network
                 outputs = model(inputs)
 
-                #Get predictions and append to label array + count number of correct and total
+                # Get predictions and append to label array + count number of correct and total
                 y_pred = np.append(y_pred, outputs.detach().numpy())
 
             y_gold = testdata.target
-
 
             print()
             print(f"Neural Net R^2 for {gal} :  {metrics.r2_score(y_gold, y_pred)}.")
