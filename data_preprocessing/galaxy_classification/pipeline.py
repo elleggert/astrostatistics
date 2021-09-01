@@ -7,6 +7,7 @@ import pandas as pd
 from brick import Brick
 import telegram_send
 
+""" File to download, process, classify and delete galaxies from DR9 all in one"""
 
 area = 'south'
 device = 'Astrodisk'
@@ -94,7 +95,7 @@ for i, brickname in enumerate(bricknames_sample):
     brickid = brickid_south[np.where(brickname_south == brickname)]
 
     # North Bricks
-    #brickid = brickid_north[np.where(brickname_north == brickname)]
+    # brickid = brickid_north[np.where(brickname_north == brickname)]
 
     if len(brickid > 0):
         brickid = brickid[0]
@@ -105,7 +106,7 @@ for i, brickname in enumerate(bricknames_sample):
     data = hdu[1].data
     brick = Brick(data)
 
-    #south = north_survey_is_south[np.where(brickid_north == brickid)]
+    # south = north_survey_is_south[np.where(brickid_north == brickid)]
 
     south = south_survey_is_south[np.where(brickid_south == brickid)]
     if len(south) > 0:
@@ -135,10 +136,9 @@ for i, brickname in enumerate(bricknames_sample):
     support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
     df_stars = df_stars.append(support_df)
 
-
     if i % 100 == 0:
         print()
-        print(i / (bricks_to_classify/100), '%')
+        print(i / (bricks_to_classify / 100), '%')
         df_galaxy = df_galaxy.astype(
             {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
         df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
@@ -161,10 +161,8 @@ for i, brickname in enumerate(bricknames_sample):
 
     print(f" Brick {area} processed: ", brickname, ", Brick ", i, " of ", bricks_to_classify)
 
-
-
 df_galaxy = df_galaxy.astype(
-            {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
+    {'BrickID': 'int32', 'LRG': 'int8', 'ELG': 'int8', 'QSO': 'int8'})
 df_galaxy.to_csv(f'../../bricks_data/galaxy_catalogue_{area}.csv', mode='a', index=False, header=False)
 df_stars.to_csv(f'../../bricks_data/stellar_catalogue_{area}.csv', mode='a', index=False, header=False)
 df_galaxy = df_galaxy[0:0]
@@ -174,5 +172,5 @@ print(f"=============================== Download {area} completed ==============
 print()
 
 print("Hours taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
-#message = f'++++++ Finished {bricks_to_classify} bricks. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
-#telegram_send.send(messages=[message])
+# message = f'++++++ Finished {bricks_to_classify} bricks. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
+# telegram_send.send(messages=[message])

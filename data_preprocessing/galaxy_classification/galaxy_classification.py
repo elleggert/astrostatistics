@@ -1,7 +1,8 @@
 import numpy as np
 
 
-
+# Code copied from Desitargets.api  to faciliate installation
+# Guide: https://desitarget.readthedocs.io/en/latest/index.html
 def get_imaging_maskbits(bitnamelist=None):
     """Return MASKBITS names and bits from the Legacy Surveys.
 
@@ -55,9 +56,9 @@ def get_default_maskbits(bgs=False, mws=False):
     """
     if bgs and mws:
         msg = "Only one of bgs or mws can be passed as True"
-        #Adapting to print messages
+        # Adapting to print messages
         print(msg)
-        #log.critical(msg)
+        # log.critical(msg)
         raise ValueError(msg)
     if bgs:
         return ["BRIGHT", "CLUSTER"]
@@ -104,7 +105,7 @@ def imaging_mask(maskbits, bitnamelist=get_default_maskbits(),
     # ADM Create array of True and set to False where a mask bit is set.
     mb = np.ones_like(maskbits, dtype='?')
     for bit in bits:
-        mb &= ((maskbits & 2**bit) == 0)
+        mb &= ((maskbits & 2 ** bit) == 0)
 
     return mb
 
@@ -172,18 +173,18 @@ def notinLRG_mask(primary=None, rflux=None, zflux=None, w1flux=None,
 
     # ADM to maintain backwards-compatibility with mocks.
     if zfiberflux is None:
-        print('Setting zfiberflux to zflux!!!') ## Altered in my code to keep compatibilty
-        #log.warning('Setting zfiberflux to zflux!!!')
+        print('Setting zfiberflux to zflux!!!')  ## Altered in my code to keep compatibilty
+        # log.warning('Setting zfiberflux to zflux!!!')
         zfiberflux = zflux.copy()
 
-    lrg &= (rfluxivar > 0) & (rflux > 0)   # ADM quality in r.
-    lrg &= (zfluxivar > 0) & (zflux > 0) & (zfiberflux > 0)   # ADM quality in z.
+    lrg &= (rfluxivar > 0) & (rflux > 0)  # ADM quality in r.
+    lrg &= (zfluxivar > 0) & (zflux > 0) & (zfiberflux > 0)  # ADM quality in z.
     lrg &= (w1fluxivar > 0) & (w1flux > 0)  # ADM quality in W1.
 
     lrg &= (gaiagmag == 0) | (gaiagmag > 18)  # remove bright GAIA sources
 
     # ADM remove stars with zfibertot < 17.5 that are missing from GAIA.
-    lrg &= zfibertotflux < 10**(-0.4*(17.5-22.5))
+    lrg &= zfibertotflux < 10 ** (-0.4 * (17.5 - 22.5))
 
     # ADM observed in every band.
     lrg &= (gnobs > 0) & (rnobs > 0) & (znobs > 0)
@@ -209,8 +210,8 @@ def isLRG_colors(gflux=None, rflux=None, zflux=None, w1flux=None,
 
     # ADM to maintain backwards-compatibility with mocks.
     if zfiberflux is None:
-        print('Setting zfiberflux to zflux!!!') ## Altered in my code to keep compatibilty
-        #log.warning('Setting zfiberflux to zflux!!!')
+        print('Setting zfiberflux to zflux!!!')  ## Altered in my code to keep compatibilty
+        # log.warning('Setting zfiberflux to zflux!!!')
         zfiberflux = zflux.copy()
 
     gmag = 22.5 - 2.5 * np.log10(gflux.clip(1e-7))
@@ -223,21 +224,21 @@ def isLRG_colors(gflux=None, rflux=None, zflux=None, w1flux=None,
     # Full SV3 selection
     if south:
         lrg &= zmag - w1mag > 0.8 * (rmag - zmag) - 0.6  # non-stellar cut
-        lrg &= zfibermag < 21.6                   # faint limit
+        lrg &= zfibermag < 21.6  # faint limit
         lrg &= (gmag - w1mag > 2.9) | (rmag - w1mag > 1.8)  # low-z cuts
         lrg &= (
-            ((rmag - w1mag > (w1mag - 17.14) * 1.8)
-             & (rmag - w1mag > (w1mag - 16.33) * 1.))
-            | (rmag - w1mag > 3.3)
+                ((rmag - w1mag > (w1mag - 17.14) * 1.8)
+                 & (rmag - w1mag > (w1mag - 16.33) * 1.))
+                | (rmag - w1mag > 3.3)
         )  # double sliding cuts and high-z extension
     else:
         lrg &= zmag - w1mag > 0.8 * (rmag - zmag) - 0.6  # non-stellar cut
-        lrg &= zfibermag < 21.61                   # faint limit
+        lrg &= zfibermag < 21.61  # faint limit
         lrg &= (gmag - w1mag > 2.97) | (rmag - w1mag > 1.8)  # low-z cuts
         lrg &= (
-            ((rmag - w1mag > (w1mag - 17.13) * 1.83)
-             & (rmag - w1mag > (w1mag - 16.31) * 1.))
-            | (rmag - w1mag > 3.4)
+                ((rmag - w1mag > (w1mag - 17.13) * 1.83)
+                 & (rmag - w1mag > (w1mag - 16.31) * 1.))
+                | (rmag - w1mag > 3.4)
         )  # double sliding cuts and high-z extension
 
     return lrg
@@ -254,34 +255,34 @@ def isELG_colors(gflux=None, rflux=None, zflux=None, w1flux=None,
 
     # ADM work in magnitudes instead of fluxes. NOTE THIS IS ONLY OK AS
     # ADM the snr masking in ALL OF g, r AND z ENSURES positive fluxes.
-    g = 22.5 - 2.5*np.log10(gflux.clip(1e-16))
-    r = 22.5 - 2.5*np.log10(rflux.clip(1e-16))
-    z = 22.5 - 2.5*np.log10(zflux.clip(1e-16))
-    gfib = 22.5 - 2.5*np.log10(gfiberflux.clip(1e-16))
+    g = 22.5 - 2.5 * np.log10(gflux.clip(1e-16))
+    r = 22.5 - 2.5 * np.log10(rflux.clip(1e-16))
+    z = 22.5 - 2.5 * np.log10(zflux.clip(1e-16))
+    gfib = 22.5 - 2.5 * np.log10(gfiberflux.clip(1e-16))
 
     # ADM cuts shared by the northern and southern selections.
-    elg &= g > 20                       # bright cut.
-    elg &= r - z > 0.15                  # blue cut.
-#    elg &= r - z < 1.6                  # red cut.
+    elg &= g > 20  # bright cut.
+    elg &= r - z > 0.15  # blue cut.
+    #    elg &= r - z < 1.6                  # red cut.
 
     # ADM cuts that are unique to the north or south. Identical for sv3
     # ADM but keep the north/south formalism in case we use it later.
     if south:
         elg &= gfib < 24.1  # faint cut.
-        elg &= g - r < 0.5*(r - z) + 0.1  # remove stars, low-z galaxies.
+        elg &= g - r < 0.5 * (r - z) + 0.1  # remove stars, low-z galaxies.
     else:
         elg &= gfib < 24.1  # faint cut.
-        elg &= g - r < 0.5*(r - z) + 0.1  # remove stars, low-z galaxies.
+        elg &= g - r < 0.5 * (r - z) + 0.1  # remove stars, low-z galaxies.
 
     # ADM separate a low-priority and a regular sample.
     elgvlo = elg.copy()
 
     # ADM low-priority OII flux cut.
-    elgvlo &= g - r < -1.2*(r - z) + 1.6
-    elgvlo &= g - r >= -1.2*(r - z) + 1.3
+    elgvlo &= g - r < -1.2 * (r - z) + 1.6
+    elgvlo &= g - r >= -1.2 * (r - z) + 1.3
 
     # ADM high-priority OII flux cut.
-    elg &= g - r < -1.2*(r - z) + 1.3
+    elg &= g - r < -1.2 * (r - z) + 1.3
 
     return elgvlo, elg
 
@@ -341,7 +342,7 @@ def _is_row(table):
     import astropy.table.row
     if isinstance(table, (astropy.io.fits.fitsrec.FITS_record,
                           astropy.table.row.Row)) or \
-       np.isscalar(table):
+            np.isscalar(table):
         return True
     else:
         return False
@@ -373,18 +374,18 @@ def shift_photo_north(gflux=None, rflux=None, zflux=None):
         zflux = np.atleast_1d(zflux)
 
     # ADM only use the g-band color shift when r and g are non-zero
-    gshift = gflux * 10**(-0.4*0.004)
+    gshift = gflux * 10 ** (-0.4 * 0.004)
     w = np.where((gflux != 0) & (rflux != 0))
-    gshift[w] = (gflux[w] * 10**(-0.4*0.004) * (gflux[w]/rflux[w])**complex(-0.059)).real
+    gshift[w] = (gflux[w] * 10 ** (-0.4 * 0.004) * (gflux[w] / rflux[w]) ** complex(-0.059)).real
 
     # ADM only use the r-band color shift when r and z are non-zero
     # ADM and only use the z-band color shift when r and z are non-zero
     w = np.where((rflux != 0) & (zflux != 0))
-    rshift = rflux * 10**(0.4*0.003)
-    zshift = zflux * 10**(0.4*0.013)
+    rshift = rflux * 10 ** (0.4 * 0.003)
+    zshift = zflux * 10 ** (0.4 * 0.013)
 
-    rshift[w] = (rflux[w] * 10**(0.4*0.003) * (rflux[w]/zflux[w])**complex(-0.024)).real
-    zshift[w] = (zflux[w] * 10**(0.4*0.013) * (rflux[w]/zflux[w])**complex(+0.015)).real
+    rshift[w] = (rflux[w] * 10 ** (0.4 * 0.003) * (rflux[w] / zflux[w]) ** complex(-0.024)).real
+    zshift[w] = (zflux[w] * 10 ** (0.4 * 0.013) * (rflux[w] / zflux[w]) ** complex(+0.015)).real
 
     if flt:
         return gshift[0], rshift[0], zshift[0]
@@ -399,7 +400,7 @@ def _psflike(psftype):
     if psftype is None:
         msg = "NoneType submitted to _psfflike function"
         print(msg)
-        #log.critical(msg)
+        # log.critical(msg)
         raise ValueError(msg)
 
     psftype = np.asarray(psftype)
@@ -458,7 +459,7 @@ def isQSO_cuts(gflux=None, rflux=None, zflux=None, w1flux=None, w2flux=None,
     if primary is not None:
         qso &= primary
 
-    if objtype is not None: # Needed???
+    if objtype is not None:  # Needed???
         qso &= _psflike(objtype)
 
     # ADM default mask bits from the Legacy Surveys not set.
@@ -474,35 +475,35 @@ def isQSO_colors(gflux=None, rflux=None, zflux=None, w1flux=None, w2flux=None,
     """
     # ----- Quasars
     # Create some composite fluxes.
-    wflux = 0.75*w1flux + 0.25*w2flux
-    grzflux = (gflux + 0.8*rflux + 0.5*zflux) / 2.3
+    wflux = 0.75 * w1flux + 0.25 * w2flux
+    grzflux = (gflux + 0.8 * rflux + 0.5 * zflux) / 2.3
 
     qso = np.ones_like(gflux, dtype='?')
-    qso &= rflux < 10**((22.5-17.5)/2.5)    # r>17.5
-    qso &= rflux > 10**((22.5-22.7)/2.5)    # r<22.7
-    qso &= grzflux < 10**((22.5-17)/2.5)    # grz>17
-    qso &= rflux < gflux * 10**(1.3/2.5)    # (g-r)<1.3
-    qso &= zflux > rflux * 10**(-0.4/2.5)   # (r-z)>-0.4
-    qso &= zflux < rflux * 10**(1.1/2.5)    # (r-z)<1.1
+    qso &= rflux < 10 ** ((22.5 - 17.5) / 2.5)  # r>17.5
+    qso &= rflux > 10 ** ((22.5 - 22.7) / 2.5)  # r<22.7
+    qso &= grzflux < 10 ** ((22.5 - 17) / 2.5)  # grz>17
+    qso &= rflux < gflux * 10 ** (1.3 / 2.5)  # (g-r)<1.3
+    qso &= zflux > rflux * 10 ** (-0.4 / 2.5)  # (r-z)>-0.4
+    qso &= zflux < rflux * 10 ** (1.1 / 2.5)  # (r-z)<1.1
 
     if not optical:
         if south:
-            qso &= w2flux > w1flux * 10**(-0.4/2.5)              # (W1-W2)>-0.4
+            qso &= w2flux > w1flux * 10 ** (-0.4 / 2.5)  # (W1-W2)>-0.4
         else:
-            qso &= w2flux > w1flux * 10**(-0.3/2.5)              # (W1-W2)>-0.3
+            qso &= w2flux > w1flux * 10 ** (-0.3 / 2.5)  # (W1-W2)>-0.3
         # (grz-W)>(g-z)-1.0
-        qso &= wflux * gflux > zflux * grzflux * 10**(-1.0/2.5)
+        qso &= wflux * gflux > zflux * grzflux * 10 ** (-1.0 / 2.5)
 
     # Harder cut on stellar contamination
-    mainseq = rflux > gflux * 10**(0.20/2.5)  # g-r>0.2
+    mainseq = rflux > gflux * 10 ** (0.20 / 2.5)  # g-r>0.2
 
     # Clip to avoid warnings for -ve numbers raised to fractional powers.
     rflux = rflux.clip(0)
     zflux = zflux.clip(0)
-    mainseq &= rflux**(1+1.53) > gflux * zflux**1.53 * 10**((-0.100+0.20)/2.5)
-    mainseq &= rflux**(1+1.53) < gflux * zflux**1.53 * 10**((+0.100+0.20)/2.5)
+    mainseq &= rflux ** (1 + 1.53) > gflux * zflux ** 1.53 * 10 ** ((-0.100 + 0.20) / 2.5)
+    mainseq &= rflux ** (1 + 1.53) < gflux * zflux ** 1.53 * 10 ** ((+0.100 + 0.20) / 2.5)
     if not optical:
-        mainseq &= w2flux < w1flux * 10**(0.3/2.5)
+        mainseq &= w2flux < w1flux * 10 ** (0.3 / 2.5)
     qso &= ~mainseq
 
     return qso

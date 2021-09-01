@@ -1,6 +1,5 @@
 import numpy as np
 import time
-#from galaxy_classification import isLRG, isELG, isQSO_cuts
 from desitarget.cuts import isLRG, isELG, isQSO_cuts, isQSO_randomforest, apply_cuts
 
 
