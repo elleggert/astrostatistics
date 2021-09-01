@@ -26,7 +26,8 @@ class MultiSetTrainer:
 
     Output: Training of 3 models for 3 types and testing their performance on a test-set"""
 
-    def __init__(self, num_pixels=1500, path_to_data='data/multiset.pickle', max_set_len=30, MSEloss=True, no_epochs=100, batch_size = 1, lr = 0.001, reduction='sum'):
+    def __init__(self, num_pixels=1500, path_to_data='data/multiset.pickle', max_set_len=30, MSEloss=True,
+                 no_epochs=100, batch_size=1, lr=0.001, reduction='sum'):
         # if traindata is None and testdata is None:
         with open(path_to_data, 'rb') as f:
             mini_multiset = pickle.load(f)
@@ -35,10 +36,10 @@ class MultiSetTrainer:
         train_df, test_df = train_test_split(df, test_size=0.33, random_state=44, shuffle=True)
         self.max_set_len = max_set_len
 
-        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67), max_ccds=self.max_set_len)
-        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33), max_ccds=self.max_set_len)
-
-
+        self.traindata = MultiSetSequence(dict=train_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.67),
+                                          max_ccds=self.max_set_len)
+        self.testdata = MultiSetSequence(dict=test_df.to_dict(orient='index'), num_pixels=round(num_pixels * 0.33),
+                                         max_ccds=self.max_set_len)
 
         self.models = []
 
@@ -47,7 +48,6 @@ class MultiSetTrainer:
             self.criterion = nn.MSELoss()
         else:
             self.criterion = nn.L1Loss()
-
 
         # Defining Hyperparemeters
         self.no_epochs = no_epochs  # very low, but computational power not sufficient for more iterations
@@ -81,7 +81,6 @@ class MultiSetTrainer:
     def get_mask(self, sizes, max_size):
         return (torch.arange(max_size).reshape(1, -1).to(sizes.device) < sizes.unsqueeze(2))
 
-
     def train(self):
 
         for gal in self.galaxy_types:
@@ -100,7 +99,8 @@ class MultiSetTrainer:
                 loss_per_epoch = 0
                 # loading the training data from trainset and shuffling for each epoch
                 # ToDo check whether DataLoader needs to be reloaded every epoch --> will not do so in HP and try
-                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True, num_workers=self.num_workers)
+                trainloader = torch.utils.data.DataLoader(self.traindata, batch_size=self.multi_batch, shuffle=True,
+                                                          num_workers=self.num_workers)
 
                 for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
                     model.train()

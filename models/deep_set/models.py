@@ -1,3 +1,5 @@
+"""Defining various model architectures for the DeepSets."""
+
 import torch
 
 from deepset_layers import InvLinear
@@ -33,7 +35,7 @@ class SetNet(nn.Module):
 
 
 class MultiSetNet(nn.Module):
-    def __init__(self, n_features=8, n_output=3, n_subpix = 64, reduction='sum'):
+    def __init__(self, n_features=8, n_output=3, n_subpix=64, reduction='sum'):
         super(MultiSetNet, self).__init__()
 
         # Takes an Input Tensor and applies transformations to last layer --> features
@@ -63,9 +65,7 @@ class MultiSetNet(nn.Module):
             nn.ReLU(inplace=False)
         )
 
-
         # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN, + added a new dimension for subpix
-
 
     def forward(self, X1, X2, mask=None):
         y = self.feature_extractor(X1)
@@ -87,9 +87,7 @@ class VarMultiSetNet(nn.Module):
 
         self.mlp = mlp
 
-
         # Invariant Layer Influenced by Code from DPernes, but adapted for the current regression task instead of CNN, + added a new dimension for subpix
-
 
     def forward(self, X1, X2, mask=None):
         y = self.feature_extractor(X1)
@@ -97,4 +95,3 @@ class VarMultiSetNet(nn.Module):
         y = torch.cat((y, X2.unsqueeze(2)), dim=1).squeeze()
         y = self.mlp(y)
         return y
-

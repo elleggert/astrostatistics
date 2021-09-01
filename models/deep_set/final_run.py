@@ -1,3 +1,5 @@
+"""File to train the best models from hyperparameter tuning on the full trainingset"""
+
 import argparse
 import math
 
@@ -219,7 +221,6 @@ def print_session_stats(args):
 
 
 def define_model(galaxy, area):
-
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
@@ -353,10 +354,10 @@ def get_hparams(galaxy, area):
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
         if galaxy == 'lrg':
-            #return 0.1, 0.11966102805969332, 256
+            # return 0.1, 0.11966102805969332, 256
             return 0.00012625840029965784, 0.11966102805969332, 256
         elif galaxy == 'elg':
-            return 0.0004377981116963404, 0,  32
+            return 0.0004377981116963404, 0, 32
         else:
             return 0.0033982461411864624, 0.006718087764096936, 128
 
@@ -371,9 +372,9 @@ def get_hparams(galaxy, area):
         if galaxy == 'lrg':
             return 0.00471120213385988, 0, 128
         elif galaxy == 'elg':
-            return  0.00471120213385988, 0, 128
+            return 0.00471120213385988, 0, 128
         else:
-            return  0.00471120213385988, 0, 128
+            return 0.00471120213385988, 0, 128
 
 
 if __name__ == "__main__":

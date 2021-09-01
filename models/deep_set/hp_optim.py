@@ -1,3 +1,6 @@
+"""Hyperparameter Search Function without Hp_lightning, with optuna. Simply trains models until completion,
+notes optimisation history as log and visually in /logs_figs"""
+
 import argparse
 import math
 import os
@@ -60,7 +63,8 @@ def main():
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
 
-    fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
+    fig1 = optuna.visualization.plot_optimization_history(study,
+                                                          target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
     fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
@@ -100,22 +104,20 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-
             """if np.isnan(outputs).sum() > 0:
                 print("Nan predicted for:")
                 print(X1, X2, labels, set_sizes)"""
 
-
         print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
         print(y_gold)
-        print("Prediction", len(y_pred),np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
+        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
         print(y_pred)
 
-        r2, rmse, mae = 0,0,0
+        r2, rmse, mae = 0, 0, 0
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
-            mae = metrics.mean_absolute_error(y_gold,y_pred)
+            mae = metrics.mean_absolute_error(y_gold, y_pred)
 
         except:
             print("++++++++++++++++++++")
@@ -178,7 +180,7 @@ def define_model(trial):
 
     fe_layers = []
 
-    in_features = features 
+    in_features = features
 
     for i in range(n_layers_fe):
         out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
@@ -213,13 +215,12 @@ def define_model(trial):
     mlp_layers.append(nn.Linear(in_features, 1))
     mlp_layers.append(nn.ReLU())
 
-    reduce = trial.suggest_categorical("reduction", ["sum", "mean","max"])
+    reduce = trial.suggest_categorical("reduction", ["sum", "mean", "max"])
     return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
                           med_layer=med_layer, reduction=reduce)
 
 
 def objective(trial):
-
     model = define_model(trial).to(device)
     print()
     print(
@@ -231,7 +232,7 @@ def objective(trial):
     optimiser = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
     criterion = nn.MSELoss()
 
-    batch_size = trial.suggest_categorical("batch_size", [32,128, 256])
+    batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = 100

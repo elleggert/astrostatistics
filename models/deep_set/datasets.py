@@ -1,7 +1,6 @@
+"""Define the Datasets used for DeepSets"""
+
 import pickle
-
-
-#from set_dataloader import CCD
 from torch.utils.data import DataLoader, Dataset
 import torch
 import random
@@ -48,16 +47,16 @@ class SetSequence(Dataset):
         self.label = np.random.rand(self.num_pixels * self.max_ccds)
 
         # Mask Variable Len Sets
-        #self.set_max_set_len()
+        # self.set_max_set_len()
 
     def set_targets(self, gal_type):
         # Features and inputs:
         self.target = None
         self.target = self.df[gal_type].to_numpy()
-        #print(self.target.shape)
+        # print(self.target.shape)
         self.scaler_out = preprocessing.MinMaxScaler()
         self.target = self.scaler_out.fit_transform(self.target.reshape(-1, 1))
-        #print(self.target.shape)
+        # print(self.target.shape)
 
     def initialise_lengths(self):
         self.lengths = np.zeros(self.num_pixels, dtype=int)
@@ -73,17 +72,17 @@ class SetSequence(Dataset):
             self.lengths.fill(self.max_ccds)
 
     def initialise_inputs(self):
-        #self.input = -1 * np.ones((self.num_pixels, self.max_ccds, self.num_features))
+        # self.input = -1 * np.ones((self.num_pixels, self.max_ccds, self.num_features))
         self.input = np.zeros((self.num_pixels, self.max_ccds, self.num_features))
 
         # Iterate through the pixels
         for i, pix in enumerate(self.pix_ids):
             ids = self.pixel2ccd_dict[pix]
             random.shuffle(ids)
-            #print(len(ids))
+            # print(len(ids))
             ids = ids[:self.max_ccds]
-            #print(len(ids))
-            #print()
+            # print(len(ids))
+            # print()
             x = self.ccd.get_ccds(ids)
             # Iterate through the CCDs for every pixel
             for j in range(len(ids)):
@@ -113,13 +112,13 @@ class SetSequence(Dataset):
 
     def __getitem__(self, idx):
         x = torch.from_numpy(self.input[idx]).float()
-        #x = x.unsqueeze(0)
+        # x = x.unsqueeze(0)
         y = torch.tensor(self.target[idx, 0]).float()
-        #print(y.shape)
+        # print(y.shape)
         y = y.unsqueeze(-1)
-        #print(y.shape)
+        # print(y.shape)
 
-        #l = torch.tensor(self.lengths[idx])
+        # l = torch.tensor(self.lengths[idx])
         l = self.lengths[idx]
 
         return x, y, l
@@ -139,7 +138,8 @@ class MultiSetSequence(Dataset):
     N = Number SubPixels of that are returned --> usually 64
     M = Max Size of each Individual Set of CCDs
     """
-    def __init__(self, dict, num_pixels,  max_ccds, num_features, num_subpixels = 64, test=False):
+
+    def __init__(self, dict, num_pixels, max_ccds, num_features, num_subpixels=64, test=False):
         self.mini_multiset = dict
         if num_pixels < len(self.mini_multiset):
             self.num_pixels = num_pixels
@@ -149,7 +149,7 @@ class MultiSetSequence(Dataset):
         # Initialise DataSet
         self.num_features = num_features
         self.input = np.zeros((self.num_pixels, num_subpixels, max_ccds, num_features))
-        self.lengths = np.zeros((self.num_pixels,num_subpixels), dtype=int)
+        self.lengths = np.zeros((self.num_pixels, num_subpixels), dtype=int)
         self.lrg = np.zeros(self.num_pixels)
         self.elg = np.zeros(self.num_pixels)
         self.qso = np.zeros(self.num_pixels)
@@ -163,7 +163,7 @@ class MultiSetSequence(Dataset):
 
         self.clean_nans()
 
-    def set_targets(self, gal_type, scaler = None):
+    def set_targets(self, gal_type, scaler=None):
         self.scaler = scaler
         # Features and inputs:
         self.target = None
@@ -192,23 +192,22 @@ class MultiSetSequence(Dataset):
             if self.test is True:
                 self.pixel_id[i] = self.mini_multiset[pix][7]
 
-
     def __len__(self):
         return self.num_pixels
 
     def __getitem__(self, idx):
         x1 = torch.from_numpy(self.input[idx]).float()
         x2 = torch.from_numpy(self.stage2_input[idx]).float()
-        #x = x.unsqueeze(0)
+        # x = x.unsqueeze(0)
         y = torch.tensor(self.target[idx, 0]).float()
-        #print(y.shape)
+        # print(y.shape)
         y = y.unsqueeze(-1)
-        #print(y.shape)
+        # print(y.shape)
 
-        #l = torch.tensor(self.lengths[idx])
+        # l = torch.tensor(self.lengths[idx])
         l = self.lengths[idx]
 
-        return x1,x2, y, l
+        return x1, x2, y, l
 
     def clean_nans(self):
         nan_list = []
@@ -231,4 +230,3 @@ class MultiSetSequence(Dataset):
         self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
 
         self.num_pixels = len(self.lrg)
-

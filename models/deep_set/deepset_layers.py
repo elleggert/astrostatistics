@@ -3,6 +3,10 @@ Permutation Equivariant and Permutation Invariant layers, as described in the
 paper Deep Sets, by Zaheer et al. (https://arxiv.org/abs/1703.06114)
 """
 
+""" Original Structure borrowed from https://github.com/dpernes/deepsets-digitsum.
+Layer structure adapted to include another dimension in the input tensors, with masking now working on two dimensions.
+"""
+
 import math
 
 import torch
@@ -39,7 +43,6 @@ class InvLinear(nn.Module):
             self.register_parameter('bias', None)
 
         self.reset_parameters()
-
 
     def reset_parameters(self):
         init.xavier_uniform_(self.beta)
@@ -93,62 +96,7 @@ class InvLinear(nn.Module):
 
         return y
 
-
     def extra_repr(self):
         return 'in_features={}, out_features={}, bias={}, reduction={}'.format(
             self.in_features, self.out_features,
             self.bias is not None, self.reduction)
-
-
-class EquivLinear(InvLinear):
-    r"""Permutation equivariant linear layer.
-    Args:
-        in_features: size of each input sample
-        out_features: size of each output sample
-        bias: If set to False, the layer will not learn an additive bias.
-            Default: ``True``
-        reduction: Permutation invariant operation that maps the input set into a single
-            vector. Currently, the following are supported: mean, sum, max and min.
-    """
-
-    def __init__(self, in_features, out_features, bias=True, reduction='mean'):
-        super(EquivLinear, self).__init__(in_features, out_features,
-                                          bias=bias, reduction=reduction)
-
-        self.alpha = nn.Parameter(torch.Tensor(self.in_features,
-                                               self.out_features))
-
-        self.reset_parameters()
-
-    def reset_parameters(self):
-        super(EquivLinear, self).reset_parameters()
-        if hasattr(self, 'alpha'):
-            init.xavier_uniform_(self.alpha)
-
-    def forward(self, X, mask=None):
-        r"""
-        Maps the input set X = {x_1, ..., x_M} to the output set
-        Y = {y_1, ..., y_M} through a permutation equivariant linear transformation
-        of the form:
-            $y_i = \alpha x_i + \beta reduction(X) + bias$
-        Inputs:
-        X: N sets of size at most M where each element has dimension in_features
-           (tensor with shape (N, M, in_features))
-        mask: binary mask to indicate which elements in X are valid (byte tensor
-            with shape (N, M) or None); if None, all sets have the maximum size M.
-            Default: ``None``.
-        Outputs:
-        Y: N sets of same cardinality as in X where each element has dimension
-           out_features (tensor with shape (N, M, out_features))
-        """
-        N, M, _ = X.shape
-        device = X.device
-        Y = torch.zeros(N, M, self.out_features).to(device)
-        if mask is None:
-            mask = torch.ones(N, M).byte().to(device)
-
-        Y = torch.zeros(N, M, self.out_features).to(device)
-        h_inv = super(EquivLinear, self).forward(X, mask=mask)
-        Y[mask] = (X @ self.alpha + h_inv.unsqueeze(1))[mask]
-
-        return Y

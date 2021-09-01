@@ -1,3 +1,4 @@
+"""Building all necessary Lightning utilities, including Module and Datamodule"""
 
 import torch
 from torch import nn
@@ -56,7 +57,6 @@ class LitVarDeepSet(pl.LightningModule):
 
         self.log("Val_loss", val_loss, on_epoch=True, prog_bar=True)
 
-
         return val_loss
 
     def test_step(self, batch, batch_idx):
@@ -72,13 +72,11 @@ class LitVarDeepSet(pl.LightningModule):
 
         self.log("Test_loss", test_loss, on_epoch=True, prog_bar=True)
 
-
         return test_loss
 
 
-
 class DeepDataModule(pl.LightningDataModule):
-    def __init__(self, area, num_pixels, gal, path_to_data, batch_size = 128):
+    def __init__(self, area, num_pixels, gal, path_to_data, batch_size=128):
         super().__init__()
         self.batch_size = batch_size
         self.num_pixels = num_pixels
@@ -93,14 +91,14 @@ class DeepDataModule(pl.LightningDataModule):
         self.gal = gal
         self.path_to_data = path_to_data
 
-        self.traindata, self.valdata, self.testdata = get_full_dataset(area=self.area, num_pixels=self.num_pixels, max_set_len=self.max_set_len,
-                                                   gal=self.gal)
+        self.traindata, self.valdata, self.testdata = get_full_dataset(area=self.area, num_pixels=self.num_pixels,
+                                                                       max_set_len=self.max_set_len,
+                                                                       gal=self.gal)
         self.num_features = self.traindata.num_features
 
     """
     def setup(self, stage: Optional[str] = None) -> None:
         """
-
 
     def train_dataloader(self) -> DataLoader:
         return DataLoader(
@@ -116,6 +114,3 @@ class DeepDataModule(pl.LightningDataModule):
         return DataLoader(
             self.testdata, batch_size=self.batch_size, shuffle=False, drop_last=True, num_workers=8
         )
-
-
-

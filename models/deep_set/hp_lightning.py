@@ -1,4 +1,4 @@
-
+"""Utilising HP_Lightning to integrate early stopping into the Optuna Pruner"""
 
 import argparse
 import math
@@ -14,7 +14,6 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn import metrics
 from torch import nn, optim
 from torch.utils.data import DataLoader
-
 
 from models import VarMultiSetNet
 from lightning import LitVarDeepSet, DeepDataModule
@@ -34,7 +33,8 @@ def main():
                         help='Maximum set lengths for individual CCDs')
     parser.add_argument('-a', '--area', default='des', metavar='', type=str,
                         help='The area of the sky that should be trained on')
-    parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str, help='Galaxy Type to optimise model for')
+    parser.add_argument('-g', '--gal_type', default='lrg', metavar='', type=str,
+                        help='Galaxy Type to optimise model for')
     parser.add_argument('-t', '--trials', default=200, metavar='', type=int, help='number of trials to tune HP for')
 
     args = vars(parser.parse_args())
@@ -65,8 +65,6 @@ def main():
 
     for key, value in trial.params.items():
         print("    {}: {}".format(key, value))
-
-
 
     fig1 = optuna.visualization.plot_optimization_history(study, target_name=f'R-squared for {gal}-optimisation ')
     fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
@@ -116,10 +114,10 @@ def main():
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
 
-
 def delete_models():
     for model in os.listdir(f"trained_models/{area}/{gal}"):
         os.remove(f"trained_models/{area}/{gal}/{model}")
+
 
 def parse_command_line_args(args):
     global gal, area, num_pixels, path_to_data, datamodule, features
@@ -127,7 +125,7 @@ def parse_command_line_args(args):
     area = args['area']
     path_to_data = args['path_to_data']
     gal = args['gal_type']
-    datamodule = DeepDataModule(area=area, num_pixels=num_pixels, gal=gal,path_to_data=path_to_data)
+    datamodule = DeepDataModule(area=area, num_pixels=num_pixels, gal=gal, path_to_data=path_to_data)
     features = datamodule.num_features
 
 
@@ -158,13 +156,11 @@ def define_model(trial):
         out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 16)
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
-        #if n_layers_fe // 2 == i:
-        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5) # Experiment with more dropout
+        # if n_layers_fe // 2 == i:
+        p = trial.suggest_float("fe_dropout_l{}".format(i), 0.0, 0.5)  # Experiment with more dropout
         fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
-
-
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
     med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 16, 64)
@@ -205,10 +201,9 @@ def objective(trial):
 
     print()
 
+    batch_size = 4  # trial.suggest_categorical("batch_size", [16,32,128,256])
 
-    batch_size = 4# trial.suggest_categorical("batch_size", [16,32,128,256])
-
-    no_epochs = 200 # --> Get rid of it , Early stopping ToDo
+    no_epochs = 200  # --> Get rid of it , Early stopping ToDo
 
     datamodule.batch_size = batch_size
 
@@ -219,26 +214,23 @@ def objective(trial):
                                           mode='min',
                                           every_n_epochs=1)
 
-
     # Have left pretty high patience since all the best models are stored
     trainer = pl.Trainer(logger=False,
-        checkpoint_callback=True,
-        max_epochs=no_epochs,
-        gpus=1 if torch.cuda.is_available() else None,
-        callbacks=[checkpoint_callback, PyTorchLightningPruningCallback(trial, monitor="Val_loss"), EarlyStopping(monitor='Val_loss', patience=15)])
+                         checkpoint_callback=True,
+                         max_epochs=no_epochs,
+                         gpus=1 if torch.cuda.is_available() else None,
+                         callbacks=[checkpoint_callback, PyTorchLightningPruningCallback(trial, monitor="Val_loss"),
+                                    EarlyStopping(monitor='Val_loss', patience=15)])
 
     trainer.fit(model, datamodule=datamodule)
-
 
     # automatically auto-loads the best weights
     trainer.test(datamodule=datamodule)
 
-    #torch.save(model, "rer/{}.pt".format(trial.number))
+    # torch.save(model, "rer/{}.pt".format(trial.number))
 
     return trainer.callback_metrics["Val_loss"].item()
 
 
-
 if __name__ == "__main__":
     main()
-

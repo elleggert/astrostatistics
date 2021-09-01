@@ -1,3 +1,5 @@
+"""Interface to provide access to the annotated CCDs in the legacy surveys"""
+
 import numpy as np
 from astropy.io import fits
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
@@ -21,7 +23,6 @@ class CCD:
 
         self.encode_add_categoricals()
 
-
     def initalise_boundaries(self):
         self.ra = self.concat_surveys('ra')
         self.dec = self.concat_surveys('dec')
@@ -43,22 +44,22 @@ class CCD:
     def initialise_systematics(self):
         # Extracting systematics
         self.filter_colour = self.concat_surveys('filter')
-        #self.camera = self.concat_surveys('camera')
+        # self.camera = self.concat_surveys('camera')
         self.exptime = self.concat_surveys('exptime')
         self.airmass = self.concat_surveys('airmass')
         self.seeing = self.concat_surveys('fwhm') * 0.262
         self.ccdskysb = self.concat_surveys('ccdskysb')
-        #self.galdepth = self.concat_surveys('galdepth')
-        #self.ebv = self.concat_surveys('ebv')
-        #self.ccdnphotom = self.concat_surveys('ccdnphotom')
-        #self.skyrms = self.concat_surveys('skyrms')
-        #self.ccdskycounts = self.concat_surveys('ccdskycounts')
+        # self.galdepth = self.concat_surveys('galdepth')
+        # self.ebv = self.concat_surveys('ebv')
+        # self.ccdnphotom = self.concat_surveys('ccdnphotom')
+        # self.skyrms = self.concat_surveys('skyrms')
+        # self.ccdskycounts = self.concat_surveys('ccdskycounts')
         self.meansky = self.concat_surveys('meansky')
-        #self.pixscale_mean = self.concat_surveys('pixscale_mean')
-        #self.ccdnastrom = self.concat_surveys('ccdnastrom')
-        #self.mjd_obs = self.concat_surveys('mjd_obs')
-        #self.sig1 = self.concat_surveys('sig1')
-        #self.ccd_cuts = self.concat_surveys('ccd_cuts')
+        # self.pixscale_mean = self.concat_surveys('pixscale_mean')
+        # self.ccdnastrom = self.concat_surveys('ccdnastrom')
+        # self.mjd_obs = self.concat_surveys('mjd_obs')
+        # self.sig1 = self.concat_surveys('sig1')
+        # self.ccd_cuts = self.concat_surveys('ccd_cuts')
 
         self.sys_tuple = (self.exptime,
                           self.airmass,
@@ -92,7 +93,6 @@ class CCD:
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
     def encode_add_categoricals(self):
-
         """encoder.fit(np.unique(self.camera))
         self.camera_encoded = encoder.transform(self.camera)
         self.camera_encoded = self.camera_encoded[:,np.newaxis]"""
@@ -100,21 +100,18 @@ class CCD:
         encoder = LabelEncoder()
         encoder.fit(self.filter_colour)
         self.filter_colour_encoded = encoder.transform(self.filter_colour)
-        self.filter_colour_encoded = self.filter_colour_encoded[:,np.newaxis]
+        self.filter_colour_encoded = self.filter_colour_encoded[:, np.newaxis]
 
-        #Tweak
-        #self.ccd_cuts_encoded = self.ccd_cuts
-        #self.ccd_cuts_encoded = self.ccd_cuts_encoded[:,np.newaxis]
-
+        # Tweak
+        # self.ccd_cuts_encoded = self.ccd_cuts
+        # self.ccd_cuts_encoded = self.ccd_cuts_encoded[:,np.newaxis]
 
         # Add encoded categoricals
         self.data = np.concatenate((self.data, self.filter_colour_encoded), axis=1)
         self.num_features = self.data.shape[1]
         print(self.num_features)
 
-
     def stack_scale_systematics(self):
-
         self.data = np.stack(self.sys_tuple,
                              axis=1)
         self.scaler_in = MinMaxScaler()
@@ -131,4 +128,3 @@ class CCD:
     def get_filter_mask(self, colour):
         m = (self.filter_colour == colour)
         return m
-
