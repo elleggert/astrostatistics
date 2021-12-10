@@ -9,10 +9,13 @@ import telegram_send
 
 """ File to download, process, classify and delete galaxies from DR9 all in one"""
 
+""" Defining area to download, how many bricks to download in one session and which storage to use (Astrodisk is the name of a hardrive)"""
 area = 'south'
 device = 'Astrodisk'
 bricks_to_classify = 30000
 
+
+# Getting all the brickids and bricknames from the DESI DR9 summary files
 hdulistBricksSouthSummary = fits.open('../../bricks_data/survey-bricks-dr9-south.fits')
 data_south = hdulistBricksSouthSummary[1].data
 brickname_south = data_south.field('brickname')
@@ -26,6 +29,7 @@ brickid_north = data_north.field('brickid')
 survey_north = data_north.field('survey_primary')
 north_survey_is_south = np.invert(survey_north)
 
+# Everything is times in order to measure when the pipeline slows down
 start = time.time()
 
 print()
@@ -38,13 +42,13 @@ data = hdulistBricks[1].data
 bricknames = list(data.field('brickname'))
 bricks = {}
 
-# This can be better processed using set()
+# Todo: This can be better processed using set()
 for brick in bricknames:
     bricks[brick] = 1
 
 downloaded_bricks = []
 
-# Getting already downloaded files:
+# Getting already downloaded files from the Harddrive:
 for filename in os.listdir(f'/Volumes/{device}/bricks_data/{area}/'):
     brickn = filename.replace("tractor-", "")
     brickn = brickn.replace(".fits", "")
@@ -70,6 +74,7 @@ for brick in bricknames_processed:
     if brick in bricks:
         bricks.pop(brick)
 
+# Define empty Dataframes that will hold the information on stars and galaxies
 df_galaxy = pd.DataFrame(columns=['BrickID', 'RA', 'DEC', 'LRG', 'ELG', 'QSO'])
 df_stars = pd.DataFrame(columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
 
@@ -77,14 +82,24 @@ print(df_galaxy.head())
 print(df_stars.head())
 
 bricknames_sample = list(bricks.keys())
+
+# Prints information on the  current session e.g. how many bricks are left --> all the code until here takes a few minutes to complete
 print(f"No of bricks left for area {area}: {len(bricknames_sample)} ")
 print("Time taken for bricks left extraction: ", round(((time.time() - start) / 60), 2))
 
+
+# There have been problems with very few bricks that were not found on the servers, this code is only to avoid the script from crashing here
 c = 0
 problem_bricks = []
 inter = time.time()
 
+
+# This is the actual loop doing the classification for the bricks that are missing from the catalogue:
+
 for i, brickname in enumerate(bricknames_sample):
+
+    # Download Brick
+
     folder = brickname[:3]
     url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
     try:
@@ -104,8 +119,12 @@ for i, brickname in enumerate(bricknames_sample):
     else:
         brickid = 0
 
+    # Open Brick
+
     hdu = fits.open(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
     data = hdu[1].data
+
+    # Define the Brick Object  --> in brick.py
     brick = Brick(data)
 
     # south = north_survey_is_south[np.where(brickid_north == brickid)]
@@ -119,7 +138,10 @@ for i, brickname in enumerate(bricknames_sample):
     ## Enable this is classifying North Objects
     # south = north_survey_is_south[np.where(brickid_north == brickid)][0]
 
+    # Initialise Brick Object
     brick.initialise_brick_for_galaxy_classification(south)
+
+    # Classify Brick objects into categories --> takes under 1 second after optimisation
     target_objects = brick.classify_galaxies()
 
     # Appending one empty line per brick to be sure that all bricks are extracted
@@ -131,12 +153,16 @@ for i, brickname in enumerate(bricknames_sample):
 
     df_galaxy = df_galaxy.append(support_df)
 
+    # Repeat steps for stellar objects
+
     brick.initialise_brick_for_stellar_density()
 
     stars = brick.get_stellar_objects()
 
     support_df = pd.DataFrame(stars, columns=['RA', 'DEC', 'GMAG', 'RMAG', 'ZMAG'])
     df_stars = df_stars.append(support_df)
+
+    # Every 100 objects, the newly classified objects are added to the existing catalogue to avoid massive reruns when the script crashes
 
     if i % 100 == 0:
         print()
@@ -150,6 +176,7 @@ for i, brickname in enumerate(bricknames_sample):
         df_galaxy = df_galaxy[0:0]
         df_stars = df_stars[0:0]
 
+    # This script used to send me updates to my phone using a Telegram Bot, so i knew when it crashed or it was completed
     """if i % 1000 == 0:
         message = f'++++++ Processed {brickname} ({brickid}). Brick {i} of {bricks_to_classify}. Current Bandwidths: {round(((time.time() - inter) / i+1), 2)} seconds per brick ++++++'
         telegram_send.send(messages=[message])
@@ -158,6 +185,7 @@ for i, brickname in enumerate(bricknames_sample):
     # Remove Downloaded Brick
     os.remove(f'/Volumes/{device}/bricks_data/{area}/tractor-{brickname}.fits')
 
+    # Stop the loop when the defined number of bricks was classified, if this number is greater than remaining bricks, script will run till all bricks are finished
     if i > bricks_to_classify:
         break
 
@@ -173,6 +201,8 @@ print()
 print(f"=============================== Download {area} completed ==================================")
 print()
 
+
+# Prints session statistics upon completion
 print("Hours taken for: ", bricks_to_classify, " bricks: ", round(((time.time() - start) / 3600), 2))
 # message = f'++++++ Finished {bricks_to_classify} bricks. Avg. Bandwidths: {round(((time.time() - start) / bricks_to_classify), 2)} seconds per brick ++++++'
 # telegram_send.send(messages=[message])
