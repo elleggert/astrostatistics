@@ -10,7 +10,7 @@ class Brick:
         self.data = data
         self.no_of_objects = 0
         """ The init method does not intialise any of the elements, will be initialised depending on the usage of the 
-        brick e.g. galaxy classification / stellar density calculation"""
+        brick e.g. galaxy classification / stellar density calculation to avoid unnecessary storage"""
 
         self.ra = None
         self.dec = None
@@ -53,8 +53,6 @@ class Brick:
         self.mag_g = None
         self.mag_r = None
         self.mag_z = None
-        #self.gmr = None
-        #self.rmz = None
         self.south = None
         self.type = None
 
@@ -71,14 +69,17 @@ class Brick:
         self.no_of_objects = len(self.flux_g)
 
     def initialise_ids(self):
+        """Initialise the object parameters"""
         self.ids = self.data.field('brickid')
         self.objid = self.data.field('objid')
 
     def initialise_position(self):
+        """Extracts the positions of all objects in the brick"""
         self.ra = self.data.field('ra')
         self.dec = self.data.field('dec')
 
     def initialise_brick_for_stellar_density(self):
+        """Helper functions for stellar extraction are invoked"""
         self.initialise_position()
         self.initialise_fluxes()
         self.initialise_type()
@@ -86,11 +87,10 @@ class Brick:
         self.no_of_objects = len(self.flux_g)
 
     def initialise_magnitudes_colours_uncorrected(self):
+        """ Magnitudes are extracted"""
         self.mag_g = 22.5 - 2.5 * np.log10(self.flux_g.clip(1e-7))
         self.mag_r = 22.5 - 2.5 * np.log10(self.flux_r.clip(1e-7))
         self.mag_z = 22.5 - 2.5 * np.log10(self.flux_z.clip(1e-7))
-        #self.gmr = self.mag_g - self.mag_r
-        #self.rmz = self.mag_r - self.mag_z
 
     def calculate_signal_to_noise(self):
         """Get the Signal-to-noise in g, r, z, W1 and W2 defined as the flux per
@@ -112,7 +112,7 @@ class Brick:
         self.nobs_g = self.data.field('nobs_g')
         self.nobs_r = self.data.field('nobs_r')
         self.nobs_z = self.data.field('nobs_z')
-        # Retrieving the maskbits for quasar detection and boolean for brick is in north
+        # Retrieving the maskbits and fitbits for quasar detection
         self.maskbits = self.data.field('maskbits')
         self.fitbits = self.data.field('fitbits')
 
@@ -124,10 +124,12 @@ class Brick:
         self.flux_z = self.data.field('flux_z')
         self.flux_w1 = self.data.field('flux_w1')
         self.flux_w2 = self.data.field('flux_w2')
+
         # getting predicted -band flux within a fiber of diameter 1.5 arcsec from this object in 1 arcsec Gaussian seeing
         self.fiberflux_g = self.data.field('fiberflux_g')
         self.fiberflux_r = self.data.field('fiberflux_r')
         self.fiberflux_z = self.data.field('fiberflux_z')
+
         # Retrurns Predicted -band flux within a fiber of diameter 1.5 arcsec from all sources at this location in 1 arcsec Gaussian seeing
         # Returns Inverse variance of FLUXES
         self.fibertotflux_g = self.data.field('fibertotflux_g')
@@ -158,7 +160,7 @@ class Brick:
         self.fiberflux_z = self.fiberflux_z / self.mw_transmission_z
 
     def set_south(self, south):
-        # Initialises the boolean whether the given brick is south
+        # Initialises the boolean whether the given brick is south or north
         self.south = south
 
     def initialise_type(self):
@@ -168,8 +170,7 @@ class Brick:
     def classify_galaxies(self):
         """ Function goes through every object in the brick and defines whether it is of LRG, ELG or QSO type """
 
-        """ Returns: an np array with 0 indicating no galaxy type of interest, 1 = LRG; 2 = ELG, 3 = QSO """
-        # target_type = np.zeros(self.no_of_objects)
+        """ Returns: an np array with boolean flags for different galaxy types. Calls the DESI Helper functions"""
         target_lrg = np.zeros(self.no_of_objects)
         target_elg = np.zeros(self.no_of_objects)
         target_qso = np.zeros(self.no_of_objects)
@@ -208,6 +209,7 @@ class Brick:
         return target_objects
 
     def get_stellar_objects(self):
+        """ Classifies Stellar Objects """
         is_PSF = (self.type == 'PSF') & (self.mag_r > 17) & (self.mag_r < 18)
         stacked_array = np.stack((self.ra, self.dec, self.mag_g, self.mag_r, self.mag_z),
                                  axis=1)
@@ -216,6 +218,7 @@ class Brick:
 
 
     def append_brick(self, data, south):
+        """Helper Function that was used when extracting using Random Forests to speed up the process"""
         brick = Brick(data)
         brick.initialise_brick_for_galaxy_classification(south)
         self.ra = np.append(self.ra , brick.ra )
