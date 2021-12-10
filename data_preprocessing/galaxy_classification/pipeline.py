@@ -37,6 +37,8 @@ data = hdulistBricks[1].data
 
 bricknames = list(data.field('brickname'))
 bricks = {}
+
+# This can be better processed using set()
 for brick in bricknames:
     bricks[brick] = 1
 
