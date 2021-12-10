@@ -39,7 +39,7 @@ def get_dataset(num_pixels, max_set_len, gal, path_to_data='data/multiset.pickle
 
     return traindata, testdata
 
-
+# ToDo: Check whether this function is actually used anywhere?
 def get_dataset(num_pixels, max_set_len, gal, path_to_data='data/multiset.pickle'):
     with open(path_to_data, 'rb') as f:
         mini_multiset = pickle.load(f)
