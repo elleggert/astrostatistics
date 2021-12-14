@@ -1,5 +1,8 @@
 import numpy as np
 
+"""This file was only used for debugging purposes to really understand how desitarget.cuts work 
+--> the actual galaxy catalogue generation utilised the installed desitarget package,"""
+
 
 # Code copied from Desitargets.api  to faciliate installation
 # Guide: https://desitarget.readthedocs.io/en/latest/index.html
