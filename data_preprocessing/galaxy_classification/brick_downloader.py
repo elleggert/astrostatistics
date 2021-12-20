@@ -4,49 +4,70 @@ import wget
 import numpy.random
 import random
 import time
+import argparse
 
-start = time.time()
 
-bricks_to_download = 16000
-# Sampling from area with probability 1:3, since this is the real distribution of bricks
-area = "south"
-rand = numpy.random.uniform(low=0.0, high=1.0, size=None)
-print(rand)
-if rand <= 0.25:
-    area = "north"
+def main():
+    parser = argparse.ArgumentParser(description='Script to download bricks from DESI DR9',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-n', '--num_bricks', default=None, metavar='', type=int, help='number of bricks to download')
+    parser.add_argument('-a', '--area', default='south', metavar='', type=str,
+                        help='The catalogue that ought to be downloaded, by default extracts southern bricks.')
 
-print()
-print(f"=============================== Download {area} ..... ==================================")
-print()
+    args = vars(parser.parse_args())
 
-hdulistBricks = fits.open(f'../../bricks_data/survey-bricks-dr9-{area}.fits')
-data = hdulistBricks[1].data
+    # Timing information
+    #start = time.time()
 
-bricknames = list(data.field('brickname'))
+    area = args['area']
+    bricks_to_download = args['num_bricks']
+    path = f'/Volumes/Astrostick/bricks_data/{area}/'
 
-downloaded_bricks = []
+    if area != 'south' or area != 'north':
+        print("Invalid Area argument: must be either 'north' or 'south'")
+        exit()
 
-# Getting already downloaded files:
-for filename in os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/'):
-    brickn = filename.replace("tractor-", "")
-    brickn = brickn.replace(".fits", "")
-    downloaded_bricks.append(brickn)
+    print()
+    print(f"=============================== Download {area} ..... ==================================")
+    print()
 
-# Getting a random sample of bricknames without replacement and deleting all that are already downloaded
-bricknames_sample = random.sample(bricknames, bricks_to_download)
-bricknames_sample = [x for x in bricknames_sample if x not in downloaded_bricks]
 
-for i, brickname in enumerate(bricknames_sample):
-    folder = brickname[:3]
-    url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
-    wget.download(url, f'/Volumes/Astrodisk/bricks_data/{area}/')
+    # Utilises the summary files to get a list of all bricks in the catalogue --> these need to be stored somewhere
+    hdulistBricks = fits.open(f'../../bricks_data/survey-bricks-dr9-{area}.fits')
+    data = hdulistBricks[1].data
 
-    print(f" Brick {area} downloaded: ", brickname, ", Brick ", i, " of ", bricks_to_download)
+    bricknames = list(data.field('brickname'))
 
-print()
-print(f"=============================== Download {area} completed ==================================")
-print()
+    downloaded_bricks = []
 
-print("Time taken for: ", bricks_to_download, " bricks: ", round(((time.time() - start) / 60), 2))
+    # Getting already downloaded files:
+    for filename in os.listdir(path):
+        brick = filename.replace("tractor-", "")
+        brick = brick.replace(".fits", "")
+        downloaded_bricks.append(brick)
 
-print(f"Number of bricks in {area}:", len(os.listdir(f'/Volumes/Astrodisk/bricks_data/{area}/')))
+    print(f'Number of bricks left in {area}: {len(bricknames) - len(downloaded_bricks)})')
+
+    """If a numerical limit was provided, getting a random sample of bricks without replacement 
+    and deleting all that are already downloaded, else simply iterate through all bricks"""
+
+    if bricks_to_download:
+        bricknames = random.sample(bricknames, bricks_to_download)
+    bricknames_sample = [x for x in bricknames if x not in downloaded_bricks]
+
+    for i, brickname in enumerate(bricknames_sample):
+        folder = brickname[:3]
+        url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
+        wget.download(url, path)
+
+    print()
+    print(f"=============================== Download {area} completed ==================================")
+    print()
+
+    #print("Time taken for: ", i, " bricks: ", round(((time.time() - start) / 60), 2))
+
+    print(f"Number of bricks in downloaded in {area}:", len(os.listdir(path)))
+
+
+if __name__ == "__main__":
+    main()
