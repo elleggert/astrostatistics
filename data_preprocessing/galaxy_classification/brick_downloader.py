@@ -5,7 +5,6 @@ import random
 import time
 import argparse
 
-
 def main():
     parser = argparse.ArgumentParser(description='Script to download bricks from DESI DR9',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -51,19 +50,12 @@ def main():
     """If a numerical limit was provided, getting a random sample of bricks without replacement 
     and deleting all that are already downloaded, else simply iterate through all bricks"""
 
-    print(len(bricknames))
-
     bricknames = [x for x in bricknames if x not in downloaded_bricks]
-    print(len(bricknames))
 
     if bricks_to_download:
         bricknames = random.sample(bricknames, bricks_to_download)
-    print(len(bricknames))
 
-
-    print(len(downloaded_bricks))
     for i, brickname in enumerate(bricknames):
-        break
         folder = brickname[:3]
         url = f'https://portal.nersc.gov/cfs/cosmo/data/legacysurvey/dr9/{area}/tractor/{folder}/tractor-{brickname}.fits'
         wget.download(url, path)
@@ -75,7 +67,6 @@ def main():
     # print("Time taken for: ", i, " bricks: ", round(((time.time() - start) / 60), 2))
 
     print(f"Number of bricks in downloaded in {area}:", len(os.listdir(path)))
-
 
 if __name__ == "__main__":
     main()
