@@ -8,7 +8,9 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(description='Script to download bricks from DESI DR9',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-n', '--num_bricks', default=None, metavar='', type=int, help='number of bricks to download')
+    parser.add_argument('-n', '--num_bricks', default=None, metavar='', type=int, help='number of bricks to download. '
+                                                                                       'By default will download all '
+                                                                                       'bricks that are missing.')
     parser.add_argument('-a', '--area', default='south', metavar='', type=str,
                         help='The catalogue that ought to be downloaded, by default extracts southern bricks. '
                              'Accepted values: south or north')
