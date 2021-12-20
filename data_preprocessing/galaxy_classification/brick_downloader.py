@@ -45,6 +45,8 @@ def main():
         brick = brick.replace(".fits", "")
         downloaded_bricks.append(brick)
 
+
+    print(f'Number of total bricks already downloaded in {area}: {len(downloaded_bricks)}')
     print(f'Number of total bricks left in {area}: {len(bricknames) - len(downloaded_bricks)}')
 
     """If a numerical limit was provided, getting a random sample of bricks without replacement 
