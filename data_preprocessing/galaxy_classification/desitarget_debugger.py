@@ -1,5 +1,6 @@
 import os
 from desitarget.cuts import select_targets
+import pandas as pd
 
 
 filenames = []
@@ -11,9 +12,12 @@ for filename in os.listdir(f'../../bricks_data/tractor/'):
 
 print(filenames)
 
-exit()
-
 
 res = select_targets(
     infiles=filenames, numproc=1, qso_selection='colorcuts', nside=None, gaiasub=False,
     tcnames=['LRG', 'ELG', 'QSO'], backup=False)
+
+
+df = pd.DataFrame(data=res)
+
+print(df.head())
