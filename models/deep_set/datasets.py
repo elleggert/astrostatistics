@@ -132,6 +132,10 @@ class SetSequence(Dataset):
 """
 
 
+
+# ToDo: Adapt to stack stage2inputs earlier and make that more efficient.
+
+
 # noinspection PyAttributeOutsideInit
 class MultiSetSequence(Dataset):
     """Processes and Returns a Dataset of Variable Sized Input Sets of Dimensions
@@ -139,7 +143,7 @@ class MultiSetSequence(Dataset):
     M = Max Size of each Individual Set of CCDs
     """
 
-    def __init__(self, dict, num_pixels, max_ccds, num_features, num_subpixels=64, test=False):
+    def __init__(self, dict, num_pixels, max_ccds, num_features, num_subpixels=16, test=False):
         self.mini_multiset = dict
         if num_pixels < len(self.mini_multiset):
             self.num_pixels = num_pixels
@@ -173,6 +177,10 @@ class MultiSetSequence(Dataset):
             self.target = self.elg
         if gal_type == 'qso':
             self.target = self.qso
+        if gal_type == 'glbg':
+            self.target = self.glbg
+        if gal_type == 'rlbg':
+            self.target = self.rlbg
         self.target = self.target.reshape(-1, 1)
         """if self.scaler is None:
             self.scaler = preprocessing.MinMaxScaler()
