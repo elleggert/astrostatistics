@@ -176,10 +176,14 @@ def objective(trial):
     print()
 
     lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
-    optimiser = optim.Adam(model.parameters(), lr=lr)
     weight_decay = trial.suggest_float("weight_decay", 0.0, 0.3)
     optimiser = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-    criterion = nn.MSELoss()
+
+    # Introduce new Loss Function
+
+    criterion_name = trial.suggest_categorical("criterion", ["MSELoss", "PoissonNLLLoss"])
+    criterion = getattr(nn, criterion_name)()
+    #criterion = nn.MSELoss()
 
     batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
 
