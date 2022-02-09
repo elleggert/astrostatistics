@@ -41,6 +41,9 @@ def main():
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     print()
     optimiser = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+
+    # ToDo: Adapt to PNLLL loss in case the HP decides this is better
+
     criterion = nn.MSELoss()
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = 1000
