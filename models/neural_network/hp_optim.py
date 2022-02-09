@@ -20,7 +20,7 @@ num_workers = 0 if device == 'cpu:0' else 8
 
 
 def main():
-    parser = argparse.ArgumentParser(description='MBase-Network using Average Systematics - HyperParameter Tuning',
+    parser = argparse.ArgumentParser(description='Base-Network using Average Systematics - HyperParameter Tuning',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int, help='number of training examples')
     parser.add_argument('-a', '--area', default='des', metavar='', type=str,
@@ -60,8 +60,8 @@ def main():
     fig1 = optuna.visualization.plot_optimization_history(study,
                                                           target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
-    fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
-    fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
+    #fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
+    #fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
 
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",

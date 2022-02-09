@@ -1,10 +1,10 @@
 #!/bin/bash
 
-for area in north south elg
+for area in north
 do
-  for gal in lrg elg qso glbg rlbg
+  for gal in qso
     do
-      python final_run.py -g $gal -a $area
+      python hp_optim.py -g $gal -a $area -n 10000 -t 10
     done
 done
 

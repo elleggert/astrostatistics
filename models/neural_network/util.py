@@ -28,12 +28,12 @@ def get_dataset(gal='lrg', num_pixels=None, kit=False):
 
 
 def get_full_dataset(num_pixels=None, area='des', gal='lrg'):
-    df_train = pd.read_csv(f'data/{area}/{area}.csv')
+    df_train = pd.read_csv(f'data/{area}/{area}_512.csv')
     df_train = df_train.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
     if num_pixels is not None:
         df_train = df_train.sample(n=num_pixels, replace=False, random_state=666, axis=0)
-    df_test = pd.read_csv(f'data/{area}/{area}_test.csv')
+    df_test = pd.read_csv(f'data/{area}/{area}_test_512.csv')
     df_test = df_test.drop(columns=['pixel_id', 'exposures'], axis=1, inplace=False)
 
     df_train, df_val = train_test_split(df_train, test_size=0.2, random_state=666, shuffle=True)
