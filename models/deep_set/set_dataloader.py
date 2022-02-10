@@ -50,7 +50,7 @@ class CCD:
         # Extracting systematics
         self.filter_colour = self.concat_surveys('filter')
         # self.camera = self.concat_surveys('camera')
-        self.exptime = self.concat_surveys('exptime')
+        #self.exptime = self.concat_surveys('exptime')
         self.airmass = self.concat_surveys('airmass')
         self.seeing = self.concat_surveys('fwhm') * 0.262
         self.ccdskysb = self.concat_surveys('ccdskysb')
@@ -59,18 +59,16 @@ class CCD:
         # self.ccdnphotom = self.concat_surveys('ccdnphotom')
         # self.skyrms = self.concat_surveys('skyrms')
         self.ccdskycounts = self.concat_surveys('ccdskycounts')
-        self.meansky = self.concat_surveys('meansky')
+        #self.meansky = self.concat_surveys('meansky')
         # self.pixscale_mean = self.concat_surveys('pixscale_mean')
         # self.ccdnastrom = self.concat_surveys('ccdnastrom')
         # self.mjd_obs = self.concat_surveys('mjd_obs')
         # self.sig1 = self.concat_surveys('sig1')
         # self.ccd_cuts = self.concat_surveys('ccd_cuts')
 
-        self.sys_tuple = (self.exptime,
-                          self.airmass,
+        self.sys_tuple = (self.airmass,
                           self.seeing,
-                          self.ccdskysb, self.ccdskycounts,
-                          self.meansky, self.filter_colour)
+                          self.ccdskysb, self.ccdskycounts, self.filter_colour)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)
