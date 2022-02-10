@@ -58,7 +58,7 @@ class CCD:
         # self.ebv = self.concat_surveys('ebv')
         # self.ccdnphotom = self.concat_surveys('ccdnphotom')
         # self.skyrms = self.concat_surveys('skyrms')
-        # self.ccdskycounts = self.concat_surveys('ccdskycounts')
+        self.ccdskycounts = self.concat_surveys('ccdskycounts')
         self.meansky = self.concat_surveys('meansky')
         # self.pixscale_mean = self.concat_surveys('pixscale_mean')
         # self.ccdnastrom = self.concat_surveys('ccdnastrom')
@@ -69,7 +69,7 @@ class CCD:
         self.sys_tuple = (self.exptime,
                           self.airmass,
                           self.seeing,
-                          self.ccdskysb,
+                          self.ccdskysb, self.ccdskycounts,
                           self.meansky, self.filter_colour)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
