@@ -21,12 +21,12 @@ class CCD:
 
 
         # Do these two if you want to prepare a dataset that is already scaled and has filter colour encoded
-        """self.stack_scale_systematics()
+        self.stack_scale_systematics()
 
-        self.encode_add_categoricals()"""
+        self.encode_add_categoricals()
 
         # Do this one if you do not want scaled inputs and only stack the important metrics
-        self.stack_systematics()
+        #self.stack_systematics()
 
     def initalise_boundaries(self):
         self.ra = self.concat_surveys('ra')
@@ -68,7 +68,8 @@ class CCD:
 
         self.sys_tuple = (self.airmass,
                           self.seeing,
-                          self.ccdskysb, self.ccdskycounts, self.filter_colour)
+                          self.ccdskysb,
+                          self.ccdskycounts)
         self.no_ccds = len(self.filter_colour)
         # self.skyrms = np.concatenate((dataDecam.field('skyrms'), dataMosaic.field('skyrms'), dataBass.field('skyrms')), axis=0)
         # self.sig1 = np.concatenate((dataDecam.field('sig1'), dataMosaic.field('sig1'), dataBass.field('sig1')), axis = 0)

@@ -132,7 +132,6 @@ class SetSequence(Dataset):
 """
 
 
-
 # ToDo: Adapt to stack stage2inputs earlier and make that more efficient.
 
 
@@ -157,7 +156,13 @@ class MultiSetSequence(Dataset):
         self.lrg = np.zeros(self.num_pixels)
         self.elg = np.zeros(self.num_pixels)
         self.qso = np.zeros(self.num_pixels)
+        self.glbg = np.zeros(self.num_pixels)
+        self.rlbg = np.zeros(self.num_pixels)
+        self.hinh = np.zeros(self.num_pixels)
         self.stellar = np.zeros(self.num_pixels)
+        self.gaia = np.zeros(self.num_pixels)
+        self.gaia12 = np.zeros(self.num_pixels)
+        self.sagitarius = np.zeros(self.num_pixels)
         self.ebv = np.zeros(self.num_pixels)
         self.test = test
         if self.test is True:
@@ -190,15 +195,23 @@ class MultiSetSequence(Dataset):
         for i, pix in enumerate(self.mini_multiset):
             if i >= self.num_pixels:
                 break
+
+            # For refactoring, morph in the data preprocessing already --> this is super messy
             self.input[i] = self.mini_multiset[pix][0]
             self.lengths[i] = self.mini_multiset[pix][1]
             self.lrg[i] = self.mini_multiset[pix][2]
             self.elg[i] = self.mini_multiset[pix][3]
             self.qso[i] = self.mini_multiset[pix][4]
-            self.stellar[i] = self.mini_multiset[pix][5]
-            self.ebv[i] = self.mini_multiset[pix][6]
+            self.glbg[i] = self.mini_multiset[pix][5]
+            self.rlbg[i] = self.mini_multiset[pix][6]
+            self.stellar[i] = self.mini_multiset[pix][7]
+            self.hinh[i] = self.mini_multiset[pix][8]
+            self.gaia[i] = self.mini_multiset[pix][9]
+            self.gaia12[i] = self.mini_multiset[pix][10]
+            self.sagitarius[i] = self.mini_multiset[pix][11]
+            self.ebv[i] = self.mini_multiset[pix][12]
             if self.test is True:
-                self.pixel_id[i] = self.mini_multiset[pix][7]
+                self.pixel_id[i] = self.mini_multiset[pix][13]
 
     def __len__(self):
         return self.num_pixels
@@ -221,8 +234,7 @@ class MultiSetSequence(Dataset):
         nan_list = []
         for i in range(self.num_pixels):
             cond = np.isnan(self.input[i])
-            c = cond.sum()
-            if c > 0:
+            if cond.sum():
                 nan_list.append(i)
 
         self.input = np.delete(self.input, nan_list, axis=0)
@@ -230,11 +242,19 @@ class MultiSetSequence(Dataset):
         self.lrg = np.delete(self.lrg, nan_list, axis=0)
         self.elg = np.delete(self.elg, nan_list, axis=0)
         self.qso = np.delete(self.qso, nan_list, axis=0)
+        self.glbg = np.delete(self.glbg, nan_list, axis=0)
+        self.rlbg = np.delete(self.rlbg, nan_list, axis=0)
+
         self.stellar = np.delete(self.stellar, nan_list, axis=0)
+        self.hinh = np.delete(self.hinh, nan_list, axis=0)
+        self.gaia = np.delete(self.gaia, nan_list, axis=0)
+        self.gaia12 = np.delete(self.gaia12, nan_list, axis=0)
+        self.sagitarius = np.delete(self.sagitarius, nan_list, axis=0)
         self.ebv = np.delete(self.ebv, nan_list, axis=0)
         if self.test is True:
             self.pixel_id = np.delete(self.pixel_id, nan_list, axis=0)
 
-        self.stage2_input = np.stack((self.stellar, self.ebv), axis=1)
+        self.stage2_input = np.stack((self.stellar, self.hinh, self.gaia, self.gaia12, self.sagitarius, self.ebv),
+                                     axis=1)
 
         self.num_pixels = len(self.lrg)
