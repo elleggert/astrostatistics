@@ -20,13 +20,10 @@ class CCD:
         self.initalise_boundaries()
 
 
+    def initialise_for_deepset(self):
         # Do these two if you want to prepare a dataset that is already scaled and has filter colour encoded
         self.stack_scale_systematics()
-
         self.encode_add_categoricals()
-
-        # Do this one if you do not want scaled inputs and only stack the important metrics
-        #self.stack_systematics()
 
     def initalise_boundaries(self):
         self.ra = self.concat_surveys('ra')
@@ -97,18 +94,11 @@ class CCD:
         # self.gaussgaldepth = np.concatenate((dataDecam.field('gaussgaldepth'), dataMosaic.field('gaussgaldepth'), dataBass.field('gaussgaldepth')), axis = 0)
 
     def encode_add_categoricals(self):
-        """encoder.fit(np.unique(self.camera))
-        self.camera_encoded = encoder.transform(self.camera)
-        self.camera_encoded = self.camera_encoded[:,np.newaxis]"""
-
+        # Function to encode and add the categorical band metric to the image
         encoder = LabelEncoder()
         encoder.fit(self.filter_colour)
         self.filter_colour_encoded = encoder.transform(self.filter_colour)
         self.filter_colour_encoded = self.filter_colour_encoded[:, np.newaxis]
-
-        # Tweak
-        # self.ccd_cuts_encoded = self.ccd_cuts
-        # self.ccd_cuts_encoded = self.ccd_cuts_encoded[:,np.newaxis]
 
         # Add encoded categoricals
         self.data = np.concatenate((self.data, self.filter_colour_encoded), axis=1)
@@ -116,6 +106,8 @@ class CCD:
         print(self.num_features)
 
     def stack_scale_systematics(self):
+        # Do this one if you do want scaled inputs and only stack the important metrics
+
         self.data = np.stack(self.sys_tuple,
                              axis=1)
         self.scaler_in = MinMaxScaler()
@@ -124,6 +116,8 @@ class CCD:
         self.num_features = self.data.shape[1]
 
     def stack_systematics(self):
+        # Do this one if you do not want scaled inputs and only stack the important metrics
+
         self.data = np.stack(self.sys_tuple,
                              axis=1)
         self.num_features = self.data.shape[1]
@@ -135,5 +129,6 @@ class CCD:
         return self.ra0, self.dec0, self.ra1, self.dec1, self.ra2, self.dec2, self.ra3, self.dec3
 
     def get_filter_mask(self, colour):
+        # Function to return only mask for images of a certain band (pass 'g', 'r' or 'z')
         m = (self.filter_colour == colour)
         return m

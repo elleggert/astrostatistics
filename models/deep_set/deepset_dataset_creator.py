@@ -181,6 +181,7 @@ def import_pixel_mappings(NSIDE):
     print(f"{time_passed / 60:.5} minutes ({time_passed:.3} seconds) taken to import the dict")
     print()
     ccd = set_dataloader.CCD()
+    ccd.initialise_for_deepset()
     print(f'Number of Features : {ccd.num_features}')
     return ccd, pixel2subpixel_dict, subpixel2ccd_dict
 
