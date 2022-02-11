@@ -104,14 +104,8 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-            """if np.isnan(outputs).sum() > 0:
-                print("Nan predicted for:")
-                print(X1, X2, labels, set_sizes)"""
-
-        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
-        print(y_gold)
-        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
-        print(y_pred)
+        print(f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, Mean: {np.mean(y_gold)}")
+        print(f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, Mean: {np.mean(y_pred)}")
 
         r2, rmse, mae = 0, 0, 0
         try:
@@ -183,7 +177,7 @@ def define_model(trial):
     in_features = features
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 25) # 256
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         # if n_layers_fe // 2 == i:
@@ -193,17 +187,17 @@ def define_model(trial):
         in_features = out_features
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 50) #512
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
     n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=4, step=2)
     mlp_layers = []
 
-    in_features = 66
+    in_features = 22
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 25) # 256
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         # if n_layers_mlp // 2 == i:
