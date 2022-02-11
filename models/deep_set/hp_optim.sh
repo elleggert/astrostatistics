@@ -5,7 +5,7 @@ for area in north
 do
   for gal in  glbg
     do
-      python hp_optim.py -g $gal -a $area -t 3
+      python hp_optim.py -g $gal -a $area -t 1
     done
 done
 

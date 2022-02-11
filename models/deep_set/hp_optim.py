@@ -66,8 +66,8 @@ def main():
     fig1 = optuna.visualization.plot_optimization_history(study,
                                                           target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
-    fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
-    fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
+    #fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
+    #fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
 
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",
@@ -104,8 +104,12 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-        print(f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, Mean: {np.mean(y_gold)}")
-        print(f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, Mean: {np.mean(y_pred)}")
+        print(
+            f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, "
+            f"Mean: {np.mean(y_gold)}")
+        print(
+            f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, "
+            f"Mean: {np.mean(y_pred)}")
 
         r2, rmse, mae = 0, 0, 0
         try:
@@ -177,7 +181,7 @@ def define_model(trial):
     in_features = features
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 25) # 256
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 100)  # 256
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         # if n_layers_fe // 2 == i:
@@ -187,7 +191,7 @@ def define_model(trial):
         in_features = out_features
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 50) #512
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 100)  # 512
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
@@ -197,7 +201,7 @@ def define_model(trial):
     in_features = 22
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 25) # 256
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 100)  # 256
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         # if n_layers_mlp // 2 == i:
@@ -244,58 +248,11 @@ def objective(trial):
 
         model.train()
 
-        for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
-            # Extract inputs and associated labels from dataloader batch
-            X1 = X1.to(device)
-
-            X2 = X2.to(device)
-
-            labels = labels.to(device)
-
-            set_sizes = set_sizes.to(device)
-
-            mask = get_mask(set_sizes, X1.shape[2])
-            # Predict outputs (forward pass)
-
-            predictions = model(X1, X2, mask=mask)
-
-            # Zero-out the gradients before backward pass (pytorch stores the gradients)
-
-            optimiser.zero_grad()
-
-            # Compute Loss
-            loss = criterion(predictions, labels)
-
-            # Backpropagation
-            loss.backward()
-
-            # Perform one step of gradient descent
-            optimiser.step()
+        train_loop(criterion, model, optimiser, trainloader)
 
         model.eval()
-        y_pred = np.array([])
-        y_gold = np.array([])
 
-        with torch.no_grad():
-            for i, (X1, X2, labels, set_sizes) in enumerate(valloader):
-                # Extract inputs and associated labels from dataloader batch
-                X1 = X1.to(device)
-
-                X2 = X2.to(device)
-
-                labels = labels.to(device)
-
-                set_sizes = set_sizes.to(device)
-
-                mask = get_mask(set_sizes, X1.shape[2])
-                # Predict outputs (forward pass)
-
-                predictions = model(X1, X2, mask=mask)
-                # Predict outputs (forward pass)
-
-                # Get predictions and append to label array + count number of correct and total
-                y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
-                y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+        y_gold, y_pred = val_loop(model, valloader, y_gold, y_pred)
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
@@ -319,6 +276,61 @@ def objective(trial):
         torch.save(model, f"trained_models/{area}/{gal}/{trial.number}.pt")
 
     return rmse
+
+
+def val_loop(model, valloader):
+    y_pred, y_gold = np.array([]), np.array([])
+    with torch.no_grad():
+        for i, (X1, X2, labels, set_sizes) in enumerate(valloader):
+            # Extract inputs and associated labels from dataloader batch
+            X1 = X1.to(device)
+
+            X2 = X2.to(device)
+
+            labels = labels.to(device)
+
+            set_sizes = set_sizes.to(device)
+
+            mask = get_mask(set_sizes, X1.shape[2])
+            # Predict outputs (forward pass)
+
+            predictions = model(X1, X2, mask=mask)
+            # Predict outputs (forward pass)
+
+            # Get predictions and append to label array + count number of correct and total
+            y_pred = np.append(y_pred, predictions.cpu().detach().numpy())
+            y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+    return y_gold, y_pred
+
+
+def train_loop(criterion, model, optimiser, trainloader):
+    for i, (X1, X2, labels, set_sizes) in enumerate(trainloader):
+        # Extract inputs and associated labels from dataloader batch
+        X1 = X1.to(device)
+
+        X2 = X2.to(device)
+
+        labels = labels.to(device)
+
+        set_sizes = set_sizes.to(device)
+
+        mask = get_mask(set_sizes, X1.shape[2])
+        # Predict outputs (forward pass)
+
+        predictions = model(X1, X2, mask=mask)
+
+        # Zero-out the gradients before backward pass (pytorch stores the gradients)
+
+        optimiser.zero_grad()
+
+        # Compute Loss
+        loss = criterion(predictions, labels)
+
+        # Backpropagation
+        loss.backward()
+
+        # Perform one step of gradient descent
+        optimiser.step()
 
 
 if __name__ == "__main__":
