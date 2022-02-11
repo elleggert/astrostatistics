@@ -119,7 +119,8 @@ class CCD:
         self.data = np.stack(self.sys_tuple,
                              axis=1)
         # Add filter colour
-        self.data = np.concatenate((self.data, self.filter_colour), axis=1)
+        fc = self.filter_colour[:, np.newaxis]
+        self.data = np.concatenate((self.data, fc), axis=1)
         self.num_features = self.data.shape[1]
 
     def get_ccds(self, ids):
