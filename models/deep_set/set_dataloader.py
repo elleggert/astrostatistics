@@ -19,7 +19,6 @@ class CCD:
 
         self.initalise_boundaries()
 
-
     def initialise_for_deepset(self):
         # Do these two if you want to prepare a dataset that is already scaled and has filter colour encoded
         self.stack_scale_systematics()
@@ -47,7 +46,7 @@ class CCD:
         # Extracting systematics
         self.filter_colour = self.concat_surveys('filter')
         # self.camera = self.concat_surveys('camera')
-        #self.exptime = self.concat_surveys('exptime')
+        # self.exptime = self.concat_surveys('exptime')
         self.airmass = self.concat_surveys('airmass')
         self.seeing = self.concat_surveys('fwhm') * 0.262
         self.ccdskysb = self.concat_surveys('ccdskysb')
@@ -56,7 +55,7 @@ class CCD:
         # self.ccdnphotom = self.concat_surveys('ccdnphotom')
         # self.skyrms = self.concat_surveys('skyrms')
         self.ccdskycounts = self.concat_surveys('ccdskycounts')
-        #self.meansky = self.concat_surveys('meansky')
+        # self.meansky = self.concat_surveys('meansky')
         # self.pixscale_mean = self.concat_surveys('pixscale_mean')
         # self.ccdnastrom = self.concat_surveys('ccdnastrom')
         # self.mjd_obs = self.concat_surveys('mjd_obs')
@@ -116,19 +115,30 @@ class CCD:
         self.num_features = self.data.shape[1]
 
     def stack_systematics(self):
-        # Do this one if you do not want scaled inputs and only stack the important metrics
-
+        # Do this one if you do not want scaled inputs and only stack the important metrics without filter colour
         self.data = np.stack(self.sys_tuple,
                              axis=1)
+        # Add filter colour
+        self.data = np.concatenate((self.data, self.filter_colour), axis=1)
         self.num_features = self.data.shape[1]
 
     def get_ccds(self, ids):
         return self.data[ids]
 
-    def get_boundaries(self):
+    def get_all_boundaries(self):
+        # Function to return Pixel Boundaries
         return self.ra0, self.dec0, self.ra1, self.dec1, self.ra2, self.dec2, self.ra3, self.dec3
+
+    def get_ccd_boundaries(self, ids):
+        xs = [self.ra0[ids], self.ra1[ids], self.ra2[ids], self.ra3[ids], self.ra0[ids]]
+        ys = [self.dec0[ids], self.dec1[ids], self.dec2[ids], self.dec3[ids], self.dec0[ids]]
+        return xs, ys
+
 
     def get_filter_mask(self, colour):
         # Function to return only mask for images of a certain band (pass 'g', 'r' or 'z')
         m = (self.filter_colour == colour)
         return m
+
+
+
