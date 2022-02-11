@@ -185,7 +185,7 @@ def objective(trial):
     criterion = getattr(nn, criterion_name)()
     #criterion = nn.MSELoss()
 
-    batch_size = trial.suggest_categorical("batch_size", [16, 32, 128, 256])
+    batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = 100
@@ -201,45 +201,12 @@ def objective(trial):
 
         model.train()
 
-        for i, (inputs, labels) in enumerate(trainloader):
-            model.train()
-
-            # Extract inputs and associated labels from dataloader batch
-            inputs = inputs.to(device)
-
-            labels = labels.to(device)
-
-            # Predict outputs (forward pass)
-
-            predictions = model(inputs)
-
-            # Compute Loss
-            loss = criterion(predictions, labels)
-
-            # Zero-out the gradients before backward pass (pytorch stores the gradients)
-            optimiser.zero_grad()
-
-            # Backpropagation
-            loss.backward()
-
-            # Perform one step of gradient descent
-            optimiser.step()
+        train_loop(criterion, model, optimiser, trainloader)
 
         model.eval()
-        y_pred = np.array([])
-        y_gold = np.array([])
 
-        with torch.no_grad():
 
-            for i, (inputs, labels) in enumerate(valloader):
-                # Split dataloader
-                inputs = inputs.to(device)
-                # Forward pass through the trained network
-                outputs = model(inputs)
-
-                # Get predictions and append to label array + count number of correct and total
-                y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
-                y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+        y_gold, y_pred = val_loop(model, valloader, y_gold, y_pred)
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
@@ -261,6 +228,47 @@ def objective(trial):
 
         torch.save(model, f"trained_models/{area}/{gal}/{trial.number}.pt")
     return rmse
+
+
+def val_loop(model, valloader):
+    y_pred, y_gold = np.array([]), np.array([])
+    with torch.no_grad():
+        for i, (inputs, labels) in enumerate(valloader):
+            # Split dataloader
+            inputs = inputs.to(device)
+            # Forward pass through the trained network
+            outputs = model(inputs)
+
+            # Get predictions and append to label array + count number of correct and total
+            y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
+            y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+    return y_gold, y_pred
+
+
+def train_loop(criterion, model, optimiser, trainloader):
+    for i, (inputs, labels) in enumerate(trainloader):
+        model.train()
+
+        # Extract inputs and associated labels from dataloader batch
+        inputs = inputs.to(device)
+
+        labels = labels.to(device)
+
+        # Predict outputs (forward pass)
+
+        predictions = model(inputs)
+
+        # Compute Loss
+        loss = criterion(predictions, labels)
+
+        # Zero-out the gradients before backward pass (pytorch stores the gradients)
+        optimiser.zero_grad()
+
+        # Backpropagation
+        loss.backward()
+
+        # Perform one step of gradient descent
+        optimiser.step()
 
 
 if __name__ == "__main__":

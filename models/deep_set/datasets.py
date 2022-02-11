@@ -244,7 +244,6 @@ class MultiSetSequence(Dataset):
         self.qso = np.delete(self.qso, nan_list, axis=0)
         self.glbg = np.delete(self.glbg, nan_list, axis=0)
         self.rlbg = np.delete(self.rlbg, nan_list, axis=0)
-
         self.stellar = np.delete(self.stellar, nan_list, axis=0)
         self.hinh = np.delete(self.hinh, nan_list, axis=0)
         self.gaia = np.delete(self.gaia, nan_list, axis=0)
@@ -256,5 +255,4 @@ class MultiSetSequence(Dataset):
 
         self.stage2_input = np.stack((self.stellar, self.hinh, self.gaia, self.gaia12, self.sagitarius, self.ebv),
                                      axis=1)
-
         self.num_pixels = len(self.lrg)
