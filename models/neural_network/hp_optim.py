@@ -88,10 +88,12 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
-        print(y_gold)
-        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
-        print(y_pred)
+        print(
+            f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, "
+            f"Mean: {np.mean(y_gold)}")
+        print(
+            f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, "
+            f"Mean: {np.mean(y_pred)}")
 
         r2, rmse, mae = 0, 0, 0
 
