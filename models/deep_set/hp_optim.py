@@ -252,7 +252,7 @@ def objective(trial):
 
         model.eval()
 
-        y_gold, y_pred = val_loop(model, valloader, y_gold, y_pred)
+        y_gold, y_pred = val_loop(model, valloader)
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
