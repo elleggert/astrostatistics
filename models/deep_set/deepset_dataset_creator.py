@@ -15,72 +15,76 @@ def main():
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-n', '--num_pixels', default=None, metavar='', type=int,
                         help='number of training examples to generate')
-    parser.add_argument('-a', '--area', default='north', metavar='', type=str,
-                        help='The area of the sky that should be prepared')
+    #parser.add_argument('-a', '--area', default='north', metavar='', type=str,
+                        #help='The area of the sky that should be prepared')
 
     args = vars(parser.parse_args())
 
     NSIDE = 512
     tests = [False, True]
     export_to_disk = True
-    area = args['area']
+    #area = args['area']
     num_pixels = args['num_pixels']
 
-    # Make this variable depenndent on the Area Size
-    if area == 'north':
-        max_ccds = 30
-    elif area == 'south':
-        max_ccds = 25
-    else:
-        max_ccds = 50
+    areas = ['north', 'south', 'des']
 
     ccd, pixel2subpixel_dict, subpixel2ccd_dict = import_pixel_mappings(NSIDE)
 
     # Generate Train and Set
 
-    for test in tests:
-
-        if test:
-            import_path = f'../../bricks_data/{area}_test_{NSIDE}.csv'
-            if export_to_disk:
-                export_path = f'/Volumes/Astrodisk/bricks_data/{area}_test_{NSIDE}.pickle'
-            else:
-                export_path = f'data/north/{area}_test_{NSIDE}.pickle'
-
-
+    for area in areas:
+        print(f'Area {area} started')
+        # Make this variable depenndent on the Area Size
+        if area == 'north':
+            max_ccds = 30
+        elif area == 'south':
+            max_ccds = 25
         else:
-            import_path = f'../../bricks_data/{area}_{NSIDE}.csv'
-            if export_to_disk:
-                # If stored on Astrodisk Volume
-                export_path = f'/Volumes/Astrodisk/bricks_data/{area}_{NSIDE}.pickle'
+            max_ccds = 50
+
+        for test in tests:
+
+            if test:
+                import_path = f'../../bricks_data/{area}_test_{NSIDE}.csv'
+                if export_to_disk:
+                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_test_{NSIDE}.pickle'
+                else:
+                    export_path = f'data/north/{area}_test_{NSIDE}.pickle'
+
+
             else:
-                export_path = f'data/north/{area}_{NSIDE}.pickle'
+                import_path = f'../../bricks_data/{area}_{NSIDE}.csv'
+                if export_to_disk:
+                    # If stored on Astrodisk Volume
+                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_{NSIDE}.pickle'
+                else:
+                    export_path = f'data/north/{area}_{NSIDE}.pickle'
 
-        df = pd.read_csv(import_path)
-        # Randomly Sampling Pixel Indices from Dataframe
-        pix_ids = df.pixel_id.to_numpy()
+            df = pd.read_csv(import_path)
+            # Randomly Sampling Pixel Indices from Dataframe
+            pix_ids = df.pixel_id.to_numpy()
 
-        if num_pixels is None:
-            num_pixels = len(df)
-        else:
-            pix_ids = pix_ids[:num_pixels]
-        num_subpixels = 16
-        num_features = ccd.num_features
+            if num_pixels is None:
+                num_pixels = len(df)
+            else:
+                pix_ids = pix_ids[:num_pixels]
+            num_subpixels = 16
+            num_features = ccd.num_features
 
-        input, lengths = generate_length_inputs(ccd, max_ccds, num_features, num_pixels, num_subpixels, pix_ids,
-                                                pixel2subpixel_dict, subpixel2ccd_dict)
+            input, lengths = generate_length_inputs(ccd, max_ccds, num_features, num_pixels, num_subpixels, pix_ids,
+                                                    pixel2subpixel_dict, subpixel2ccd_dict)
 
-        # Generate Dict
+            # Generate Dict
 
-        mini_multiset = generate_dict(df, input, lengths, pix_ids)
+            mini_multiset = generate_dict(df, input, lengths, pix_ids)
 
-        with open(export_path, 'wb') as f:
-            pickle.dump(mini_multiset, f)
-            f.close()
+            with open(export_path, 'wb') as f:
+                pickle.dump(mini_multiset, f)
+                f.close()
 
-        """with open(export_path, 'wb') as f:
-            pickle.dump(mini_multiset, f)
-            f.close()"""
+            """with open(export_path, 'wb') as f:
+                pickle.dump(mini_multiset, f)
+                f.close()"""
 
 
 def generate_length_inputs(ccd, max_ccds, num_features, num_pixels, num_subpixels, pix_ids, pixel2subpixel_dict,
@@ -139,8 +143,6 @@ def generate_dict(df, input, lengths, pix_ids):
     sagitarius = df.sagitarius.to_numpy().flatten()
     mini_multiset = defaultdict(list)
     for i, pix in enumerate(pix_ids):
-        if i % 200 == 0:
-            print(i)
         mini_multiset[pix].append(input[i])
         mini_multiset[pix].append(lengths[i])
         mini_multiset[pix].append(lrg[i])

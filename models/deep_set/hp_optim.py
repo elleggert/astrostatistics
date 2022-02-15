@@ -181,7 +181,7 @@ def define_model(trial):
     in_features = features
 
     for i in range(n_layers_fe):
-        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 100)  # 256
+        out_features = trial.suggest_int("fe_n_units_l{}".format(i), 8, 256)  # 256
         fe_layers.append(nn.Linear(in_features, out_features))
         fe_layers.append(nn.ReLU())
         # if n_layers_fe // 2 == i:
@@ -191,7 +191,7 @@ def define_model(trial):
         in_features = out_features
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
-    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 100)  # 512
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)  # 512
     fe_layers.append(nn.Linear(in_features, med_layer))
     fe_layers.append(nn.ReLU())
 
@@ -201,7 +201,7 @@ def define_model(trial):
     in_features = 22
 
     for i in range(n_layers_mlp):
-        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 100)  # 256
+        out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)  # 256
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
         # if n_layers_mlp // 2 == i:
