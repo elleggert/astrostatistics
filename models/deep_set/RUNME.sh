@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/test_run_15_02_22_18_23
+./hp_optim.sh |& tee logs_figs/glbg_17_02_22.txt
