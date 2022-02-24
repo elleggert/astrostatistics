@@ -1,6 +1,6 @@
 """Final Run for the best hyperparameter configurations of the Neural Network"""
 
-# ToDo: Script must be updapted for
+# ToDo: Script must be updapted for Dropouts
 
 import argparse
 import math
@@ -12,7 +12,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models import BaseNet
-from util import get_full_dataset
+from util import get_full_dataset, get_final_dataset
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
@@ -37,15 +37,12 @@ def main():
     patience = 0
     model = define_model(galaxy=gal, area=area).to(device)
     print(model)
-    lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
+    lr, weight_decay, batch_size, criterion = get_hparams(galaxy=gal, area=area)
     print()
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     print()
     optimiser = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
 
-    # ToDo: Adapt to PNLLL loss in case the HP decides this is better
-
-    criterion = nn.MSELoss()
     drop_last = True if (len(valdata.input) > batch_size) else False
     no_epochs = 1000
     testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
@@ -61,45 +58,10 @@ def main():
 
         model.train()
 
-        for i, (inputs, labels) in enumerate(trainloader):
-            model.train()
-
-            # Extract inputs and associated labels from dataloader batch
-            inputs = inputs.to(device)
-
-            labels = labels.to(device)
-
-            # Predict outputs (forward pass)
-
-            predictions = model(inputs)
-
-            # Compute Loss
-            loss = criterion(predictions, labels)
-
-            # Zero-out the gradients before backward pass (pytorch stores the gradients)
-            optimiser.zero_grad()
-
-            # Backpropagation
-            loss.backward()
-
-            # Perform one step of gradient descent
-            optimiser.step()
+        train_loop(criterion, model, optimiser, trainloader)
 
         model.eval()
-        y_pred = np.array([])
-        y_gold = np.array([])
-
-        with torch.no_grad():
-
-            for i, (inputs, labels) in enumerate(valloader):
-                # Split dataloader
-                inputs = inputs.to(device)
-                # Forward pass through the trained network
-                outputs = model(inputs)
-
-                # Get predictions and append to label array + count number of correct and total
-                y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
-                y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+        y_gold, y_pred = val_loop(model, valloader)
 
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
@@ -135,10 +97,12 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
-        print(y_gold)
-        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
-        print(y_pred)
+        print(
+            f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, "
+            f"Mean: {np.mean(y_gold)}")
+        print(
+            f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, "
+            f"Mean: {np.mean(y_pred)}")
 
         r2, rmse, mae = 0, 0, 0
 
@@ -165,12 +129,54 @@ def main():
     torch.save(model, f"trained_models/{area}/{gal}/{r2}.pt")
 
 
+def val_loop(model, valloader):
+    y_pred = np.array([])
+    y_gold = np.array([])
+    with torch.no_grad():
+        for i, (inputs, labels) in enumerate(valloader):
+            # Split dataloader
+            inputs = inputs.to(device)
+            # Forward pass through the trained network
+            outputs = model(inputs)
+
+            # Get predictions and append to label array + count number of correct and total
+            y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
+            y_gold = np.append(y_gold, labels.cpu().detach().numpy())
+    return y_gold, y_pred
+
+
+def train_loop(criterion, model, optimiser, trainloader):
+    for i, (inputs, labels) in enumerate(trainloader):
+        model.train()
+
+        # Extract inputs and associated labels from dataloader batch
+        inputs = inputs.to(device)
+
+        labels = labels.to(device)
+
+        # Predict outputs (forward pass)
+
+        predictions = model(inputs)
+
+        # Compute Loss
+        loss = criterion(predictions, labels)
+
+        # Zero-out the gradients before backward pass (pytorch stores the gradients)
+        optimiser.zero_grad()
+
+        # Backpropagation
+        loss.backward()
+
+        # Perform one step of gradient descent
+        optimiser.step()
+
+
 def parse_command_line_args(args):
     global gal, area, num_pixels, num_features, path_to_data, max_set_len, traindata, valdata, testdata
     num_pixels = args['num_pixels']
     gal = args['gal_type']
     area = args['area']
-    traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, area=area, gal=gal)
+    traindata, valdata, testdata = get_final_dataset(num_pixels=num_pixels, area=area, gal=gal)
     num_features = traindata.num_features
 
 
@@ -194,26 +200,38 @@ def get_hparams(galaxy, area):
     if area == "north":
         if galaxy == 'lrg':
             # return 0.1, 0.11966102805969332, 256
-            return 0.00042966343711901, 0.0, 128
+            return 0.00042966343711901, 0.0, 128, nn.MSELoss()
         elif galaxy == 'elg':
-            return 0.0022168493798361945, 0, 16
+            return 0.0022168493798361945, 0, 16, nn.MSELoss()
+        elif galaxy == 'qso':
+            return 0.0022168493798361945, 0, 16, nn.MSELoss()
+        elif galaxy == 'glbg':
+            return 0.0022168493798361945, 0, 16, nn.MSELoss()
         else:
-            return 0.0059739578840763, 0.0, 16
+            return 0.0059739578840763, 0.0, 16, nn.MSELoss()
 
     elif area == "south":
         if galaxy == 'lrg':
-            return 4.8538834002443876e-05, 0, 128
+            return 4.8538834002443876e-05, 0, 128, nn.MSELoss()
         elif galaxy == 'elg':
-            return 0.0007693503935423424, 0, 32
+            return 0.0007693503935423424, 0, 32, nn.MSELoss()
+        elif galaxy == 'qso':
+            return 0.0007693503935423424, 0, 32, nn.MSELoss()
+        elif galaxy == 'glbg':
+            return 0.0007693503935423424, 0, 32, nn.MSELoss()
         else:
-            return 0.0011912772207786039, 0.15312074922163604, 32
+            return 0.0011912772207786039, 0.15312074922163604, 32, nn.MSELoss()
     else:
         if galaxy == 'lrg':
-            return 0.0005231431812476474, 0, 32
+            return 0.0005231431812476474, 0, 32, nn.MSELoss()
         elif galaxy == 'elg':
-            return 0.003155992400443771, 0, 128
+            return 0.003155992400443771, 0, 128, nn.MSELoss()
+        elif galaxy == 'qso':
+            return 0.003155992400443771, 0, 128, nn.MSELoss()
+        elif galaxy == 'glbg':
+            return 0.003155992400443771, 0, 128, nn.MSELoss()
         else:
-            return 0.00011377624891759982, 0, 32
+            return 0.00011377624891759982, 0, 32, nn.MSELoss()
 
 
 def define_model(area, galaxy):
@@ -229,6 +247,16 @@ def define_model(area, galaxy):
             out_features_mlp = 256
             p = 0.3
 
+        elif galaxy == 'qso':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
+        elif galaxy == 'glbg':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
         else:
             n_layers_mlp = 4
             out_features_mlp = 256
@@ -243,6 +271,16 @@ def define_model(area, galaxy):
 
 
         elif galaxy == 'elg':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
+        elif galaxy == 'qso':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
+        elif galaxy == 'glbg':
             n_layers_mlp = 4
             out_features_mlp = 256
             p = 0.3
@@ -260,6 +298,16 @@ def define_model(area, galaxy):
             p = 0.3
 
         elif galaxy == 'elg':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
+        elif galaxy == 'qso':
+            n_layers_mlp = 4
+            out_features_mlp = 256
+            p = 0.3
+
+        elif galaxy == 'glbg':
             n_layers_mlp = 4
             out_features_mlp = 256
             p = 0.3
