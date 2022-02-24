@@ -26,7 +26,7 @@ def main():
     #area = args['area']
     num_pixels = args['num_pixels']
 
-    areas = ['north', 'south', 'des']
+    areas = ['des','south']
 
     ccd, pixel2subpixel_dict, subpixel2ccd_dict = import_pixel_mappings(NSIDE)
 
@@ -40,25 +40,25 @@ def main():
         elif area == 'south':
             max_ccds = 25
         else:
-            max_ccds = 50
+            max_ccds = 40
 
         for test in tests:
 
             if test:
                 import_path = f'../../bricks_data/{area}_test_{NSIDE}.csv'
                 if export_to_disk:
-                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_test_{NSIDE}.pickle'
+                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_test_{NSIDE}_robust.pickle'
                 else:
-                    export_path = f'data/north/{area}_test_{NSIDE}.pickle'
+                    export_path = f'data/north/{area}_test_{NSIDE}_robust.pickle'
 
 
             else:
                 import_path = f'../../bricks_data/{area}_{NSIDE}.csv'
                 if export_to_disk:
                     # If stored on Astrodisk Volume
-                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_{NSIDE}.pickle'
+                    export_path = f'/Volumes/Astrodisk/bricks_data/{area}_{NSIDE}_robust.pickle'
                 else:
-                    export_path = f'data/north/{area}_{NSIDE}.pickle'
+                    export_path = f'data/north/{area}_{NSIDE}_robust.pickle'
 
             df = pd.read_csv(import_path)
             # Randomly Sampling Pixel Indices from Dataframe
