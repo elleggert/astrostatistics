@@ -2,7 +2,7 @@
 
 import numpy as np
 from astropy.io import fits
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, RobustScaler
 
 
 # noinspection PyAttributeOutsideInit
@@ -23,6 +23,8 @@ class CCD:
         # Do these two if you want to prepare a dataset that is already scaled and has filter colour encoded
         self.stack_scale_systematics()
         self.encode_add_categoricals()
+        #self.clean_nans()
+
 
     def initalise_boundaries(self):
         self.ra = self.concat_surveys('ra')
@@ -102,14 +104,13 @@ class CCD:
         # Add encoded categoricals
         self.data = np.concatenate((self.data, self.filter_colour_encoded), axis=1)
         self.num_features = self.data.shape[1]
-        print(self.num_features)
 
     def stack_scale_systematics(self):
         # Do this one if you do want scaled inputs and only stack the important metrics
 
         self.data = np.stack(self.sys_tuple,
                              axis=1)
-        self.scaler_in = MinMaxScaler()
+        self.scaler_in = RobustScaler()
 
         self.data = self.scaler_in.fit_transform(self.data)
         self.num_features = self.data.shape[1]
@@ -122,6 +123,13 @@ class CCD:
         fc = self.filter_colour[:, np.newaxis]
         self.data = np.concatenate((self.data, fc), axis=1)
         self.num_features = self.data.shape[1]
+        #self.clean_nans()
+
+
+    def clean_nans(self):
+        for i in range(self.data.shape[1] - 1):
+            ind = np.isfinite(self.data[:, i])
+            self.data = self.data[ind]
 
     def get_ccds(self, ids):
         return self.data[ids]

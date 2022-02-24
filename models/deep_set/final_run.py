@@ -10,7 +10,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models import VarMultiSetNet
-from util import get_mask, get_full_dataset
+from util import get_mask, get_full_dataset, get_final_dataset
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
@@ -159,14 +159,12 @@ def main():
             y_pred = np.append(y_pred, outputs.cpu().detach().numpy())
             y_gold = np.append(y_gold, labels.cpu().detach().numpy())
 
-            """if np.isnan(outputs).sum() > 0:
-                print("Nan predicted for:")
-                print(X1, X2, labels, set_sizes)"""
-
-        print("Target", len(y_gold), np.isnan(y_gold).sum(), np.max(y_gold), np.min(y_gold), np.mean(y_gold))
-        print(y_gold)
-        print("Prediction", len(y_pred), np.isnan(y_pred).sum(), np.max(y_pred), np.min(y_pred), np.mean(y_pred))
-        print(y_pred)
+        print(
+            f"Target: {len(y_gold)}, NaN: {np.isnan(y_gold).sum()}, Max: {np.max(y_gold)}, Min: {np.min(y_gold)}, "
+            f"Mean: {np.mean(y_gold)}")
+        print(
+            f"Prediction: {len(y_pred)}, NaN: {np.isnan(y_pred).sum()}, Max: {np.max(y_pred)}, Min: {np.min(y_pred)}, "
+            f"Mean: {np.mean(y_pred)}")
 
         r2, rmse, mae = 0, 0, 0
         try:
@@ -201,7 +199,7 @@ def parse_command_line_args(args):
     elif area == "south":
         max_set_len = 25
     else:
-        max_set_len = 50
+        max_set_len = 40
     gal = args['gal_type']
     traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
     features = traindata.num_features
@@ -224,6 +222,7 @@ def print_session_stats(args):
 
 
 def define_model(galaxy, area):
+    # ToDo: Provide cases for Dropout Galaxies
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
@@ -336,7 +335,7 @@ def define_model(galaxy, area):
 
     mlp_layers = []
 
-    in_features = 66
+    in_features = 22
 
     for i in range(n_layers_mlp):
         mlp_layers.append(nn.Linear(in_features, out_features_mlp))
@@ -354,6 +353,7 @@ def define_model(galaxy, area):
 
 
 def get_hparams(galaxy, area):
+    # ToDo: Provide cases for dropout galaxies
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
         if galaxy == 'lrg':
