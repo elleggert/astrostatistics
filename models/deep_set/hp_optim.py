@@ -150,7 +150,7 @@ def parse_command_line_args(args):
     elif area == "south":
         max_set_len = 25
     else:
-        max_set_len = 50
+        max_set_len = 40
     gal = args['gal_type']
     traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
     features = traindata.num_features

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/glbg_17_02_22.txt
+./hp_optim.sh |& tee logs_figs/north/lrg_robust_23.txt

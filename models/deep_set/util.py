@@ -70,10 +70,10 @@ def get_dataset(num_pixels, max_set_len, gal, path_to_data='data/multiset.pickle
 
 def get_full_dataset(area, num_pixels, max_set_len, gal):
     print(f"Starting Loading {area}")
-    with open(f'data/{area}/{area}_512.pickle', 'rb') as f:
+    with open(f'data/{area}/{area}_512_robust.pickle', 'rb') as f:
         trainset = pickle.load(f)
         f.close()
-    with open(f'data/{area}/{area}_test_512.pickle', 'rb') as f:
+    with open(f'data/{area}/{area}_test_512_robust.pickle', 'rb') as f:
         testset = pickle.load(f)
         f.close()
 
