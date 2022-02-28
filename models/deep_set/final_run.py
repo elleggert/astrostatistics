@@ -208,7 +208,7 @@ def parse_command_line_args(args):
     else:
         max_set_len = 40
     gal = args['gal_type']
-    traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
+    traindata, valdata, testdata = get_final_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
     features = traindata.num_features
 
 
@@ -233,14 +233,13 @@ def define_model(galaxy, area):
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            n_layers_fe = 2
+            out_features_fe = 150
+            p1 = 0.3
             p2 = 0.25
-            med_layer = 350
+            med_layer = 150
             n_layers_mlp = 4
-            out_features_mlp = 256
-            # TBC
+            out_features_mlp = 100
 
         elif galaxy == 'elg':
             n_layers_fe = 2
@@ -270,25 +269,24 @@ def define_model(galaxy, area):
             out_features_mlp = 200
 
         else:
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
+            n_layers_fe = 2
+            out_features_fe = 220
+            p1 = 0.3
+            p2 = 0.2
+            med_layer = 150
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 100
 
     elif area == "south":
 
         if galaxy == 'lrg':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            n_layers_fe = 2
+            out_features_fe = 150
+            p1 = 0.3
             p2 = 0.25
-            med_layer = 350
+            med_layer = 150
             n_layers_mlp = 4
-            out_features_mlp = 256
-
+            out_features_mlp = 100
 
         elif galaxy == 'elg':
             n_layers_fe = 2
@@ -300,26 +298,26 @@ def define_model(galaxy, area):
             out_features_mlp = 175
 
         elif galaxy == 'qso':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
+            n_layers_fe = 2
+            out_features_fe = 200
+            p1 = 0.2
+            p2 = 0.2
+            med_layer = 185
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 100
 
         elif galaxy == 'glbg':
-            n_layers_fe = 4
-            out_features_fe = 256
+            n_layers_fe = 2
+            out_features_fe = 200
             p1 = 0.25
             p2 = 0.25
-            med_layer = 350
-            n_layers_mlp = 4
-            out_features_mlp = 256
+            med_layer = 400
+            n_layers_mlp = 2
+            out_features_mlp = 100
 
         else:
             n_layers_fe = 4
-            out_features_fe = 125
+            out_features_fe = 150
             p1 = 0.25
             p2 = 0.05
             med_layer = 300
@@ -329,51 +327,49 @@ def define_model(galaxy, area):
     else:
 
         if galaxy == 'lrg':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            n_layers_fe = 2
+            out_features_fe = 150
+            p1 = 0.3
             p2 = 0.25
-            med_layer = 350
+            med_layer = 150
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 100
 
         elif galaxy == 'elg':
             n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            out_features_fe = 150
+            p1 = 0.2
             p2 = 0.25
             med_layer = 350
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 160
 
         elif galaxy == 'qso':
-            n_layers_fe = 4
-            out_features_fe = 256
+            n_layers_fe = 2
+            out_features_fe = 150
             p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
-            n_layers_mlp = 4
-            out_features_mlp = 256
+            p2 = 0.4
+            med_layer = 20
+            n_layers_mlp = 2
+            out_features_mlp = 120
 
         elif galaxy == 'glbg':
             n_layers_fe = 4
-            out_features_fe = 256
+            out_features_fe = 100
             p1 = 0.25
             p2 = 0.25
-            med_layer = 350
+            med_layer = 130
             n_layers_mlp = 4
-            out_features_mlp = 256
-
-
+            out_features_mlp = 100
 
         else:
             n_layers_fe = 4
-            out_features_fe = 256
+            out_features_fe = 180
             p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
-            n_layers_mlp = 4
-            out_features_mlp = 256
+            p2 = 0.35
+            med_layer = 330
+            n_layers_mlp = 2
+            out_features_mlp = 200
 
     reduce = 'sum'
     fe_layers = []
@@ -413,42 +409,41 @@ def get_hparams(galaxy, area):
     # ToDo: Provide cases for dropout galaxies
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
-        if galaxy == 'lrg':
-            # return 0.1, 0.11966102805969332, 256
-            return 0.00012625840029965784, 0.11966102805969332, 256, nn.MSELoss()
-        elif galaxy == 'elg': # --> done
+        if galaxy == 'lrg': # --> done
+            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+        elif galaxy == 'elg':  # --> done
             return 0.0004599944376425736, 0.0738690886140696, 32, nn.MSELoss()
 
-        elif galaxy == 'qso': # --> done
+        elif galaxy == 'qso':  # --> done
             return 0.0002129782693067251, 0.01091575020984078, 32, nn.MSELoss()
 
-        elif galaxy == 'glbg': # --> done
+        elif galaxy == 'glbg':  # --> done
             return 0.0010669093353509024, 0.12333702988885017, 128, nn.MSELoss()
-        else:
-            return 0.0033982461411864624, 0.006718087764096936, 128, nn.MSELoss()
+        else: # --> done
+            return 9.698438573821183e-05, 0.23961834074306818, 256, nn.MSELoss()
 
     elif area == "south":
-        if galaxy == 'lrg':
-            return 7.458723170594822e-05, 0, 128, nn.MSELoss()
-        elif galaxy == 'elg': # --> done
+        if galaxy == 'lrg': # --> done
+            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+        elif galaxy == 'elg':  # --> done
             return 0.00018641861416175164, 0.07947795784779363, 256, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.0012133886263240518, 0, 256, nn.MSELoss()
+        elif galaxy == 'qso': # --> done
+            return 0.0001883515972221876, 0.044348213953226155, 256, nn.MSELoss()
         elif galaxy == 'glbg':
-            return 0.0012133886263240518, 0, 256, nn.MSELoss()
-        else: # --> done
+            return 0.00030735807502983687, 0.2898483420649945, 32, nn.MSELoss()
+        else:  # --> done
             return 0.00023951669569601602, 0.12288462842525326, 256, nn.MSELoss()
     else:
-        if galaxy == 'lrg':
-            return 0.00471120213385988, 0, 128, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.00471120213385988, 0, 128, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.00471120213385988, 0, 128, nn.MSELoss()
-        elif galaxy == 'glbg':
-            return 0.00471120213385988, 0, 128, nn.MSELoss()
-        else:
-            return 0.00471120213385988, 0, 128, nn.MSELoss()
+        if galaxy == 'lrg':  # --> done
+            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+        elif galaxy == 'elg': # --> done
+            return 9.342861572715064e-05, 0.055109740552741496, 32, nn.MSELoss()
+        elif galaxy == 'qso': # --> done
+            return 0.005544184180774864, 0.008298229989336776, 32, nn.MSELoss()
+        elif galaxy == 'glbg': # --> done
+            return 0.00014553858586568378, 0.20049865047593457, 32, nn.MSELoss()
+        else: # --> done
+            return 6.646267123877951e-05, 0.003691296129378855, 256, nn.MSELoss()
 
 
 if __name__ == "__main__":
