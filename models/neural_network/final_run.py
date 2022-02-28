@@ -35,7 +35,9 @@ def main():
     patience = 0
     model = define_model(galaxy=gal, area=area).to(device)
     print(model)
-    lr, weight_decay, batch_size, criterion = get_hparams(galaxy=gal, area=area)
+    lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
+    criterion = nn.MSELoss()
+    #criterion = nn.PoissonNLLLoss()
     print()
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     print()
@@ -197,38 +199,38 @@ def get_hparams(galaxy, area):
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
         if galaxy == 'lrg': # done
-            return 0.0014261033969104992, 0.028416090227268063, 32, nn.MSELoss()
+            return 0.0014261033969104992, 0.028416090227268063, 32
         elif galaxy == 'elg': # done
-            return 0.0005483155562317579, 0.0030780942332826744, 256, nn.MSELoss()
+            return 0.0005483155562317579, 0.0030780942332826744, 256
         elif galaxy == 'qso':# done
-            return 2.870873422671021e-05, 0.009684600148157946, 256, nn.MSELoss()
+            return 2.870873422671021e-05, 0.009684600148157946, 256
         elif galaxy == 'glbg':# done
-            return 0.0012021727952055794, 0.0011311838264277674, 256, nn.MSELoss()
+            return 0.0012021727952055794, 0.0011311838264277674, 256
         else: # done
-            return 7.378549719315322e-05, 0.041856805620734086, 256, nn.MSELoss()
+            return 7.378549719315322e-05, 0.041856805620734086, 256
 
     elif area == "south":
         if galaxy == 'lrg': # done
-            return 1.4486327797188878e-05, 0.013624934186382366, 128, nn.MSELoss()
+            return 1.4486327797188878e-05, 0.013624934186382366, 128
         elif galaxy == 'elg': # done
-            return 5.083620673436264e-05, 0.08754366669226324, 128, nn.MSELoss()
+            return 5.083620673436264e-05, 0.08754366669226324, 128
         elif galaxy == 'qso': # done
-            return 1.4397108307235833e-05, 0.00047458046979852696, 128, nn.MSELoss()
+            return 1.4397108307235833e-05, 0.00047458046979852696, 128
         elif galaxy == 'glbg': # done
-            return 0.00011913397792380141, 0.0037406889381795955, 256, nn.MSELoss()
+            return 0.00011913397792380141, 0.0037406889381795955, 256
         else: # done
-            return 0.0002706380625918258, 0.0010891782949972563, 256, nn.MSELoss()
+            return 0.0002706380625918258, 0.0010891782949972563, 256
     else:
         if galaxy == 'lrg': # done
-            return 0.00034294857273689517, 0.0004828378731781737, 256, nn.MSELoss()
+            return 0.00034294857273689517, 0.0004828378731781737, 256
         elif galaxy == 'elg': # done
-            return 0.0005319590184319263, 0.02003499265389086, 128, nn.MSELoss()
+            return 0.0005319590184319263, 0.02003499265389086, 128
         elif galaxy == 'qso': # done
-            return 7.274339370730868e-05, 0.008569901646051892, 256, nn.MSELoss()
+            return 7.274339370730868e-05, 0.008569901646051892, 256
         elif galaxy == 'glbg': # done
-            return 0.00017847465975742678, 0.11091240407712032, 128, nn.MSELoss()
+            return 0.00017847465975742678, 0.11091240407712032, 128
         else: # done
-            return 3.15390633591755e-05, 0.00714665318674708, 256, nn.MSELoss()
+            return 3.15390633591755e-05, 0.00714665318674708, 256
 
 
 def define_model(area, galaxy):
