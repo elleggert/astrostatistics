@@ -130,8 +130,14 @@ def parse_command_line_args(args):
 
 
 def delete_models():
-    for model in os.listdir(f"trained_models/{area}/{gal}"):
-        os.remove(f"trained_models/{area}/{gal}/{model}")
+    for obj in os.listdir(f"trained_models/{area}/{gal}"):
+        try:
+            # Try casting it as a int (only works for those models trained previously)
+            int(obj.replace('.pt', ""))
+            os.remove(f"trained_models/{area}/{gal}/{obj}")
+        except:
+            # Meaning the result is a float aka it is an actual Model that was tested on the testset
+            continue
 
 
 def print_session_stats(args):

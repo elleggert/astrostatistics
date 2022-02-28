@@ -136,8 +136,6 @@ def main():
 
 
 def delete_models():
-
-    new_mod = set()
     for obj in os.listdir(f"trained_models/{area}/{gal}"):
 
         try:
