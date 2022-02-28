@@ -1,7 +1,5 @@
 """Final Run for the best hyperparameter configurations of the Neural Network"""
 
-# ToDo: Script must be updapted for Dropouts
-
 import argparse
 import math
 

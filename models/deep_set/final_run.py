@@ -240,40 +240,34 @@ def define_model(galaxy, area):
             med_layer = 350
             n_layers_mlp = 4
             out_features_mlp = 256
-            """n_layers_fe = 1
-            out_features_fe = 3
-            p1 = 0.25
-            p2 = 0.2
-            med_layer = 4
-            n_layers_mlp = 1
-            out_features_mlp = 2"""
+            # TBC
 
         elif galaxy == 'elg':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
+            n_layers_fe = 2
+            out_features_fe = 60
+            p1 = 0.1
+            p2 = 0.27
+            med_layer = 380
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 100
 
         elif galaxy == 'qso':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            n_layers_fe = 2
+            out_features_fe = 175
+            p1 = 0.075
             p2 = 0.25
-            med_layer = 350
+            med_layer = 250
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 175
 
         elif galaxy == 'glbg':
-            n_layers_fe = 4
-            out_features_fe = 256
-            p1 = 0.25
+            n_layers_fe = 2
+            out_features_fe = 70
+            p1 = 0.2
             p2 = 0.25
-            med_layer = 350
+            med_layer = 100
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 200
 
         else:
             n_layers_fe = 4
@@ -297,13 +291,13 @@ def define_model(galaxy, area):
 
 
         elif galaxy == 'elg':
-            n_layers_fe = 4
-            out_features_fe = 256
+            n_layers_fe = 2
+            out_features_fe = 250
             p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
+            p2 = 0.3
+            med_layer = 500
             n_layers_mlp = 4
-            out_features_mlp = 256
+            out_features_mlp = 175
 
         elif galaxy == 'qso':
             n_layers_fe = 4
@@ -325,12 +319,12 @@ def define_model(galaxy, area):
 
         else:
             n_layers_fe = 4
-            out_features_fe = 256
+            out_features_fe = 125
             p1 = 0.25
-            p2 = 0.25
-            med_layer = 350
-            n_layers_mlp = 4
-            out_features_mlp = 256
+            p2 = 0.05
+            med_layer = 300
+            n_layers_mlp = 2
+            out_features_mlp = 175
 
     else:
 
@@ -422,26 +416,28 @@ def get_hparams(galaxy, area):
         if galaxy == 'lrg':
             # return 0.1, 0.11966102805969332, 256
             return 0.00012625840029965784, 0.11966102805969332, 256, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.0004377981116963404, 0, 32, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.0004377981116963404, 0, 32, nn.MSELoss()
-        elif galaxy == 'glbg':
-            return 0.0004377981116963404, 0, 32, nn.MSELoss()
+        elif galaxy == 'elg': # --> done
+            return 0.0004599944376425736, 0.0738690886140696, 32, nn.MSELoss()
+
+        elif galaxy == 'qso': # --> done
+            return 0.0002129782693067251, 0.01091575020984078, 32, nn.MSELoss()
+
+        elif galaxy == 'glbg': # --> done
+            return 0.0010669093353509024, 0.12333702988885017, 128, nn.MSELoss()
         else:
             return 0.0033982461411864624, 0.006718087764096936, 128, nn.MSELoss()
 
     elif area == "south":
         if galaxy == 'lrg':
             return 7.458723170594822e-05, 0, 128, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.0012133886263240518, 0, 256, nn.MSELoss()
+        elif galaxy == 'elg': # --> done
+            return 0.00018641861416175164, 0.07947795784779363, 256, nn.MSELoss()
         elif galaxy == 'qso':
             return 0.0012133886263240518, 0, 256, nn.MSELoss()
         elif galaxy == 'glbg':
             return 0.0012133886263240518, 0, 256, nn.MSELoss()
-        else:
-            return 0.0008379365544368044, 0, 256, nn.MSELoss()
+        else: # --> done
+            return 0.00023951669569601602, 0.12288462842525326, 256, nn.MSELoss()
     else:
         if galaxy == 'lrg':
             return 0.00471120213385988, 0, 128, nn.MSELoss()

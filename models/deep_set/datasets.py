@@ -124,14 +124,6 @@ class SetSequence(Dataset):
         return x, y, l
 
 
-""" Todo
-1. Where to get the data from
-2. Scaling --> import an already scaled dataset, this will have to be prepared but should be same for Neural Net
-3. Combine larger and smaller dataset
-4. Build 64 input channels instead of one, so one more dimension of tensors( NO of Pixels,no_of_subpixels,no_ccds, no_features)
-"""
-
-
 # ToDo: Adapt to stack stage2inputs earlier and make that more efficient.
 
 
