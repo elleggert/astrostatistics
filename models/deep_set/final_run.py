@@ -35,7 +35,9 @@ def main():
     patience = 0
     model = define_model(galaxy=gal, area=area).to(device)
     print(model)
-    lr, weight_decay, batch_size, criterion = get_hparams(galaxy=gal, area=area)
+    lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
+    criterion = nn.MSELoss()
+    #criterion = nn.PoissonNLLLoss()
     print(f"Learning Rate: {lr}, weight decay: {weight_decay}, batch_size: {batch_size}")
     print()
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
@@ -410,40 +412,40 @@ def get_hparams(galaxy, area):
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
         if galaxy == 'lrg': # --> done
-            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+            return 0.0001546764411255828, 0.03184751820920388, 32
         elif galaxy == 'elg':  # --> done
-            return 0.0004599944376425736, 0.0738690886140696, 32, nn.MSELoss()
+            return 0.0004599944376425736, 0.0738690886140696, 32
 
         elif galaxy == 'qso':  # --> done
-            return 0.0002129782693067251, 0.01091575020984078, 32, nn.MSELoss()
+            return 0.0002129782693067251, 0.01091575020984078, 32
 
         elif galaxy == 'glbg':  # --> done
-            return 0.0010669093353509024, 0.12333702988885017, 128, nn.MSELoss()
+            return 0.0010669093353509024, 0.12333702988885017, 128
         else: # --> done
-            return 9.698438573821183e-05, 0.23961834074306818, 256, nn.MSELoss()
+            return 9.698438573821183e-05, 0.23961834074306818, 256
 
     elif area == "south":
         if galaxy == 'lrg': # --> done
-            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+            return 0.0001546764411255828, 0.03184751820920388, 32
         elif galaxy == 'elg':  # --> done
-            return 0.00018641861416175164, 0.07947795784779363, 256, nn.MSELoss()
+            return 0.00018641861416175164, 0.07947795784779363, 256
         elif galaxy == 'qso': # --> done
-            return 0.0001883515972221876, 0.044348213953226155, 256, nn.MSELoss()
+            return 0.0001883515972221876, 0.044348213953226155, 256
         elif galaxy == 'glbg':
-            return 0.00030735807502983687, 0.2898483420649945, 32, nn.MSELoss()
+            return 0.00030735807502983687, 0.2898483420649945, 32
         else:  # --> done
-            return 0.00023951669569601602, 0.12288462842525326, 256, nn.MSELoss()
+            return 0.00023951669569601602, 0.12288462842525326, 256
     else:
         if galaxy == 'lrg':  # --> done
-            return 0.0001546764411255828, 0.03184751820920388, 32, nn.MSELoss()
+            return 0.0001546764411255828, 0.03184751820920388, 32
         elif galaxy == 'elg': # --> done
-            return 9.342861572715064e-05, 0.055109740552741496, 32, nn.MSELoss()
+            return 9.342861572715064e-05, 0.055109740552741496, 32
         elif galaxy == 'qso': # --> done
-            return 0.005544184180774864, 0.008298229989336776, 32, nn.MSELoss()
+            return 0.005544184180774864, 0.008298229989336776, 32
         elif galaxy == 'glbg': # --> done
-            return 0.00014553858586568378, 0.20049865047593457, 32, nn.MSELoss()
+            return 0.00014553858586568378, 0.20049865047593457, 32
         else: # --> done
-            return 6.646267123877951e-05, 0.003691296129378855, 256, nn.MSELoss()
+            return 6.646267123877951e-05, 0.003691296129378855, 256
 
 
 if __name__ == "__main__":
