@@ -219,16 +219,16 @@ def get_hparams(galaxy, area):
         else: # done
             return 0.0002706380625918258, 0.0010891782949972563, 256, nn.MSELoss()
     else:
-        if galaxy == 'lrg':
-            return 0.0005231431812476474, 0, 32, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.003155992400443771, 0, 128, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.003155992400443771, 0, 128, nn.MSELoss()
-        elif galaxy == 'glbg':
-            return 0.003155992400443771, 0, 128, nn.MSELoss()
-        else:
-            return 0.00011377624891759982, 0, 32, nn.MSELoss()
+        if galaxy == 'lrg': # done
+            return 0.00034294857273689517, 0.0004828378731781737, 256, nn.MSELoss()
+        elif galaxy == 'elg': # done
+            return 0.0005319590184319263, 0.02003499265389086, 128, nn.MSELoss()
+        elif galaxy == 'qso': # done
+            return 7.274339370730868e-05, 0.008569901646051892, 256, nn.MSELoss()
+        elif galaxy == 'glbg': # done
+            return 0.00017847465975742678, 0.11091240407712032, 128, nn.MSELoss()
+        else: # done
+            return 3.15390633591755e-05, 0.00714665318674708, 256, nn.MSELoss()
 
 
 def define_model(area, galaxy):
@@ -290,29 +290,29 @@ def define_model(area, galaxy):
     else:
 
         if galaxy == 'lrg':
-            n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            n_layers_mlp = 2
+            out_features_mlp = 60
+            p = 0.05
 
         elif galaxy == 'elg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.1
 
         elif galaxy == 'qso':
-            n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            n_layers_mlp = 2
+            out_features_mlp = 60
+            p = 0.05
 
         elif galaxy == 'glbg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.1
 
         else:
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 50
+            p = 0.05
 
     mlp_layers = []
 
