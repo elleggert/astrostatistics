@@ -196,29 +196,28 @@ def print_session_stats(args):
 def get_hparams(galaxy, area):
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
-        if galaxy == 'lrg':
-            # return 0.1, 0.11966102805969332, 256
-            return 0.00042966343711901, 0.0, 128, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.0022168493798361945, 0, 16, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.0022168493798361945, 0, 16, nn.MSELoss()
-        elif galaxy == 'glbg':
-            return 0.0022168493798361945, 0, 16, nn.MSELoss()
-        else:
-            return 0.0059739578840763, 0.0, 16, nn.MSELoss()
+        if galaxy == 'lrg': # done
+            return 0.0014261033969104992, 0.028416090227268063, 32, nn.MSELoss()
+        elif galaxy == 'elg': # done
+            return 0.0005483155562317579, 0.0030780942332826744, 256, nn.MSELoss()
+        elif galaxy == 'qso':# done
+            return 2.870873422671021e-05, 0.009684600148157946, 256, nn.MSELoss()
+        elif galaxy == 'glbg':# done
+            return 0.0012021727952055794, 0.0011311838264277674, 256, nn.MSELoss()
+        else: # done
+            return 7.378549719315322e-05, 0.041856805620734086, 256, nn.MSELoss()
 
     elif area == "south":
-        if galaxy == 'lrg':
-            return 4.8538834002443876e-05, 0, 128, nn.MSELoss()
-        elif galaxy == 'elg':
-            return 0.0007693503935423424, 0, 32, nn.MSELoss()
-        elif galaxy == 'qso':
-            return 0.0007693503935423424, 0, 32, nn.MSELoss()
-        elif galaxy == 'glbg':
-            return 0.0007693503935423424, 0, 32, nn.MSELoss()
-        else:
-            return 0.0011912772207786039, 0.15312074922163604, 32, nn.MSELoss()
+        if galaxy == 'lrg': # done
+            return 1.4486327797188878e-05, 0.013624934186382366, 128, nn.MSELoss()
+        elif galaxy == 'elg': # done
+            return 5.083620673436264e-05, 0.08754366669226324, 128, nn.MSELoss()
+        elif galaxy == 'qso': # done
+            return 1.4397108307235833e-05, 0.00047458046979852696, 128, nn.MSELoss()
+        elif galaxy == 'glbg': # done
+            return 0.00011913397792380141, 0.0037406889381795955, 256, nn.MSELoss()
+        else: # done
+            return 0.0002706380625918258, 0.0010891782949972563, 256, nn.MSELoss()
     else:
         if galaxy == 'lrg':
             return 0.0005231431812476474, 0, 32, nn.MSELoss()
@@ -237,56 +236,56 @@ def define_model(area, galaxy):
     if area == "north":
         if galaxy == 'lrg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 64
+            p = 0.1
 
         elif galaxy == 'elg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 64
+            p = 0.1
 
         elif galaxy == 'qso':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.15
 
         elif galaxy == 'glbg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.15
 
         else:
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 50
+            p = 0.2
 
     elif area == "south":
 
         if galaxy == 'lrg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 50
+            p = 0.15
 
 
         elif galaxy == 'elg':
-            n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            n_layers_mlp = 2
+            out_features_mlp = 50
+            p = 0.1
 
         elif galaxy == 'qso':
-            n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            n_layers_mlp = 2
+            out_features_mlp = 45
+            p = 0.05
 
         elif galaxy == 'glbg':
             n_layers_mlp = 4
-            out_features_mlp = 256
-            p = 0.3
+            out_features_mlp = 60
+            p = 0.2
 
         else:
             n_layers_mlp = 4
-            out_features_mlp = 60
-            p = 0.0
+            out_features_mlp = 50
+            p = 0.05
 
     else:
 
