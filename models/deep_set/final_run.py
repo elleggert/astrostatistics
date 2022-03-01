@@ -33,11 +33,11 @@ def main():
 
     best_r2 = -10000
     patience = 0
-    model = define_model(galaxy=gal, area=area).to(device)
+    model = define_generic_model(galaxy=gal, area=area).to(device)
     print(model)
     lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
-    # criterion = nn.MSELoss()
-    criterion = nn.PoissonNLLLoss()
+    criterion = nn.MSELoss()
+    #criterion = nn.PoissonNLLLoss()
     print(f"Learning Rate: {lr}, weight decay: {weight_decay}, batch_size: {batch_size}")
     print()
     print(f" Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
@@ -232,7 +232,7 @@ def print_session_stats(args):
 
 # Generic Model for testing purposes
 
-def define_generic_model():
+def define_generic_model(galaxy, area):
     n_layers_fe = 4
     out_features_fe = 256
     p1 = 0.25

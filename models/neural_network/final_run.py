@@ -33,7 +33,7 @@ def main():
 
     best_r2 = -10000
     patience = 0
-    model = define_model(galaxy=gal, area=area).to(device)
+    model = define_generic_model(galaxy=gal, area=area).to(device)
     print(model)
     lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
     #criterion = nn.MSELoss()
@@ -231,6 +231,25 @@ def get_hparams(galaxy, area):
             return 0.00017847465975742678, 0.11091240407712032, 128
         else: # done
             return 3.15390633591755e-05, 0.00714665318674708, 256
+
+def define_generic_model(area, galaxy):
+    n_layers_mlp = 4
+    out_features_mlp = 256
+    p = 0.25
+
+    mlp_layers = []
+
+    in_features = num_features
+
+    for i in range(n_layers_mlp):
+        mlp_layers.append(nn.Linear(in_features, out_features_mlp))
+        mlp_layers.append(nn.ReLU())
+        mlp_layers.append(nn.Dropout(p))
+        in_features = out_features_mlp
+    mlp_layers.append(nn.Linear(in_features, int(in_features / 2)))
+    mlp_layers.append(nn.Linear(int(in_features / 2), 1))
+
+    return BaseNet(mlp=nn.Sequential(*mlp_layers))
 
 
 def define_model(area, galaxy):
