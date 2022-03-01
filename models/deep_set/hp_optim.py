@@ -211,7 +211,7 @@ def define_model_simple(trial):
 
     in_features = 22
 
-    out_features_mlp = trial.suggest_categorical("fe_neurons", [64, 128, 256])  # 256
+    out_features_mlp = trial.suggest_categorical("fe_neurons", [64, 128, 256])
 
 
     for i in range(n_layers_mlp):
@@ -274,7 +274,7 @@ def define_model(trial):
 
 
 def objective(trial):
-    model = define_model(trial).to(device)
+    model = define_model_simple(trial).to(device)
     print()
     print(
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} "
@@ -290,8 +290,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = 6
-    #no_epochs = trial.suggest_categorical("epochs", [30, 50, 70])
+    no_epochs = trial.suggest_categorical("epochs", [20, 40, 60])
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
