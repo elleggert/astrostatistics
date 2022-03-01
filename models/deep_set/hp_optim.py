@@ -14,7 +14,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 
 from models import VarMultiSetNet
-from util import get_mask, get_full_dataset
+from util import get_mask, get_full_dataset, get_final_dataset
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
@@ -162,7 +162,7 @@ def parse_command_line_args(args):
     else:
         max_set_len = 40
     gal = args['gal_type']
-    traindata, valdata, testdata = get_full_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
+    traindata, valdata, testdata = get_final_dataset(num_pixels=num_pixels, max_set_len=max_set_len, gal=gal, area=area)
     features = traindata.num_features
 
 
