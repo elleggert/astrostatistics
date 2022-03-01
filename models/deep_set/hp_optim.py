@@ -182,6 +182,50 @@ def print_session_stats(args):
     print()
     print('+++++++++++++++++++++++++++++++++++++++')
 
+def define_model_simple(trial):
+
+    n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=4, step=2)
+
+    fe_layers = []
+
+    in_features = features
+
+    out_features_fe = trial.suggest_categorical("fe_neurons", [64, 128, 256])  # 256
+    p1 = trial.suggest_float("fe_dropout", 0.0, 0.5)  # Experiment with more dropout
+
+    for i in range(n_layers_fe):
+        fe_layers.append(nn.Linear(in_features, out_features_fe))
+        fe_layers.append(nn.ReLU())
+        fe_layers.append(nn.Dropout(p1))
+        in_features = out_features_fe
+
+    med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)  # 512
+
+    # Getting Output Layer for FE that is then fed into Invariant Layer
+    fe_layers.append(nn.Linear(out_features_fe, med_layer))
+    fe_layers.append(nn.ReLU())
+
+    n_layers_mlp = trial.suggest_int("n_layers_mlp", low=2, high=4, step=2)
+    p2 = trial.suggest_float("fe_dropout", 0.0, 0.5)  # Experiment with more dropout
+    mlp_layers = []
+
+    in_features = 22
+
+    out_features_mlp = trial.suggest_categorical("fe_neurons", [64, 128, 256])  # 256
+
+
+    for i in range(n_layers_mlp):
+        mlp_layers.append(nn.Linear(in_features, out_features_mlp))
+        mlp_layers.append(nn.ReLU())
+        mlp_layers.append(nn.Dropout(p2))
+        in_features = out_features_mlp
+
+    mlp_layers.append(nn.Linear(in_features, int(in_features / 2)))
+    mlp_layers.append(nn.Linear(int(in_features / 2), 1))
+    reduce = 'sum' # Always use sum, the other ones do not work better anyway
+
+    return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
+                          med_layer=med_layer, reduction=reduce)
 
 def define_model(trial):
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=4, step=2)
@@ -200,6 +244,8 @@ def define_model(trial):
 
         in_features = out_features
 
+
+
     # Getting Output Layer for FE that is then fed into Invariant Layer
     med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)  # 512
     fe_layers.append(nn.Linear(in_features, med_layer))
@@ -214,7 +260,6 @@ def define_model(trial):
         out_features = trial.suggest_int("mlp_n_units_l{}".format(i), 8, 256)  # 256
         mlp_layers.append(nn.Linear(in_features, out_features))
         mlp_layers.append(nn.ReLU())
-        # if n_layers_mlp // 2 == i:
         p = trial.suggest_float("mlp_dropout_l{}".format(i), 0.0, 0.5)
         mlp_layers.append(nn.Dropout(p))
 
@@ -245,7 +290,8 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = 100
+    no_epochs = 6
+    #no_epochs = trial.suggest_categorical("epochs", [30, 50, 70])
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
