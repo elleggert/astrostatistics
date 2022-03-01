@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/final_run_PL.txt
+./hp_optim.sh |& tee logs_figs/final_run_PL_DES.txt

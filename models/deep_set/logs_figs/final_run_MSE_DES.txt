@@ -1,0 +1,243 @@
+Starting Loading des
+Finished Loading des
+Finished des setup
+
+++++++++ Session Characteristics +++++++
+
+Area: des
+Gal Type: lrg
+Training Set: 270781
+Validation Set: 67698
+Test Samples: 67698
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+
++++++++++++++++++++++++++++++++++++++++
+VarMultiSetNet(
+  (feature_extractor): Sequential(
+    (0): Linear(in_features=5, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=350, bias=True)
+    (13): ReLU()
+  )
+  (adder): InvLinear(in_features=350, out_features=1, bias=True, reduction=sum)
+  (mlp): Sequential(
+    (0): Linear(in_features=22, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=128, bias=True)
+    (13): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Learning Rate: 0.0001546764411255828, weight decay: 0.03184751820920388, batch_size: 32
+
+ Model params: 525502
+
+epoch 0 -0.019843114028613273 4.251627069331622 0
+epoch 1 0.014631665214297152 4.179148279071968 0
+epoch 2 0.016218802913926744 4.175781235191137 0
+epoch 3 -0.004489401158537243 4.2195016286510985 0
+epoch 4 0.00965478639220474 4.189688965741093 1
+epoch 5 0.02094377369981726 4.165741303474757 2
+epoch 6 0.021446586064162276 4.164671469498325 0
+epoch 7 0.021355292913303847 4.164865734373398 0
+epoch 8 0.020587723512149103 4.166498705403648 1
+epoch 9 0.020417104090842186 4.166861603979474 2
+epoch 10 0.0209159407874292 4.165800515543277 3
+epoch 11 0.021410555629537198 4.164748140602705 4
+epoch 12 0.01919036272918173 4.169469888665979 5
+epoch 13 0.01625560678209692 4.175703125170367 6
+epoch 14 0.022559523896515166 4.162302493513859 7
+epoch 15 0.012283594522062624 4.184124639839476 0
+epoch 16 0.019643975429203597 4.16850561224001 1
+epoch 17 0.021351202453389395 4.164874438348605 2
+epoch 18 0.022777930696942783 4.161837439129165 3
+epoch 19 0.018620153745224632 4.170681705747619 0
+epoch 20 0.018321978308370457 4.171315252685353 1
+epoch 21 0.02215439907761907 4.1631649896933665 2
+epoch 22 0.019080741901564613 4.169702883914162 3
+epoch 23 0.016365657881587836 4.175469551502187 4
+epoch 24 0.01813308796683122 4.171716546819921 5
+epoch 25 0.021545787512719516 4.164460366094155 6
+epoch 26 0.022507213205469112 4.162413871143505 7
+Target: 67698, NaN: 0, Max: 143.0, Min: 0.0, Mean: 8.148734083724777
+Prediction: 67698, NaN: 0, Max: 10.012999534606934, Min: 7.181127071380615, Mean: 8.212769891441708
+
+ XXXXXX======== TRIAL des - lrg ended
+
+Test Set - R-squared:  0.022507213205469112
+Test Set - RMSE:  4.162413871143505
+Test Set - MAE:  3.0820721292457693
+
+
+
+Starting Loading des
+Finished Loading des
+Finished des setup
+
+++++++++ Session Characteristics +++++++
+
+Area: des
+Gal Type: elg
+Training Set: 270781
+Validation Set: 67698
+Test Samples: 67698
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+
++++++++++++++++++++++++++++++++++++++++
+VarMultiSetNet(
+  (feature_extractor): Sequential(
+    (0): Linear(in_features=5, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=350, bias=True)
+    (13): ReLU()
+  )
+  (adder): InvLinear(in_features=350, out_features=1, bias=True, reduction=sum)
+  (mlp): Sequential(
+    (0): Linear(in_features=22, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=128, bias=True)
+    (13): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Learning Rate: 9.342861572715064e-05, weight decay: 0.055109740552741496, batch_size: 32
+
+ Model params: 525502
+
+epoch 0 -14.838222121772125 28.70306464218654 0
+epoch 1 -14.777446113784968 28.647940576084583 0
+epoch 2 -14.755010664916327 28.627564716346452 0
+epoch 3 -14.774343326351561 28.645123490226844 0
+epoch 4 -14.71896585690988 28.594798444047683 1
+epoch 5 -14.789067750996173 28.658489643480838 0
+epoch 6 -14.734332897151152 28.60877233011542 1
+epoch 7 -14.746307480058919 28.619656584426888 2
+epoch 8 -14.792432212985716 28.661542871975442 3
+epoch 9 -14.760779669268036 28.632805507141544 4
+epoch 10 -14.734788185010004 28.60918623811396 5
+epoch 11 -14.738052810057429 28.61215397498015 6
+epoch 12 -14.74231617354185 28.616029160615774 7
+Target: 67698, NaN: 0, Max: 114.0, Min: 8.0, Mean: 31.138955360571952
+Prediction: 67698, NaN: 0, Max: 3.4467263221740723, Min: 3.4467263221740723, Mean: 3.4467263221740723
+
+ XXXXXX======== TRIAL des - elg ended
+
+Test Set - R-squared:  -14.74231617354185
+Test Set - RMSE:  28.616029160615774
+Test Set - MAE:  27.69222903839788
+
+
+
+Starting Loading des
+Finished Loading des
+Finished des setup
+
+++++++++ Session Characteristics +++++++
+
+Area: des
+Gal Type: qso
+Training Set: 270781
+Validation Set: 67698
+Test Samples: 67698
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+
++++++++++++++++++++++++++++++++++++++++
+VarMultiSetNet(
+  (feature_extractor): Sequential(
+    (0): Linear(in_features=5, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=350, bias=True)
+    (13): ReLU()
+  )
+  (adder): InvLinear(in_features=350, out_features=1, bias=True, reduction=sum)
+  (mlp): Sequential(
+    (0): Linear(in_features=22, out_features=256, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.25, inplace=False)
+    (3): Linear(in_features=256, out_features=256, bias=True)
+    (4): ReLU()
+    (5): Dropout(p=0.25, inplace=False)
+    (6): Linear(in_features=256, out_features=256, bias=True)
+    (7): ReLU()
+    (8): Dropout(p=0.25, inplace=False)
+    (9): Linear(in_features=256, out_features=256, bias=True)
+    (10): ReLU()
+    (11): Dropout(p=0.25, inplace=False)
+    (12): Linear(in_features=256, out_features=128, bias=True)
+    (13): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Learning Rate: 0.005544184180774864, weight decay: 0.008298229989336776, batch_size: 32
+
+ Model params: 525502
+
+epoch 0 -1.389585968448256 3.076112574091427 0
+epoch 1 -1.3746064757859986 3.066455870732858 0
+epoch 2 -1.261600329250284 2.9926010541937442 0
+epoch 3 -1.2861387388636105 3.008792145443556 0
+epoch 4 -1.3721303180867381 3.0648566565344413 1
+epoch 5 -1.1573739660114564 2.922830375073896 2
+epoch 6 -1.2156510743451405 2.9620445021012105 0
+epoch 7 -1.195729293982192 2.94869798647779 1
+epoch 8 -1.2074491123014526 2.956556927328031 2
+epoch 9 -1.2202486712839637 2.965116111512392 3
+epoch 10 -1.2017170077835697 2.9527157720928536 4
+epoch 11 -1.18518275560902 2.941607861640607 5
+epoch 12 -1.1450202994655014 2.9144499293730544 6
+epoch 13 -1.2245802153538556 2.968007065390468 0
+epoch 14 -1.2032832337846004 2.9537658157730564 1
+epoch 15 -1.2291279687105243 2.9710392942592856 2
