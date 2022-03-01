@@ -36,7 +36,7 @@ def main():
     model = define_model(galaxy=gal, area=area).to(device)
     print(model)
     lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
-    #criterion = nn.MSELoss()
+    # criterion = nn.MSELoss()
     criterion = nn.PoissonNLLLoss()
     print(f"Learning Rate: {lr}, weight decay: {weight_decay}, batch_size: {batch_size}")
     print()
@@ -230,8 +230,50 @@ def print_session_stats(args):
     print('+++++++++++++++++++++++++++++++++++++++')
 
 
+# Generic Model for testing purposes
+
+def define_generic_model():
+    n_layers_fe = 4
+    out_features_fe = 256
+    p1 = 0.25
+    p2 = 0.25
+    med_layer = 350
+    n_layers_mlp = 4
+    out_features_mlp = 256
+
+    reduce = 'sum'
+    fe_layers = []
+
+    in_features = features
+
+    for i in range(n_layers_fe):
+        fe_layers.append(nn.Linear(in_features, out_features_fe))
+        fe_layers.append(nn.ReLU())
+        fe_layers.append(nn.Dropout(p1))
+        in_features = out_features_fe
+
+    # Getting Output Layer for FE that is then fed into Invariant Layer
+    fe_layers.append(nn.Linear(out_features_fe, med_layer))
+    fe_layers.append(nn.ReLU())
+
+    mlp_layers = []
+
+    in_features = 22
+
+    for i in range(n_layers_mlp):
+        mlp_layers.append(nn.Linear(in_features, out_features_mlp))
+        mlp_layers.append(nn.ReLU())
+        mlp_layers.append(nn.Dropout(p2))
+        in_features = out_features_mlp
+    mlp_layers.append(nn.Linear(in_features, int(in_features / 2)))
+    mlp_layers.append(nn.Linear(int(in_features / 2), 1))
+
+    return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
+                          med_layer=med_layer, reduction=reduce)
+
+
+# Specialised Model Definition
 def define_model(galaxy, area):
-    # ToDo: Provide cases for Dropout Galaxies
     # defines and returns the best models from HP Tuning
     if area == "north":
         if galaxy == 'lrg':
@@ -411,7 +453,7 @@ def get_hparams(galaxy, area):
     # ToDo: Provide cases for dropout galaxies
     # defines and returns: lr, weight_decay, batch_size
     if area == "north":
-        if galaxy == 'lrg': # --> done
+        if galaxy == 'lrg':  # --> done
             return 0.0001546764411255828, 0.03184751820920388, 32
         elif galaxy == 'elg':  # --> done
             return 0.0004599944376425736, 0.0738690886140696, 32
@@ -421,15 +463,15 @@ def get_hparams(galaxy, area):
 
         elif galaxy == 'glbg':  # --> done
             return 0.0010669093353509024, 0.12333702988885017, 128
-        else: # --> done
+        else:  # --> done
             return 9.698438573821183e-05, 0.23961834074306818, 256
 
     elif area == "south":
-        if galaxy == 'lrg': # --> done
+        if galaxy == 'lrg':  # --> done
             return 0.0001546764411255828, 0.03184751820920388, 32
         elif galaxy == 'elg':  # --> done
             return 0.00018641861416175164, 0.07947795784779363, 256
-        elif galaxy == 'qso': # --> done
+        elif galaxy == 'qso':  # --> done
             return 0.0001883515972221876, 0.044348213953226155, 256
         elif galaxy == 'glbg':
             return 0.00030735807502983687, 0.2898483420649945, 32
@@ -438,13 +480,13 @@ def get_hparams(galaxy, area):
     else:
         if galaxy == 'lrg':  # --> done
             return 0.0001546764411255828, 0.03184751820920388, 32
-        elif galaxy == 'elg': # --> done
+        elif galaxy == 'elg':  # --> done
             return 9.342861572715064e-05, 0.055109740552741496, 32
-        elif galaxy == 'qso': # --> done
+        elif galaxy == 'qso':  # --> done
             return 0.005544184180774864, 0.008298229989336776, 32
-        elif galaxy == 'glbg': # --> done
+        elif galaxy == 'glbg':  # --> done
             return 0.00014553858586568378, 0.20049865047593457, 32
-        else: # --> done
+        else:  # --> done
             return 6.646267123877951e-05, 0.003691296129378855, 256
 
 
