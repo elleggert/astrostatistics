@@ -330,7 +330,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_categorical("epochs", [1, 2, 3])
+    no_epochs = trial.suggest_categorical("epochs", [25, 50, 75])
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
