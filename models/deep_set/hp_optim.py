@@ -66,8 +66,8 @@ def main():
     fig1 = optuna.visualization.plot_optimization_history(study,
                                                           target_name=f'RMSE-squared for {gal}-{area}-optimisation ')
     fig2 = optuna.visualization.plot_param_importances(study)
-    #fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
-    #fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
+    # fig1.write_image(f"logs_figs/{area}/hp_search_{gal}.png")
+    # fig2.write_image(f"logs_figs/{area}/hp_params_{gal}.png")
 
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt",
@@ -147,9 +147,6 @@ def delete_models():
             continue
 
 
-
-
-
 def parse_command_line_args(args):
     global gal, area, num_pixels, max_set_len, traindata, valdata, testdata, features
     num_pixels = args['num_pixels']
@@ -182,8 +179,38 @@ def print_session_stats(args):
     print()
     print('+++++++++++++++++++++++++++++++++++++++')
 
-def define_model_simple(trial):
 
+def init_weights_xavier(m):
+    if type(m) == nn.Linear:
+        torch.nn.init.xavier_uniform_(m.weight)
+        m.bias.data.fill_(0.01)
+
+
+def init_weights_normal(m):
+    '''Takes in a module and initializes all linear layers with weight
+       values taken from a normal distribution.'''
+    classname = m.__class__.__name__
+    # for every Linear layer in a model
+    if classname.find('Linear') != -1:
+        y = m.in_features
+        # m.weight.data shoud be taken from a normal distribution
+        m.weight.data.normal_(0.0, 1 / np.sqrt(y))
+        # m.bias.data should be 0
+        m.bias.data.fill_(0)
+
+
+def init_weights_uniform(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0 / np.sqrt(n)
+        m.weight.data.uniform_(-y, y)
+        m.bias.data.fill_(0)
+
+
+def define_model_simple(trial):
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=4, step=2)
 
     fe_layers = []
@@ -213,7 +240,6 @@ def define_model_simple(trial):
 
     out_features_mlp = trial.suggest_categorical("fe_neurons", [64, 128, 256])
 
-
     for i in range(n_layers_mlp):
         mlp_layers.append(nn.Linear(in_features, out_features_mlp))
         mlp_layers.append(nn.ReLU())
@@ -222,10 +248,26 @@ def define_model_simple(trial):
 
     mlp_layers.append(nn.Linear(in_features, int(in_features / 2)))
     mlp_layers.append(nn.Linear(int(in_features / 2), 1))
-    reduce = 'sum' # Always use sum, the other ones do not work better anyway
+    reduce = 'sum'  # Always use sum, the other ones do not work better anyway
 
-    return VarMultiSetNet(feature_extractor=nn.Sequential(*fe_layers), mlp=nn.Sequential(*mlp_layers),
+    fe = nn.Sequential(*fe_layers)
+    mlp = nn.Sequential(*mlp_layers)
+    initialiser = trial.suggest_categorical("initialiser", ["xavier", "normal", "uniform", "kaiming_he"])
+    if initialiser == "xavier":
+        fe.apply(init_weights_xavier)
+        mlp.apply(init_weights_xavier)
+    elif initialiser == "normal":
+        fe.apply(init_weights_normal)
+        mlp.apply(init_weights_normal)
+    elif initialiser == "uniform":
+        fe.apply(init_weights_uniform)
+        mlp.apply(init_weights_uniform)
+    else:  # Kaiming He is standard, just included for clarity
+        pass
+
+    return VarMultiSetNet(feature_extractor=fe, mlp=mlp,
                           med_layer=med_layer, reduction=reduce)
+
 
 def define_model(trial):
     n_layers_fe = trial.suggest_int("n_layers_fe", low=2, high=4, step=2)
@@ -243,8 +285,6 @@ def define_model(trial):
         fe_layers.append(nn.Dropout(p))
 
         in_features = out_features
-
-
 
     # Getting Output Layer for FE that is then fed into Invariant Layer
     med_layer = trial.suggest_int("n_units_l{}".format('(Invariant)'), 1, 512)  # 512
@@ -290,7 +330,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_categorical("epochs", [20, 40, 60])
+    no_epochs = trial.suggest_categorical("epochs", [1, 2, 3])
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)

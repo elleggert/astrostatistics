@@ -217,7 +217,7 @@ def get_hparams(galaxy, area):
         elif galaxy == 'elg': # done
             return 5.083620673436264e-05, 0.08754366669226324, 128
         elif galaxy == 'qso': # done
-            return 1.4397108307235833e-05, 0.00047458046979852696, 128
+            return 0.0012021727952055794, 0.00047458046979852696, 128
         elif galaxy == 'glbg': # done
             return 0.00011913397792380141, 0.0037406889381795955, 256
         else: # done

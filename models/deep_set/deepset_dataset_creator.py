@@ -26,7 +26,7 @@ def main():
     #area = args['area']
     num_pixels = args['num_pixels']
 
-    areas = ['des','south']
+    areas = ['south']
 
     ccd, pixel2subpixel_dict, subpixel2ccd_dict = import_pixel_mappings(NSIDE)
 
@@ -43,6 +43,8 @@ def main():
             max_ccds = 40
 
         for test in tests:
+
+
 
             if test:
                 import_path = f'../../bricks_data/{area}_test_{NSIDE}.csv'
@@ -64,10 +66,7 @@ def main():
             # Randomly Sampling Pixel Indices from Dataframe
             pix_ids = df.pixel_id.to_numpy()
 
-            if num_pixels is None:
-                num_pixels = len(df)
-            else:
-                pix_ids = pix_ids[:num_pixels]
+            num_pixels = len(df)
             num_subpixels = 16
             num_features = ccd.num_features
 
