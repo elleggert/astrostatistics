@@ -143,6 +143,9 @@ def delete_models():
             int(obj.replace('.pt', ""))
             os.remove(f"trained_models/{area}/{gal}/{obj}")
         except:
+            # No need for negative models --> these are products of local minima or local small test runs
+            if float(obj.replace('.pt', "")) < 0.0:
+                os.remove(f"trained_models/{area}/{gal}/{obj}")
             # Meaning the result is a float aka it is an actual Model that was tested on the testset
             continue
 

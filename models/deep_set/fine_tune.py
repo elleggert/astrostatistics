@@ -137,12 +137,14 @@ def main():
 
 def delete_models():
     for obj in os.listdir(f"trained_models/{area}/{gal}"):
-
         try:
             # Try casting it as a int (only works for those models trained previously)
             int(obj.replace('.pt', ""))
             os.remove(f"trained_models/{area}/{gal}/{obj}")
         except:
+            # No need for negative models --> these are products of local minima or local small test runs
+            if float(obj.replace('.pt', "")) < 0.0:
+                os.remove(f"trained_models/{area}/{gal}/{obj}")
             # Meaning the result is a float aka it is an actual Model that was tested on the testset
             continue
 
@@ -180,36 +182,7 @@ def print_session_stats(args):
     print('+++++++++++++++++++++++++++++++++++++++')
 
 
-def init_weights_xavier(m):
-    if type(m) == nn.Linear:
-        torch.nn.init.xavier_uniform_(m.weight)
-        m.bias.data.fill_(0.01)
-
-
-def init_weights_normal(m):
-    '''Takes in a module and initializes all linear layers with weight
-       values taken from a normal distribution.'''
-    classname = m.__class__.__name__
-    # for every Linear layer in a model
-    if classname.find('Linear') != -1:
-        y = m.in_features
-        # m.weight.data shoud be taken from a normal distribution
-        m.weight.data.normal_(0.0, 1 / np.sqrt(y))
-        # m.bias.data should be 0
-        m.bias.data.fill_(0)
-
-
-def init_weights_uniform(m):
-    classname = m.__class__.__name__
-    # for every Linear layer in a model..
-    if classname.find('Linear') != -1:
-        # get the number of the inputs
-        n = m.in_features
-        y = 1.0 / np.sqrt(n)
-        m.weight.data.uniform_(-y, y)
-        m.bias.data.fill_(0)
-
-def define_best_model(trial):
+def define_best_model():
     best_val = -1000
     for model in os.listdir(f"trained_models/{area}/{gal}"):
         try:
@@ -219,8 +192,8 @@ def define_best_model(trial):
 
             val = float(model[:-3])
             best_val = max(val, best_val)
-
-    print(f" Previous best Test-set performance: {best_val}" )
+    print()
+    print(f"Previous best Test-set performance: {best_val}")
 
     if device == 'cpu:0':
         model = torch.load(f"trained_models/{area}/{gal}/{best_val}.pt",
@@ -230,8 +203,9 @@ def define_best_model(trial):
 
     return model
 
+
 def objective(trial):
-    model = define_best_model(trial).to(device)
+    model = define_best_model().to(device)
     print()
     print(
         f"Trial Id: {trial.number} | Model params: {sum(p.numel() for p in model.parameters() if p.requires_grad)} "
@@ -247,7 +221,7 @@ def objective(trial):
     batch_size = trial.suggest_categorical("batch_size", [32, 128, 256])
 
     drop_last = True if (len(valdata.input) > batch_size) else False
-    no_epochs = trial.suggest_categorical("epochs", [1, 2, 3])
+    no_epochs = trial.suggest_categorical("epochs", [10, 20, 40, 60])
 
     trainloader = torch.utils.data.DataLoader(traindata, batch_size=batch_size, shuffle=True,
                                               num_workers=num_workers, drop_last=drop_last)
@@ -269,7 +243,7 @@ def objective(trial):
         try:
             r2 = metrics.r2_score(y_gold, y_pred)
             rmse = math.sqrt(metrics.mean_squared_error(y_gold, y_pred))
-            #if epoch % 5 == 0:
+            # if epoch % 5 == 0:
             print("epoch", epoch, r2, rmse)
 
         except:
