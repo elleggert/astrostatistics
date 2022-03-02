@@ -245,3 +245,40 @@ Trial Id: 33 | Model params: 105512 | Timestamp: 2022-03-02 09:24:00.164127
 epoch 0 -15.303879568423355 31.991370031813275
 epoch 5 -14.42373740116669 31.115885955608913
 epoch 10 -14.01056094683584 30.696285176642867
+epoch 15 -13.898812082331762 30.58180966742372
+[32m[I 2022-03-02 10:16:17,175][0m Trial 33 finished with value: 30.440518041274032 and parameters: {'n_layers_fe': 2, 'fe_neurons': 128, 'fe_dropout': 0.40378062407572196, 'n_units_l(Invariant)': 211, 'n_layers_mlp': 4, 'lr': 3.2581375253562665e-05, 'weight_decay': 0.13641160614654582, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 20}. Best is trial 3 with value: 7.516583401745888.[0m
+
+Trial Id: 34 | Model params: 37704 | Timestamp: 2022-03-02 10:16:17.176163
+
+[32m[I 2022-03-02 10:18:47,804][0m Trial 34 pruned. [0m
+epoch 0 -13.721112838074013 30.398886833939063
+
+Study statistics: 
+  Number of finished trials:  35
+  Number of pruned trials:  23
+  Number of complete trials:  12
+
+Best trial:
+  Value:  7.516583401745888
+  Params: 
+    n_layers_fe: 4
+    fe_neurons: 256
+    fe_dropout: 0.21212974567144843
+    n_units_l(Invariant): 215
+    n_layers_mlp: 2
+    lr: 0.0047256035406579525
+    weight_decay: 0.04444720872726249
+    criterion: MSELoss
+    batch_size: 256
+    epochs: 40
+Target: 132567, NaN: 0, Max: 365.0, Min: 0.0, Mean: 32.88284414673335
+Prediction: 132567, NaN: 0, Max: 40.534629821777344, Min: 27.731889724731445, Mean: 33.0771544102103
+
+ XXXXXX======== TRIAL south - elg ended
+
+Test Set - R-squared:  0.09995081785765259
+Test Set - RMSE:  7.516583401745888
+Test Set - MAE:  5.889720755906733
+
+
+
