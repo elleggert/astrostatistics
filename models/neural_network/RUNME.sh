@@ -1,5 +1,5 @@
 #!/bin/bash
 
-./hp_search.sh |& tee logs_figs/final_run_MSE_qso.txt
+./hp_search.sh |& tee logs_figs/final_run_PL_qso.txt
 
 

@@ -36,8 +36,8 @@ def main():
     model = define_generic_model(galaxy=gal, area=area).to(device)
     print(model)
     lr, weight_decay, batch_size = get_hparams(galaxy=gal, area=area)
-    #criterion = nn.MSELoss()
-    criterion = nn.PoissonNLLLoss()
+    criterion = nn.MSELoss()
+    #criterion = nn.PoissonNLLLoss()
 
     print(f"Learning Rate: {lr}, weight decay: {weight_decay}, batch_size: {batch_size}")
     print()
