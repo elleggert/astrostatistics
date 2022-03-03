@@ -1,0 +1,22 @@
+[32m[I 2022-03-02 19:42:47,338][0m A new study created in memory with name: DeepSet[0m
+Starting Loading north
+Finished Loading north
+Finished north setup
+
+++++++++ Session Characteristics +++++++
+
+Area: north
+Gal Type: lrg
+Training Set: 290439
+Validation Set: 72610
+Test Samples: 72610
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 10
+
++++++++++++++++++++++++++++++++++++++++
+
+Trial Id: 0 | Model params: 347736 | Timestamp: 2022-03-02 19:42:47.339083
+
+epoch 0 0.004504484656662977 4.858674269115181

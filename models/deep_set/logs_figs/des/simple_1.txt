@@ -1295,3 +1295,69 @@ epoch 25 -2.0746319784694722 7.382187122860342
 epoch 30 -2.0719559289569665 7.378973827936948
 epoch 35 -2.075266303128375 7.382948589901804
 epoch 40 -2.0743685207769906 7.381870835307302
+epoch 45 -2.0766083628028675 7.38455938972009
+[32m[I 2022-03-02 19:41:10,376][0m Trial 23 finished with value: 7.384372916876157 and parameters: {'n_layers_fe': 4, 'fe_neurons': 256, 'fe_dropout': 0.45347313101490266, 'n_units_l(Invariant)': 63, 'n_layers_mlp': 4, 'initialiser': 'uniform', 'lr': 1.0800733115556709e-05, 'weight_decay': 0.13814538036186463, 'criterion': 'PoissonNLLLoss', 'batch_size': 128, 'epochs': 50}. Best is trial 14 with value: 7.359932378242359.[0m
+
+Trial Id: 24 | Model params: 473128 | Timestamp: 2022-03-02 19:41:10.376945
+
+[32m[I 2022-03-02 19:42:00,636][0m Trial 24 pruned. [0m
+epoch 0 -2.236994924098456 7.574596253422543
+
+Trial Id: 25 | Model params: 455584 | Timestamp: 2022-03-02 19:42:00.637151
+
+[32m[I 2022-03-02 19:42:48,220][0m Trial 25 pruned. [0m
+epoch 0 -2.070643152447636 7.377396985876134
+
+Trial Id: 26 | Model params: 31702 | Timestamp: 2022-03-02 19:42:48.220700
+
+[32m[I 2022-03-02 19:43:13,159][0m Trial 26 pruned. [0m
+epoch 0 -2.0598803347386765 7.364456491947421
+
+Trial Id: 27 | Model params: 492478 | Timestamp: 2022-03-02 19:43:13.160007
+
+[32m[I 2022-03-02 19:44:05,881][0m Trial 27 pruned. [0m
+epoch 0 0.00031394399452078225 4.209400969441087
+
+Trial Id: 28 | Model params: 111366 | Timestamp: 2022-03-02 19:44:05.882134
+
+[32m[I 2022-03-02 19:45:31,080][0m Trial 28 pruned. [0m
+epoch 0 -2.0690673638197947 7.375503781499629
+
+Trial Id: 29 | Model params: 167266 | Timestamp: 2022-03-02 19:45:31.080558
+
+[32m[I 2022-03-02 19:46:58,469][0m Trial 29 pruned. [0m
+epoch 0 -2.097678670916786 7.409803007316525
+
+Study statistics: 
+  Number of finished trials:  30
+  Number of pruned trials:  20
+  Number of complete trials:  10
+
+Best trial:
+  Value:  7.359932378242359
+  Params: 
+    n_layers_fe: 4
+    fe_neurons: 256
+    fe_dropout: 0.49268449101898226
+    n_units_l(Invariant): 57
+    n_layers_mlp: 4
+    initialiser: kaiming_he
+    lr: 0.002075673522730702
+    weight_decay: 0.050914126737914595
+    criterion: PoissonNLLLoss
+    batch_size: 128
+    epochs: 50
+Target: 67698, NaN: 0, Max: 143.0, Min: 0.0, Mean: 8.148734083724777
+Prediction: 67698, NaN: 0, Max: 2.111848831176758, Min: 2.111848831176758, Mean: 2.111848831176758
+
+ XXXXXX======== TRIAL des - lrg ended
+
+Test Set - R-squared:  -2.056122014080577
+Test Set - RMSE:  7.359932378242359
+Test Set - MAE:  6.079714004826294
+
+
+
+./hp_optim.sh: line 11: t: command not found
+./hp_optim.sh: line 12: syntax error near unexpected token `done'
+./hp_optim.sh: line 12: `    done'

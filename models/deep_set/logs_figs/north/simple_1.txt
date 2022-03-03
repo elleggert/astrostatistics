@@ -1004,3 +1004,459 @@ Trial Id: 12 | Model params: 236276 | Timestamp: 2022-03-02 19:20:01.953976
 epoch 0 0.11807551062321409 9.189878749177709
 epoch 5 0.24055540988857416 8.527900540206232
 epoch 10 0.2467979278144441 8.492779201743492
+epoch 15 0.2538863149927958 8.452721947723564
+epoch 20 0.2536283589023518 8.454183013725906
+epoch 25 0.2541672921592707 8.451130202690157
+epoch 30 0.2501512368884553 8.473852885083966
+epoch 35 0.2580496190201339 8.429105921671656
+epoch 40 0.2530935229379784 8.457211526026342
+epoch 45 0.251849544647197 8.464251370355452
+[32m[I 2022-03-02 20:25:46,941][0m Trial 12 finished with value: 8.434441655361423 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.37853892843024256, 'n_units_l(Invariant)': 249, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.00036011318715529973, 'weight_decay': 0.07581909282909356, 'criterion': 'MSELoss', 'batch_size': 32, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 13 | Model params: 219248 | Timestamp: 2022-03-02 20:25:46.941284
+
+epoch 0 -0.1298132205595015 10.401534320251272
+epoch 5 0.1336088629221489 9.108588465255886
+epoch 10 0.16980490918181324 8.916289493473343
+epoch 15 0.2508585628212815 8.469855285615942
+epoch 20 0.24316688380113838 8.513225626355903
+epoch 25 0.23608393499243308 8.552969076652886
+epoch 30 0.2584089808567699 8.427064366106837
+epoch 35 0.2665062044226958 8.380931721419385
+epoch 40 0.2654221565971244 8.387122623432202
+epoch 45 0.2703214981335962 8.359106447996405
+[32m[I 2022-03-02 21:08:04,331][0m Trial 13 finished with value: 8.372777315690023 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.15175853615908994, 'n_units_l(Invariant)': 183, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.00010191846528641389, 'weight_decay': 0.11721347420030614, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 14 | Model params: 193706 | Timestamp: 2022-03-02 21:08:04.331839
+
+epoch 0 -0.14529264752925242 10.472546962091066
+epoch 5 0.0915942793183484 9.326828915812756
+epoch 10 0.19186603001591984 8.797023691610871
+epoch 15 0.15339878327336953 9.003959323634776
+epoch 20 0.12934581354568686 9.13097022332635
+epoch 25 0.1522152958564802 9.010250568465779
+epoch 30 0.1512544456540187 9.015355077547389
+epoch 35 0.17838217156731628 8.870110037469784
+epoch 40 0.1744572037769856 8.891271589267465
+epoch 45 0.17498622705781286 8.88842228606777
+[32m[I 2022-03-02 21:44:50,484][0m Trial 14 finished with value: 8.71424010119972 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.19131550111582385, 'n_units_l(Invariant)': 84, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 3.904345827585173e-05, 'weight_decay': 0.22119675409327383, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 15 | Model params: 216152 | Timestamp: 2022-03-02 21:44:50.484484
+
+epoch 0 -0.1998347463864325 10.719012997566516
+epoch 5 -0.03354887053472444 9.948545454714852
+epoch 10 0.025278285381598264 9.661274037653358
+epoch 15 0.17077028146737372 8.911103939749138
+epoch 20 0.09240436315350342 9.322669321508286
+epoch 25 0.07813002071725528 9.395695129798344
+epoch 30 0.08851229691088547 9.342637261185391
+epoch 35 0.0951206912578314 9.308708035456336
+epoch 40 0.12058688168383724 9.17678485658678
+epoch 45 0.18578800506767368 8.830043198727463
+[32m[I 2022-03-02 22:27:04,276][0m Trial 15 finished with value: 9.19664794093295 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.15512311309212024, 'n_units_l(Invariant)': 171, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 2.5997292214116767e-05, 'weight_decay': 0.11990117779894165, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 16 | Model params: 258722 | Timestamp: 2022-03-02 22:27:04.276338
+
+epoch 0 -0.09901812862936832 10.258798706231346
+epoch 5 0.23951800285991465 8.533723140632038
+epoch 10 0.19590405779738895 8.775017989065761
+epoch 15 0.2364949341802277 8.550667949311064
+epoch 20 0.19072466435090485 8.803233725132323
+epoch 25 0.24765993368798012 8.487918008702971
+epoch 30 0.2509874961186508 8.469126388970022
+epoch 35 0.24919037901195729 8.479280353935703
+epoch 40 0.20316741682362738 8.735295931164782
+epoch 45 0.25486110019285324 8.44719847227914
+[32m[I 2022-03-02 23:17:44,108][0m Trial 16 finished with value: 8.469114503340242 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.3531085608108665, 'n_units_l(Invariant)': 336, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.0005550341957837297, 'weight_decay': 0.22022554092115465, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 17 | Model params: 197834 | Timestamp: 2022-03-02 23:17:44.108727
+
+[32m[I 2022-03-02 23:18:29,362][0m Trial 17 pruned. [0m
+epoch 0 0.12555002047469477 9.150852732442763
+
+Trial Id: 18 | Model params: 173066 | Timestamp: 2022-03-02 23:18:29.362514
+
+[32m[I 2022-03-02 23:19:07,998][0m Trial 18 pruned. [0m
+epoch 0 0.121201449862261 9.173577748629725
+
+Trial Id: 19 | Model params: 353154 | Timestamp: 2022-03-02 23:19:07.998827
+
+epoch 0 -0.8846743542902606 13.434213337229366
+epoch 5 -1.300554933907895 14.842613691877617
+epoch 10 -0.7750331189539257 13.037589732607398
+epoch 15 -0.2554359640755328 10.964563902392378
+epoch 20 -0.22520430642502887 10.831742759855096
+epoch 25 -0.21152993748540783 10.771127216591566
+epoch 30 -0.19092340827559884 10.67913301722548
+epoch 35 -0.20156616152966156 10.726744216769058
+epoch 40 -0.16827324816494493 10.577092349757498
+epoch 45 -0.17459605308559678 10.605675838117124
+[32m[I 2022-03-03 00:00:39,976][0m Trial 19 finished with value: 10.408490849353328 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.42673497811263095, 'n_units_l(Invariant)': 192, 'n_layers_mlp': 4, 'initialiser': 'kaiming_he', 'lr': 2.1241133150557686e-05, 'weight_decay': 0.03417457017333318, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 20 | Model params: 274718 | Timestamp: 2022-03-03 00:00:39.976448
+
+[32m[I 2022-03-03 00:01:45,065][0m Trial 20 pruned. [0m
+epoch 0 -0.0793966696889592 10.166807885535462
+
+Trial Id: 21 | Model params: 225440 | Timestamp: 2022-03-03 00:01:45.065741
+
+[32m[I 2022-03-03 00:03:02,217][0m Trial 21 pruned. [0m
+epoch 0 0.18430189256683827 8.83809789167032
+
+Trial Id: 22 | Model params: 244532 | Timestamp: 2022-03-03 00:03:02.217776
+
+[32m[I 2022-03-03 00:04:19,923][0m Trial 22 pruned. [0m
+epoch 0 0.22084938809669596 8.637832699867879
+
+Trial Id: 23 | Model params: 230342 | Timestamp: 2022-03-03 00:04:19.923408
+
+[32m[I 2022-03-03 00:05:12,958][0m Trial 23 pruned. [0m
+epoch 0 0.1554812636733789 8.99287847862269
+
+Trial Id: 24 | Model params: 205574 | Timestamp: 2022-03-03 00:05:12.958934
+
+[32m[I 2022-03-03 00:06:29,161][0m Trial 24 pruned. [0m
+epoch 0 0.2376537359346973 8.544176642335893
+
+Trial Id: 25 | Model params: 247886 | Timestamp: 2022-03-03 00:06:29.161819
+
+epoch 0 -0.16704132796195048 10.571514215280137
+epoch 5 0.014839892591275716 9.712868051391395
+epoch 10 0.07906525838459089 9.39092795113871
+epoch 15 0.1760054889961019 8.882929995677493
+epoch 20 0.24639857497791462 8.495030367894143
+epoch 25 0.22046784750419557 8.639947361905332
+epoch 30 0.24360192642860967 8.510778489499438
+epoch 35 0.256451272761018 8.438180235949314
+epoch 40 0.24890621218599174 8.480884823411298
+epoch 45 0.21753568969939108 8.65618140110807
+[32m[I 2022-03-03 00:55:51,456][0m Trial 25 finished with value: 8.504776707710256 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.3112272814054811, 'n_units_l(Invariant)': 294, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 8.719338560223228e-05, 'weight_decay': 0.16988975975808934, 'criterion': 'MSELoss', 'batch_size': 128, 'epochs': 50}. Best is trial 11 with value: 8.328703448860335.[0m
+
+Trial Id: 26 | Model params: 228020 | Timestamp: 2022-03-03 00:55:51.456820
+
+[32m[I 2022-03-03 00:56:42,545][0m Trial 26 pruned. [0m
+epoch 0 0.00037168057490544193 9.783930427013013
+
+Trial Id: 27 | Model params: 189320 | Timestamp: 2022-03-03 00:56:42.545561
+
+[32m[I 2022-03-03 00:57:25,059][0m Trial 27 pruned. [0m
+epoch 0 0.14246154120922805 9.061933761827312
+
+Trial Id: 28 | Model params: 206864 | Timestamp: 2022-03-03 00:57:25.059255
+
+[32m[I 2022-03-03 00:58:41,687][0m Trial 28 pruned. [0m
+epoch 0 0.22399058339533573 8.620403128779623
+
+Trial Id: 29 | Model params: 83672 | Timestamp: 2022-03-03 00:58:41.687872
+
+epoch 0 -6.587031170589492 26.95442143812623
+epoch 5 -6.698026105913813 27.150871229671175
+[32m[I 2022-03-03 01:02:09,648][0m Trial 29 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Study statistics: 
+  Number of finished trials:  30
+  Number of pruned trials:  16
+  Number of complete trials:  14
+
+Best trial:
+  Value:  8.328703448860335
+  Params: 
+    n_layers_fe: 2
+    fe_neurons: 256
+    fe_dropout: 0.37320416203069967
+    n_units_l(Invariant): 197
+    n_layers_mlp: 2
+    initialiser: uniform
+    lr: 0.0003881372563740905
+    weight_decay: 0.00437306288214083
+    criterion: MSELoss
+    batch_size: 256
+    epochs: 50
+Target: 72610, NaN: 0, Max: 105.0, Min: 1.0, Mean: 25.195950970940643
+Prediction: 72610, NaN: 0, Max: 46.77867126464844, Min: 10.544905662536621, Mean: 24.737056397465764
+
+ XXXXXX======== TRIAL north - rlbg ended
+
+Test Set - R-squared:  0.2756196891324698
+Test Set - RMSE:  8.328703448860335
+Test Set - MAE:  6.440849697148237
+
+
+
+[32m[I 2022-03-03 01:04:01,495][0m A new study created in memory with name: DeepSet[0m
+Starting Loading north
+Finished Loading north
+Finished north setup
+
+++++++++ Session Characteristics +++++++
+
+Area: north
+Gal Type: lrg
+Training Set: 290439
+Validation Set: 72610
+Test Samples: 72610
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 30
+
++++++++++++++++++++++++++++++++++++++++
+
+Trial Id: 0 | Model params: 115912 | Timestamp: 2022-03-03 01:04:01.495761
+
+epoch 0 -1.9222932563161854 8.324535859289497
+epoch 5 -1.564173738500592 7.797795733750445
+epoch 10 -1.5216872164658861 7.732923946818924
+epoch 15 -1.585767520520434 7.8305608461735545
+epoch 20 -1.7054686169732394 8.009757740053155
+epoch 25 -1.7140414842326814 8.022438034920079
+epoch 30 -1.7041524511224861 8.007809195537801
+epoch 35 -1.7120009037724895 8.019421590879084
+epoch 40 -1.7073732289465826 8.01257662259963
+epoch 45 -1.7143487019989543 8.022892074728404
+[32m[I 2022-03-03 01:52:08,792][0m Trial 0 finished with value: 8.005688904272077 and parameters: {'n_layers_fe': 4, 'fe_neurons': 128, 'fe_dropout': 0.23068996517038037, 'n_units_l(Invariant)': 291, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 3.2694954205339826e-05, 'weight_decay': 0.24157178242372104, 'criterion': 'PoissonNLLLoss', 'batch_size': 256, 'epochs': 50}. Best is trial 0 with value: 8.005688904272077.[0m
+
+Trial Id: 1 | Model params: 104212 | Timestamp: 2022-03-03 01:52:08.793035
+
+epoch 0 -0.3566486499436001 5.671942558955143
+epoch 5 -0.0012158863199043246 4.872613863082745
+epoch 10 0.007375507568427198 4.851662968209106
+epoch 15 0.007645632148989501 4.851002777670174
+epoch 20 0.007100181305452757 4.852335779342402
+[32m[I 2022-03-03 02:06:59,565][0m Trial 1 finished with value: 4.853277235502351 and parameters: {'n_layers_fe': 2, 'fe_neurons': 128, 'fe_dropout': 0.2786403658703153, 'n_units_l(Invariant)': 201, 'n_layers_mlp': 4, 'initialiser': 'normal', 'lr': 7.481885332504913e-05, 'weight_decay': 0.2723782688481518, 'criterion': 'MSELoss', 'batch_size': 128, 'epochs': 25}. Best is trial 1 with value: 4.853277235502351.[0m
+
+Trial Id: 2 | Model params: 41198 | Timestamp: 2022-03-03 02:06:59.566108
+
+epoch 0 -0.054484385075020514 5.000554984837891
+epoch 5 0.009593437098862956 4.846239636275237
+epoch 10 0.00913006220462953 4.847373192565626
+epoch 15 0.010294361142985431 4.844524458275086
+epoch 20 0.011599332783519989 4.8413295424806755
+epoch 25 0.011448384829408353 4.841699210832074
+epoch 30 0.011742960573676742 4.840977774847674
+epoch 35 0.01261809190534302 4.8388338844131855
+epoch 40 0.012263516873178726 4.839702634215804
+epoch 45 0.013100959841998994 4.837650551274212
+epoch 50 0.013217622717959676 4.837364609712252
+epoch 55 0.012835410785247303 4.838301350943027
+epoch 60 0.013585832391890817 4.836462014229024
+epoch 65 0.01435214763144843 4.83458299891898
+epoch 70 0.013621499837107476 4.836374573370504
+[32m[I 2022-03-03 02:49:18,935][0m Trial 2 finished with value: 4.8346284008037745 and parameters: {'n_layers_fe': 2, 'fe_neurons': 64, 'fe_dropout': 0.2327940545244253, 'n_units_l(Invariant)': 438, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.0004835264121755147, 'weight_decay': 0.003567518588292828, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 75}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 3 | Model params: 567040 | Timestamp: 2022-03-03 02:49:18.935806
+
+epoch 0 -0.0062646368215084625 4.884883782632095
+epoch 5 -3.845554985559829e-10 4.869654290355475
+epoch 10 -0.000589437886751476 4.871089257360965
+epoch 15 -0.0003762597227141562 4.870570330646223
+epoch 20 -3.5433647514075766 10.37975093642422
+epoch 25 -44070.054931714905 1022.2917445587561
+epoch 30 -6773851663941.026 12674066.209475389
+epoch 35 -910.5279648178829 147.02227171953786
+epoch 40 -1.2566920001559388e+22 545899323034.26825
+epoch 45 -7.062998597084951e+17 4092537716.304383
+[32m[I 2022-03-03 04:33:58,051][0m Trial 3 finished with value: 11.893470213039416 and parameters: {'n_layers_fe': 4, 'fe_neurons': 256, 'fe_dropout': 0.27809898992336, 'n_units_l(Invariant)': 511, 'n_layers_mlp': 4, 'initialiser': 'normal', 'lr': 0.00584032960661842, 'weight_decay': 0.09783310696680375, 'criterion': 'MSELoss', 'batch_size': 32, 'epochs': 50}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 4 | Model params: 401658 | Timestamp: 2022-03-03 04:33:58.051653
+
+epoch 0 -1.6990770018971313 8.000290699715846
+epoch 5 -1.6877344692847989 7.983462892736803
+epoch 10 -1.704919270583202 8.008944506653085
+epoch 15 -1.703604306151044 8.006997543294636
+epoch 20 -1.6796733181708174 7.971481756083033
+[32m[I 2022-03-03 05:20:44,199][0m Trial 4 finished with value: 8.00440114977436 and parameters: {'n_layers_fe': 4, 'fe_neurons': 256, 'fe_dropout': 0.2209929563609292, 'n_units_l(Invariant)': 380, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 2.506805964546197e-05, 'weight_decay': 0.0914671666074023, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 25}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 5 | Model params: 32622 | Timestamp: 2022-03-03 05:20:44.199650
+
+[32m[I 2022-03-03 05:21:16,565][0m Trial 5 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 6 | Model params: 97582 | Timestamp: 2022-03-03 05:21:16.565194
+
+[32m[I 2022-03-03 05:22:06,859][0m Trial 6 pruned. [0m
+epoch 0 0.0069114378767789475 4.852796955261127
+
+Trial Id: 7 | Model params: 88612 | Timestamp: 2022-03-03 05:22:06.859908
+
+epoch 0 -0.7685652264374137 6.476027306936946
+epoch 5 -0.0012449905374678494 4.872684683265153
+[32m[I 2022-03-03 05:25:54,086][0m Trial 7 pruned. [0m
+
+Trial Id: 8 | Model params: 290714 | Timestamp: 2022-03-03 05:25:54.086727
+
+epoch 0 -2.440212422160457 9.032142074313654
+epoch 5 -2.518963557717916 9.134936129739481
+epoch 10 -2.8401985219133996 9.542781250034205
+epoch 15 -3.0003569994237838 9.739743185085214
+epoch 20 -2.959370864674105 9.68971987503492
+[32m[I 2022-03-03 06:01:22,511][0m Trial 8 finished with value: 9.546096580597162 and parameters: {'n_layers_fe': 2, 'fe_neurons': 256, 'fe_dropout': 0.4813135721160101, 'n_units_l(Invariant)': 460, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 1.7753702159367407e-05, 'weight_decay': 0.24310925023451715, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 25}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 9 | Model params: 89912 | Timestamp: 2022-03-03 06:01:22.511598
+
+epoch 0 -1.3896316008133955 7.527722602559426
+epoch 5 -0.1768472391958651 5.282727110416645
+[32m[I 2022-03-03 06:07:45,038][0m Trial 9 pruned. [0m
+
+Trial Id: 10 | Model params: 44964 | Timestamp: 2022-03-03 06:07:45.038996
+
+[32m[I 2022-03-03 06:08:16,008][0m Trial 10 pruned. [0m
+epoch 0 0.007863641820154754 4.850469891614047
+
+Trial Id: 11 | Model params: 38364 | Timestamp: 2022-03-03 06:08:16.008745
+
+[32m[I 2022-03-03 06:08:45,059][0m Trial 11 pruned. [0m
+epoch 0 0.004256999173147036 4.859278177725287
+
+Trial Id: 12 | Model params: 34074 | Timestamp: 2022-03-03 06:08:45.059364
+
+[32m[I 2022-03-03 06:09:12,348][0m Trial 12 pruned. [0m
+epoch 0 -0.03614513236684935 4.956880236999753
+
+Trial Id: 13 | Model params: 43512 | Timestamp: 2022-03-03 06:09:12.349038
+
+[32m[I 2022-03-03 06:09:43,823][0m Trial 13 pruned. [0m
+epoch 0 0.00615701069022867 4.854639886016203
+
+Trial Id: 14 | Model params: 78212 | Timestamp: 2022-03-03 06:09:43.823277
+
+[32m[I 2022-03-03 06:10:10,575][0m Trial 14 pruned. [0m
+epoch 0 0.003995666807635856 4.8599157937318385
+
+Trial Id: 15 | Model params: 102128 | Timestamp: 2022-03-03 06:10:10.575878
+
+[32m[I 2022-03-03 06:10:56,502][0m Trial 15 pruned. [0m
+epoch 0 -0.07912690607582284 5.058647189599267
+
+Trial Id: 16 | Model params: 31034 | Timestamp: 2022-03-03 06:10:56.502342
+
+[32m[I 2022-03-03 06:11:24,483][0m Trial 16 pruned. [0m
+epoch 0 -0.02824709026325012 4.9379521264084385
+
+Trial Id: 17 | Model params: 27870 | Timestamp: 2022-03-03 06:11:24.483991
+
+[32m[I 2022-03-03 06:11:51,682][0m Trial 17 pruned. [0m
+epoch 0 0.007696571188549162 4.850878271444597
+
+Trial Id: 18 | Model params: 80942 | Timestamp: 2022-03-03 06:11:51.682772
+
+[32m[I 2022-03-03 06:12:14,127][0m Trial 18 pruned. [0m
+epoch 0 -0.11948368604252657 5.1523696701864115
+
+Trial Id: 19 | Model params: 76388 | Timestamp: 2022-03-03 06:12:14.127308
+
+[32m[I 2022-03-03 06:13:35,523][0m Trial 19 pruned. [0m
+epoch 0 -0.10269472096079002 5.113588519079337
+
+Trial Id: 20 | Model params: 45752 | Timestamp: 2022-03-03 06:13:35.523895
+
+[32m[I 2022-03-03 06:14:13,319][0m Trial 20 pruned. [0m
+epoch 0 -0.014142229047012789 4.903967282947775
+
+Trial Id: 21 | Model params: 410688 | Timestamp: 2022-03-03 06:14:13.319241
+
+epoch 0 -2.3435794156790273 8.904385462922898
+epoch 5 -1.809294586373253 8.162003405746837
+epoch 10 -1.702392426744574 8.005202790445228
+epoch 15 -1.7145656659719108 8.023212712190194
+epoch 20 -1.707113690967287 8.012192557010827
+[32m[I 2022-03-03 07:03:08,618][0m Trial 21 finished with value: 8.000474615459478 and parameters: {'n_layers_fe': 4, 'fe_neurons': 256, 'fe_dropout': 0.23697041564929544, 'n_units_l(Invariant)': 415, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.00014069857558348617, 'weight_decay': 0.08618092933217884, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 25}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 22 | Model params: 413526 | Timestamp: 2022-03-03 07:03:08.618999
+
+[32m[I 2022-03-03 07:05:05,935][0m Trial 22 pruned. [0m
+epoch 0 -1.6867007456798593 7.981927494095134
+
+Trial Id: 23 | Model params: 389274 | Timestamp: 2022-03-03 07:05:05.935862
+
+[32m[I 2022-03-03 07:06:56,017][0m Trial 23 pruned. [0m
+epoch 0 -1.6260957861800818 7.891388269505191
+
+Trial Id: 24 | Model params: 408366 | Timestamp: 2022-03-03 07:06:56.017773
+
+epoch 0 -1.7467857061991272 8.07068728231791
+epoch 5 -1.7206367362346726 8.032179576519388
+epoch 10 -1.7054416306937221 8.00971779242654
+epoch 15 -1.710629167131084 8.017393212901785
+epoch 20 -1.7172828799783848 8.027227227927773
+[32m[I 2022-03-03 07:55:19,978][0m Trial 24 finished with value: 8.010947130304755 and parameters: {'n_layers_fe': 4, 'fe_neurons': 256, 'fe_dropout': 0.3965678836584782, 'n_units_l(Invariant)': 406, 'n_layers_mlp': 2, 'initialiser': 'uniform', 'lr': 0.00043272054562955753, 'weight_decay': 0.13096888244154445, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 25}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Trial Id: 25 | Model params: 293294 | Timestamp: 2022-03-03 07:55:19.978534
+
+[32m[I 2022-03-03 07:56:29,631][0m Trial 25 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 26 | Model params: 253820 | Timestamp: 2022-03-03 07:56:29.631245
+
+[32m[I 2022-03-03 07:57:53,982][0m Trial 26 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 27 | Model params: 140226 | Timestamp: 2022-03-03 07:57:53.982294
+
+[32m[I 2022-03-03 07:59:39,238][0m Trial 27 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Trial Id: 28 | Model params: 294584 | Timestamp: 2022-03-03 07:59:39.239006
+
+[32m[I 2022-03-03 08:00:49,340][0m Trial 28 pruned. [0m
+epoch 0 0.008181523231054366 4.849692781832599
+
+Trial Id: 29 | Model params: 46944 | Timestamp: 2022-03-03 08:00:49.340223
+
+epoch 0 -1.871802789433925 8.252308157426366
+epoch 5 -1.7689103166041091 8.103125686157915
+epoch 10 -1.7366702102241973 8.05581274995778
+epoch 15 -1.7152016744374445 8.024152555424244
+epoch 20 -1.6978248950771824 7.99843480961698
+epoch 25 -1.7152557143305147 8.024232406249434
+epoch 30 -1.7103020321262243 8.016909404725967
+epoch 35 -1.6995928560550366 8.001055180693616
+epoch 40 -1.700808239611661 8.002856055337896
+epoch 45 -1.6927994583468253 7.990981700921243
+[32m[I 2022-03-03 08:35:25,143][0m Trial 29 finished with value: 8.0130895545462 and parameters: {'n_layers_fe': 4, 'fe_neurons': 64, 'fe_dropout': 0.2454322293558818, 'n_units_l(Invariant)': 399, 'n_layers_mlp': 2, 'initialiser': 'kaiming_he', 'lr': 9.22921392316379e-05, 'weight_decay': 0.16935438454830135, 'criterion': 'PoissonNLLLoss', 'batch_size': 128, 'epochs': 50}. Best is trial 2 with value: 4.8346284008037745.[0m
+
+Study statistics: 
+  Number of finished trials:  30
+  Number of pruned trials:  21
+  Number of complete trials:  9
+
+Best trial:
+  Value:  4.8346284008037745
+  Params: 
+    n_layers_fe: 2
+    fe_neurons: 64
+    fe_dropout: 0.2327940545244253
+    n_units_l(Invariant): 438
+    n_layers_mlp: 2
+    initialiser: uniform
+    lr: 0.0004835264121755147
+    weight_decay: 0.003567518588292828
+    criterion: MSELoss
+    batch_size: 256
+    epochs: 75
+Traceback (most recent call last):
+  File "hp_optim.py", line 435, in <module>
+    main()
+  File "hp_optim.py", line 76, in main
+    model = torch.load(f"trained_models/{area}/{gal}/{trial.number}.pt")
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/serialization.py", line 594, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/serialization.py", line 230, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/serialization.py", line 211, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/north/lrg/2.pt'
+./hp_optim.sh: line 11: 10: command not found
+./hp_optim.sh: line 12: syntax error near unexpected token `done'
+./hp_optim.sh: line 12: `    done'
