@@ -1,10 +1,10 @@
 
-0;95;0c#!/bin/bash
+#!/bin/bash
 
-for area in north south des
+for area in south
 do
-  for gal in lrg elg qso glbg rlbg
+  for gal in qso
     do
-      python fine_tune.py -g $gal -a $area -t 10
+      python hp_optim.py -g $gal -a $area -t 20
     done
 done

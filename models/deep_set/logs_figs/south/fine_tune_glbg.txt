@@ -1,0 +1,145 @@
+[32m[I 2022-03-03 13:04:45,733][0m A new study created in memory with name: DeepSet[0m
+Starting Loading south
+Finished Loading south
+Finished south setup
+
+++++++++ Session Characteristics +++++++
+
+Area: south
+Gal Type: glbg
+Training Set: 530265
+Validation Set: 132567
+Test Samples: 132567
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 10
+
++++++++++++++++++++++++++++++++++++++++
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 0 | Model params: 555688 | Timestamp: 2022-03-03 13:04:45.734539
+
+epoch 0 -4.820706150959341 20.223846423619484
+epoch 1 -4.788476133401861 20.167777648506117
+epoch 2 -4.839662322254279 20.25675094317121
+epoch 3 -4.853916795146112 20.281458991214404
+[32m[I 2022-03-03 13:23:18,819][0m Trial 0 finished with value: 20.293895137609407 and parameters: {'lr': 0.00240367281423489, 'weight_decay': 0.20049964328715872, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 5}. Best is trial 0 with value: 20.293895137609407.[0m
+epoch 4 -4.861097983246415 20.293895137609407
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 1 | Model params: 555688 | Timestamp: 2022-03-03 13:23:18.820018
+
+[32m[I 2022-03-03 13:26:54,551][0m Trial 1 pruned. [0m
+++++++++++++++++++++
+        NaN         
+++++++++++++++++++++
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 2 | Model params: 555688 | Timestamp: 2022-03-03 13:26:54.551528
+
+epoch 0 -4.763258421806846 20.123798860654084
+epoch 1 -4.90707866333145 20.37334306154903
+epoch 2 -4.837030451766821 20.252185683204083
+epoch 3 -4.867234133813908 20.30451548732993
+epoch 4 -4.866643811182637 20.303494008022597
+epoch 5 -4.838314766189766 20.254413592052167
+epoch 6 -4.867221709563201 20.304493989251046
+epoch 7 -4.831961420999258 20.243390007834254
+epoch 8 -4.848256228761944 20.271650830662075
+[32m[I 2022-03-03 14:04:16,390][0m Trial 2 finished with value: 20.272905777773612 and parameters: {'lr': 0.00292299176958125, 'weight_decay': 0.25863061100800144, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 10}. Best is trial 2 with value: 20.272905777773612.[0m
+epoch 9 -4.848980341415308 20.272905777773612
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 3 | Model params: 555688 | Timestamp: 2022-03-03 14:04:16.391124
+
+epoch 0 0.13561774836740537 7.793433635240608
+epoch 1 0.13440151656760357 7.798914595725009
+epoch 2 0.13525413472615644 7.795072667520987
+epoch 3 0.13287053970220042 7.805808486592077
+epoch 4 0.13196907953811954 7.809864857565334
+epoch 5 0.13375685312657115 7.801818216434232
+epoch 6 0.13421411860269894 7.799758764042215
+epoch 7 0.13637035956266963 7.790040054047771
+epoch 8 0.1350463464450996 7.796009143500124
+[32m[I 2022-03-03 14:37:06,196][0m Trial 3 finished with value: 7.792293488019221 and parameters: {'lr': 0.00012044881062729452, 'weight_decay': 0.18755760530999585, 'criterion': 'MSELoss', 'batch_size': 128, 'epochs': 10}. Best is trial 3 with value: 7.792293488019221.[0m
+epoch 9 0.1358706409894661 7.792293488019221
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 4 | Model params: 555688 | Timestamp: 2022-03-03 14:37:06.196829
+
+epoch 0 -4.8554980211345145 20.2841979611932
+epoch 1 -4.789314111364292 20.169237405895718
+epoch 2 -4.78509878106869 20.16189323025399
+epoch 3 -4.855845750138258 20.284800241239218
+[32m[I 2022-03-03 14:55:45,466][0m Trial 4 finished with value: 20.267367285690206 and parameters: {'lr': 0.0009511588550629648, 'weight_decay': 0.10102536050128631, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 5}. Best is trial 3 with value: 7.792293488019221.[0m
+epoch 4 -4.845784933057814 20.267367285690206
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 5 | Model params: 555688 | Timestamp: 2022-03-03 14:55:45.466776
+
+epoch 0 -4.8553901242917386 20.284011076064683
+epoch 1 -4.919111060200876 20.39408219978809
+epoch 2 -4.85042471995284 20.27540877323306
+epoch 3 -4.8565892333359635 20.286087922824596
+[32m[I 2022-03-03 15:14:29,314][0m Trial 5 finished with value: 20.293133886343103 and parameters: {'lr': 0.0018376362181385512, 'weight_decay': 0.1295495417469522, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 5}. Best is trial 3 with value: 7.792293488019221.[0m
+epoch 4 -4.860658276177076 20.293133886343103
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 6 | Model params: 555688 | Timestamp: 2022-03-03 15:14:29.314359
+
+[32m[I 2022-03-03 15:17:45,789][0m Trial 6 pruned. [0m
+epoch 0 0.11385041430859455 7.890952705724162
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 7 | Model params: 555688 | Timestamp: 2022-03-03 15:17:45.789319
+
+[32m[I 2022-03-03 15:21:01,005][0m Trial 7 pruned. [0m
+epoch 0 -4.812768322155742 20.21005186032978
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 8 | Model params: 555688 | Timestamp: 2022-03-03 15:21:01.005166
+
+[32m[I 2022-03-03 15:24:37,122][0m Trial 8 pruned. [0m
+epoch 0 0.1369994782773747 7.787202175053805
+
+Previous best Test-set performance: 0.12887890592745455
+
+Trial Id: 9 | Model params: 555688 | Timestamp: 2022-03-03 15:24:37.122574
+
+[32m[I 2022-03-03 15:28:16,599][0m Trial 9 pruned. [0m
+epoch 0 0.1372967020148521 7.785861074673623
+
+Study statistics: 
+  Number of finished trials:  10
+  Number of pruned trials:  5
+  Number of complete trials:  5
+
+Best trial:
+  Value:  7.792293488019221
+  Params: 
+    lr: 0.00012044881062729452
+    weight_decay: 0.18755760530999585
+    criterion: MSELoss
+    batch_size: 128
+    epochs: 10
+Target: 132567, NaN: 0, Max: 159.0, Min: 0.0, Mean: 21.53262878393567
+Prediction: 132567, NaN: 0, Max: 37.33262252807617, Min: 14.365386009216309, Mean: 21.74649599990195
+
+ XXXXXX======== TRIAL south - glbg ended
+
+Test Set - R-squared:  0.1358706409894661
+Test Set - RMSE:  7.792293488019221
+Test Set - MAE:  6.016636272879809
+
+
+

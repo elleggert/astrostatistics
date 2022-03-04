@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/fine_tune_simple_1.txt
+./hp_optim.sh |& tee logs_figs/south/qso_simple3.txt
