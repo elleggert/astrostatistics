@@ -1,0 +1,71 @@
+[32m[I 2022-03-04 12:36:43,841][0m A new study created in memory with name: DeepSet[0m
+[33m[W 2022-03-04 12:36:44,404][0m Trial 0 failed because of the following error: RuntimeError('CUDA error: all CUDA-capable devices are busy or unavailable\nCUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1.')
+Traceback (most recent call last):
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/_optimize.py", line 216, in _run_trial
+    value_or_values = func(trial)
+  File "hp_optim.py", line 320, in objective
+    model = define_model_simple(trial).to(device)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 852, in to
+    return self._apply(convert)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 530, in _apply
+    module._apply(fn)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 530, in _apply
+    module._apply(fn)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 552, in _apply
+    param_applied = fn(param)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 850, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: all CUDA-capable devices are busy or unavailable
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.[0m
+Starting Loading south
+Finished Loading south
+Finished south setup
+
+++++++++ Session Characteristics +++++++
+
+Area: south
+Gal Type: glbg
+Training Set: 530265
+Validation Set: 132567
+Test Samples: 132567
+Number of features: 5
+Device: cuda:0
+Number of Workers: 8
+Number of Trials: 15
+
++++++++++++++++++++++++++++++++++++++++
+Traceback (most recent call last):
+  File "hp_optim.py", line 435, in <module>
+    main()
+  File "hp_optim.py", line 45, in main
+    study.optimize(objective, n_trials=args['trials'], timeout=None)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/study.py", line 401, in optimize
+    _optimize(
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/_optimize.py", line 65, in _optimize
+    _optimize_sequential(
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/_optimize.py", line 162, in _optimize_sequential
+    trial = _run_trial(study, func, catch)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/_optimize.py", line 267, in _run_trial
+    raise func_err
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/optuna/_optimize.py", line 216, in _run_trial
+    value_or_values = func(trial)
+  File "hp_optim.py", line 320, in objective
+    model = define_model_simple(trial).to(device)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 852, in to
+    return self._apply(convert)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 530, in _apply
+    module._apply(fn)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 530, in _apply
+    module._apply(fn)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 552, in _apply
+    param_applied = fn(param)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 850, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: all CUDA-capable devices are busy or unavailable
+CUDA kernel errors might be asynchronously reported at some other API call,so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:115.)
+  return torch._C._cuda_getDeviceCount() > 0
+[32m[I 2022-03-04 12:37:23,025][0m A new study created in memory with name: DeepSet[0m
+[32m[I 2022-03-06 14:05:08,593][0m Trial 0 finished with value: 7.772676048644041 and parameters: {'lr': 0.0001220800149696435, 'weight_decay': 0.13467468091156964, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 20}. Best is trial 0 with value: 7.772676048644041.[0m
