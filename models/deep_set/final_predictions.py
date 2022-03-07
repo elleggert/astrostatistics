@@ -140,9 +140,13 @@ to_drop =['pixel_id', 'exposures', 'hinh',
        'ccdskycounts_r', 'ccdskycounts_z', 'seeing_g', 'seeing_r', 'seeing_z', 'y_gold_x',
        'y_gold_y', 'y_gold']
 
-df_north = df_north.drop(columns=to_drop, axis=1, inplace=False)
-df_south = df_south.drop(columns=to_drop, axis=1, inplace=False)
-df_des = df_des.drop(columns=to_drop, axis=1, inplace=False)
+try:
+    df_north = df_north.drop(columns=to_drop, axis=1, inplace=False)
+    df_south = df_south.drop(columns=to_drop, axis=1, inplace=False)
+    df_des = df_des.drop(columns=to_drop, axis=1, inplace=False)
+
+except:
+    pass
 
 df_north.to_csv(f'../regression/results/north_compare.csv', index=False)
 df_south.to_csv(f'../regression/results/south_compare.csv', index=False)
