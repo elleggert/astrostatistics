@@ -1,9 +1,9 @@
 
 #!/bin/bash
 
-for area in des
+for area in north
 do
-  for gal in lrg
+  for gal in glbg
     do
 	python hp_optim.py -g $gal -a $area -t 15
 	python fine_tune.py -g $gal -a $area -t 15
