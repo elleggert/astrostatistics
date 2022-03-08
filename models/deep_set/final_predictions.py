@@ -64,6 +64,8 @@ for area in areas:
                 if val > best_val:
                     best_val = val
 
+        print()
+        print()
         print(f' Area: {area}. Gal: {gal}. Best val: {best_val}.')
         print()
 
