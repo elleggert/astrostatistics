@@ -134,20 +134,6 @@ print(len(df_south))
 print(len(df_des))
 
 
-to_drop =['pixel_id', 'exposures', 'hinh',
-       'gaia', 'gaia12', 'sagitarius', 'stellar', 'EBV', 'airmass',
-       'ccdskysb_g', 'ccdskysb_r', 'ccdskysb_z', 'ccdskycounts_g',
-       'ccdskycounts_r', 'ccdskycounts_z', 'seeing_g', 'seeing_r', 'seeing_z', 'y_gold_x',
-       'y_gold_y', 'y_gold']
-
-try:
-    df_north = df_north.drop(columns=to_drop, axis=1, inplace=False)
-    df_south = df_south.drop(columns=to_drop, axis=1, inplace=False)
-    df_des = df_des.drop(columns=to_drop, axis=1, inplace=False)
-
-except:
-    pass
-
 df_north.to_csv(f'../regression/results/north_compare.csv', index=False)
 df_south.to_csv(f'../regression/results/south_compare.csv', index=False)
 df_des.to_csv(f'../regression/results/des_compare.csv', index=False)
