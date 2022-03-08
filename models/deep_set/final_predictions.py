@@ -16,6 +16,8 @@ num_workers = 0 if device == 'cpu:0' else 8
 NSIDE = 512
 
 for area in areas:
+
+    print(f'Area: {area} started loading.')
     with open(f'data/{area}/{area}_512_robust.pickle', 'rb') as f:
         trainset = pickle.load(f)
         f.close()
@@ -35,10 +37,15 @@ for area in areas:
     df_test = df_test.append(df_train)
     print(len(df_test))
 
+    
+
     testdata = MultiSetSequence(dict=df_test.to_dict(orient='index'), num_pixels=len(df_test),
                                 max_ccds=max_set_len, num_features=5, test=True)
 
     pixel_id = testdata.pixel_id
+
+    print(f'Area: {area} finished loading.')
+    print()
 
     for gal in galaxies:
         testdata.set_targets(gal_type=gal)
