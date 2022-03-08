@@ -10,7 +10,7 @@ import math
 from util import get_mask
 
 areas = ['north', 'south', 'des']
-galaxies = ['lrg', 'elg', 'qso','glbg', 'rlbg']
+galaxies = ['lrg', 'elg', 'qso', 'glbg', 'rlbg']
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
 NSIDE = 512
@@ -22,8 +22,6 @@ for area in areas:
     with open(f'data/{area}/{area}_test_512_robust.pickle', 'rb') as f:
         testset = pickle.load(f)
         f.close()
-        
-    
 
     if area == "north":
         max_set_len = 30
@@ -36,19 +34,14 @@ for area in areas:
     print(len(df_test), len(df_train))
     df_test = df_test.append(df_train)
     print(len(df_test))
-    
-
 
     testdata = MultiSetSequence(dict=df_test.to_dict(orient='index'), num_pixels=len(df_test),
                                 max_ccds=max_set_len, num_features=5, test=True)
 
-
-
-
     pixel_id = testdata.pixel_id
 
     for gal in galaxies:
-        #testdata.set_targets(gal_type=gal)
+        testdata.set_targets(gal_type=gal)
 
         best_val = -100
         for model in os.listdir(f"trained_models/{area}/{gal}"):
@@ -70,8 +63,6 @@ for area in areas:
         else:
             model = torch.load(f"trained_models/{area}/{gal}/{best_val}.pt")
 
-
-        continue
         testloader = torch.utils.data.DataLoader(testdata, batch_size=128, shuffle=False)
 
         model.eval()
@@ -110,10 +101,8 @@ for area in areas:
             print("Test Set - RMSE: ", rmse)
             print("Test Set - MAE: ", mae)
 
-        continue
         ax = np.stack((pixel_id, y_pred, y_gold), axis=1)
         df_deep = pd.DataFrame(ax, columns=['pixel_id', f'{gal}_deep', 'y_gold'])
-
 
         df_deep = df_deep.dropna()
         df_deep.pixel_id = df_deep.pixel_id.astype(int)
