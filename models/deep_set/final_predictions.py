@@ -15,7 +15,6 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
 NSIDE = 512
 
-
 for area in areas:
 
     df_deep = None
@@ -39,8 +38,6 @@ for area in areas:
     print(len(df_test), len(df_train))
     df_test = df_test.append(df_train)
     print(len(df_test))
-
-    
 
     testdata = MultiSetSequence(dict=df_test.to_dict(orient='index'), num_pixels=len(df_test),
                                 max_ccds=max_set_len, num_features=5, test=True)
