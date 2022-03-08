@@ -3,6 +3,8 @@ Area: north started loading.
 363076
 Area: north finished loading.
 
+
+
  Area: north. Gal: lrg. Best val: 0.014333634977770293.
 
 363049
@@ -12,7 +14,8 @@ Area: north finished loading.
 Test Set - R-squared:  0.012851093221407317
 Test Set - RMSE:  4.8126483030905085
 Test Set - MAE:  3.272792036834281
- Pixels in Area: north: 363049. 
+
+
  Area: north. Gal: elg. Best val: 0.1390606825230084.
 
 363049
@@ -22,7 +25,8 @@ Test Set - MAE:  3.272792036834281
 Test Set - R-squared:  0.14076095182191406
 Test Set - RMSE:  7.254119434354527
 Test Set - MAE:  5.680141978053195
- Pixels in Area: north: 363049. 
+
+
  Area: north. Gal: qso. Best val: 0.12876160874765996.
 
 363049
@@ -32,7 +36,8 @@ Test Set - MAE:  5.680141978053195
 Test Set - R-squared:  0.12734037469155957
 Test Set - RMSE:  2.294057790663517
 Test Set - MAE:  1.788668083447624
- Pixels in Area: north: 363049. 
+
+
  Area: north. Gal: glbg. Best val: 0.23080766650092444.
 
 363049
@@ -42,7 +47,8 @@ Test Set - MAE:  1.788668083447624
 Test Set - R-squared:  0.2296622726422538
 Test Set - RMSE:  9.930330273290336
 Test Set - MAE:  7.714878627243776
- Pixels in Area: north: 363049. 
+
+
  Area: north. Gal: rlbg. Best val: 0.2756589034118746.
 
 363049
@@ -58,6 +64,8 @@ Area: south started loading.
 662847
 Area: south finished loading.
 
+
+
  Area: south. Gal: lrg. Best val: 0.005822209211420515.
 
 662832
@@ -67,7 +75,8 @@ Area: south finished loading.
 Test Set - R-squared:  0.005305906342071953
 Test Set - RMSE:  4.949974621803286
 Test Set - MAE:  3.315972292321382
- Pixels in Area: south: 662832. 
+
+
  Area: south. Gal: elg. Best val: 0.10441788660780649.
 
 662832
@@ -77,7 +86,8 @@ Test Set - MAE:  3.315972292321382
 Test Set - R-squared:  0.10474403765569129
 Test Set - RMSE:  7.447900581589401
 Test Set - MAE:  5.8727179009301995
- Pixels in Area: south: 662832. 
+
+
  Area: south. Gal: qso. Best val: 0.100764047862966.
 
 662832
@@ -87,7 +97,8 @@ Test Set - MAE:  5.8727179009301995
 Test Set - R-squared:  0.09753622754708946
 Test Set - RMSE:  2.249079849451271
 Test Set - MAE:  1.7281409783182862
- Pixels in Area: south: 662832. 
+
+
  Area: south. Gal: glbg. Best val: 0.14031004514856982.
 
 662832
@@ -97,7 +108,8 @@ Test Set - MAE:  1.7281409783182862
 Test Set - R-squared:  0.13809580811876088
 Test Set - RMSE:  7.759568414971907
 Test Set - MAE:  5.985648021523157
- Pixels in Area: south: 662832. 
+
+
  Area: south. Gal: rlbg. Best val: 0.15010537486015252.
 
 662832
@@ -113,6 +125,8 @@ Area: des started loading.
 338526
 Area: des finished loading.
 
+
+
  Area: des. Gal: lrg. Best val: 0.025305062865661365.
 
 338479
@@ -122,7 +136,8 @@ Area: des finished loading.
 Test Set - R-squared:  0.025593476788113523
 Test Set - RMSE:  4.248980190478164
 Test Set - MAE:  3.094243466776437
- Pixels in Area: des: 338479. 
+
+
  Area: des. Gal: elg. Best val: 0.04756083163409808.
 
 338479
@@ -132,7 +147,8 @@ Test Set - MAE:  3.094243466776437
 Test Set - R-squared:  0.048007722321337876
 Test Set - RMSE:  7.048246289179957
 Test Set - MAE:  5.5811267660841875
- Pixels in Area: des: 338479. 
+
+
  Area: des. Gal: qso. Best val: 0.029479080716163675.
 
 338479
@@ -142,7 +158,8 @@ Test Set - MAE:  5.5811267660841875
 Test Set - R-squared:  0.029869239219570187
 Test Set - RMSE:  1.9559200311602856
 Test Set - MAE:  1.5542855332067556
- Pixels in Area: des: 338479. 
+
+
  Area: des. Gal: glbg. Best val: 0.10000555796016108.
 
 338479
@@ -152,7 +169,8 @@ Test Set - MAE:  1.5542855332067556
 Test Set - R-squared:  0.10032700958500707
 Test Set - RMSE:  9.063358041596702
 Test Set - MAE:  6.966571560696435
- Pixels in Area: des: 338479. 
+
+
  Area: des. Gal: rlbg. Best val: 0.10300418958165136.
 
 338479
