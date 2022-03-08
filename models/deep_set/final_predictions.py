@@ -15,7 +15,10 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu:0'
 num_workers = 0 if device == 'cpu:0' else 8
 NSIDE = 512
 
+
 for area in areas:
+
+    df_deep = None
 
     print(f'Area: {area} started loading.')
     with open(f'data/{area}/{area}_512_robust.pickle', 'rb') as f:
@@ -108,17 +111,15 @@ for area in areas:
             print("Test Set - RMSE: ", rmse)
             print("Test Set - MAE: ", mae)
 
-        ax = np.stack((pixel_id, y_pred, y_gold), axis=1)
-        df_deep = pd.DataFrame(ax, columns=['pixel_id', f'{gal}_deep', 'y_gold'])
+        ax = np.stack((pixel_id, y_pred), axis=1)
 
-        df_deep = df_deep.dropna()
-        df_deep.pixel_id = df_deep.pixel_id.astype(int)
-
-        df_deep.to_csv(f'results/{area}_ds_predictions.csv', index=False)
-        print(f' Pixels in Area: {area}: {len(df_deep)}. ')
-        """if area == 'north':
-            df_north = df_north.merge(df_deep, how='inner', on='pixel_id')
-        elif area == 'south':
-            df_south = df_south.merge(df_deep, how='inner', on='pixel_id')
+        if df_deep is None:
+            df_deep = pd.DataFrame(ax, columns=['pixel_id', f'{gal}_deep'])
+            df_deep.pixel_id = df_deep.pixel_id.astype(int)
         else:
-            df_des = df_des.merge(df_deep, how='inner', on='pixel_id')"""
+            df_temp = pd.DataFrame(ax, columns=['pixel_id', f'{gal}_deep'])
+            df_deep = df_deep.merge(df_temp, how='inner', on='pixel_id')
+
+    df_deep = df_deep.dropna()
+    df_deep.to_csv(f'results/{area}_ds_predictions.csv', index=False)
+    print(f' Pixels in Area: {area}: {len(df_deep)}. ')
