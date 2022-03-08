@@ -369,3 +369,78 @@ epoch 11 -4.8330095798494135 20.245209064372435
 epoch 12 -4.8606738273713646 20.293160810132512
 epoch 13 -4.868832099909287 20.307280309535436
 epoch 14 -4.878598540068015 20.324170160188952
+epoch 15 -4.866835561716958 20.303825813918625
+epoch 16 -4.849100343164821 20.273113743225792
+epoch 17 -4.8469574456882585 20.26939973752708
+epoch 18 -4.828974629405209 20.238205600213107
+[32m[I 2022-03-07 11:18:50,894][0m Trial 9 finished with value: 20.27304883538086 and parameters: {'lr': 0.001016878657916686, 'weight_decay': 0.2349957165279638, 'criterion': 'PoissonNLLLoss', 'batch_size': 32, 'epochs': 20}. Best is trial 1 with value: 7.776068116372847.[0m
+epoch 19 -4.849062889432245 20.27304883538086
+
+Previous best Test-set performance: 0.14031004514856982
+
+Trial Id: 10 | Model params: 555688 | Timestamp: 2022-03-07 11:18:50.894634
+
+[32m[I 2022-03-07 11:22:01,827][0m Trial 10 pruned. [0m
+epoch 0 0.13908181832126854 7.777801603434651
+
+Previous best Test-set performance: 0.14031004514856982
+
+Trial Id: 11 | Model params: 555688 | Timestamp: 2022-03-07 11:22:01.827843
+
+[32m[I 2022-03-07 11:25:12,673][0m Trial 11 pruned. [0m
+epoch 0 0.13883893630313748 7.778898661768293
+
+Previous best Test-set performance: 0.14031004514856982
+
+Trial Id: 12 | Model params: 555688 | Timestamp: 2022-03-07 11:25:12.673980
+
+[32m[I 2022-03-07 11:28:23,499][0m Trial 12 pruned. [0m
+epoch 0 0.1375856834597453 7.784556942743736
+
+Previous best Test-set performance: 0.14031004514856982
+
+Trial Id: 13 | Model params: 555688 | Timestamp: 2022-03-07 11:28:23.499988
+
+[32m[I 2022-03-07 11:31:34,517][0m Trial 13 pruned. [0m
+epoch 0 0.14146578693174694 7.76702538261208
+
+Previous best Test-set performance: 0.14031004514856982
+
+Trial Id: 14 | Model params: 555688 | Timestamp: 2022-03-07 11:31:34.517249
+
+[32m[I 2022-03-07 11:34:45,235][0m Trial 14 pruned. [0m
+epoch 0 0.132460955275308 7.807651786983067
+
+Study statistics: 
+  Number of finished trials:  15
+  Number of pruned trials:  9
+  Number of complete trials:  6
+
+Best trial:
+  Value:  7.776068116372847
+  Params: 
+    lr: 3.838353290097276e-05
+    weight_decay: 0.13759378947274312
+    criterion: MSELoss
+    batch_size: 32
+    epochs: 5
+Traceback (most recent call last):
+  File "fine_tune.py", line 323, in <module>
+    main()
+  File "fine_tune.py", line 101, in main
+    outputs = model(X1, X2, mask=mask)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/vol/bitbucket/ele20/astrostatistics/models/deep_set/models.py", line 93, in forward
+    y = self.feature_extractor(X1)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/container.py", line 139, in forward
+    input = module(input)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/modules/linear.py", line 96, in forward
+    return F.linear(input, self.weight, self.bias)
+  File "/vol/bitbucket/ele20/venv/lib/python3.8/site-packages/torch/nn/functional.py", line 1847, in linear
+    return torch._C._nn.linear(input, weight, bias)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu! (when checking arugment for argument mat2 in method wrapper_mm)

@@ -69,3 +69,4 @@ For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
   return torch._C._cuda_getDeviceCount() > 0
 [32m[I 2022-03-04 12:37:23,025][0m A new study created in memory with name: DeepSet[0m
 [32m[I 2022-03-06 14:05:08,593][0m Trial 0 finished with value: 7.772676048644041 and parameters: {'lr': 0.0001220800149696435, 'weight_decay': 0.13467468091156964, 'criterion': 'MSELoss', 'batch_size': 256, 'epochs': 20}. Best is trial 0 with value: 7.772676048644041.[0m
+[32m[I 2022-03-07 12:48:18,328][0m Trial 1 finished with value: 7.837633234512872 and parameters: {'lr': 0.0001306521100307686, 'weight_decay': 0.14544641628710994, 'criterion': 'MSELoss', 'batch_size': 32, 'epochs': 10}. Best is trial 0 with value: 7.772676048644041.[0m
