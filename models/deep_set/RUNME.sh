@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./final_predictions.sh |& tee logs_figs/final_preds.txt
+./hp_optim.sh |& tee logs_figs/north/elg_8_dual.txt
