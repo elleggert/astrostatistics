@@ -14,6 +14,7 @@ dataDecam = decamCCD[1].data
 dataMosaic = mosaicCCD[1].data
 dataBass = bassCCD[1].data
 
+
 def raDec2thetaPhi(ra, dec):
     return (0.5 * np.pi - np.deg2rad(dec)), (np.deg2rad(ra))
 
@@ -22,7 +23,7 @@ NSIDE = 512
 NSIDE_SUB = 2048
 NPIX = hp.nside2npix(NSIDE)
 
-#Extracting systematics
+# Extracting systematics
 filter_colour = np.concatenate((dataDecam.field('filter'), dataMosaic.field('filter'), dataBass.field('filter')),
                                axis=0)
 
@@ -34,7 +35,8 @@ fwhm = np.concatenate((dataDecam.field('fwhm'), dataMosaic.field('fwhm'), dataBa
 seeing = fwhm * 0.262
 ccdskysb = np.concatenate((dataDecam.field('ccdskysb'), dataMosaic.field('ccdskysb'), dataBass.field('ccdskysb')),
                           axis=0)
-ccdskycounts = np.concatenate((dataDecam.field('ccdskycounts'), dataMosaic.field('ccdskycounts'), dataBass.field('ccdskycounts')), axis = 0)
+ccdskycounts = np.concatenate(
+    (dataDecam.field('ccdskycounts'), dataMosaic.field('ccdskycounts'), dataBass.field('ccdskycounts')), axis=0)
 
 # Use this cell to simply import an existing pixel2subpixel mapping
 
@@ -49,13 +51,10 @@ with open(f'../../bricks_data/pixel2ccd_{NSIDE}.pickle', 'rb') as f:
 
 pixels_overall = pixel2ccd_dict.keys()
 
-
 # For DECAM, BASS, MzLS
 with open(f'../../bricks_data/pixel2ccd_{NSIDE_SUB}_non_inclusive.pickle', 'rb') as f:
     subpixel2ccd_dict = pickle.load(f)
     f.close()
-
-
 
 pixel2systematics_dict = defaultdict(list)
 
@@ -100,7 +99,6 @@ for i, sample_pixel in enumerate(pixels_overall):
         mask_g = (filter_colour[ccds_per_subpixel] == 'g')
         mask_r = (filter_colour[ccds_per_subpixel] == 'r')
         mask_z = (filter_colour[ccds_per_subpixel] == 'z')
-
 
         see = seeing[ccds_per_subpixel]
         seeing_g = see[mask_g]
@@ -250,13 +248,72 @@ for i, sample_pixel in enumerate(pixels_overall):
     systematics_per_pixel.append(seeing_z_min / subpixels_covered_z)
     systematics_per_pixel.append(seeing_z_max / subpixels_covered_z)
 
-
     # Also appending fraction of pixel covered to cut on it later
     systematics_per_pixel.append(subpixels_covered / 16)
 
     pixel2systematics_dict[sample_pixel] = systematics_per_pixel
 
-
 with open(f'../../bricks_data/pixel2systematics_geometric_{NSIDE}_{NSIDE_SUB}_inclusive.pickle', 'wb') as f:
     pickle.dump(pixel2systematics_dict, f)
     f.close()
+
+system = ['airmass_mean',
+          'airmass_std',
+          'airmass_median',
+          'airmass_min',
+          'airmass_max',
+
+          'ccdskysb_g_mean',
+          'ccdskysb_g_std',
+          'ccdskysb_g_median',
+          'ccdskysb_g_min',
+          'ccdskysb_g_max',
+
+          'ccdskysb_r_mean',
+          'ccdskysb_r_std',
+          'ccdskysb_r_median',
+          'ccdskysb_r_min',
+          'ccdskysb_r_max',
+
+          'ccdskysb_z_mean',
+          'ccdskysb_z_std',
+          'ccdskysb_z_median',
+          'ccdskysb_z_min',
+          'ccdskysb_z_max',
+
+          'ccdskycounts_g_mean',
+          'ccdskycounts_g_std',
+          'ccdskycounts_g_median',
+          'ccdskycounts_g_min',
+          'ccdskycounts_g_max',
+
+          'ccdskycounts_r_mean',
+          'ccdskycounts_r_std',
+          'ccdskycounts_r_median',
+          'ccdskycounts_r_min',
+          'ccdskycounts_r_max',
+
+          'ccdskycounts_z_mean',
+          'ccdskycounts_z_std',
+          'ccdskycounts_z_median',
+          'ccdskycounts_z_min',
+          'ccdskycounts_z_max',
+
+          'seeing_g_mean',
+          'seeing_g_std',
+          'seeing_g_median',
+          'seeing_g_min',
+          'seeing_g_max',
+
+          'seeing_r_mean',
+          'seeing_r_std',
+          'seeing_r_median',
+          'seeing_r_min',
+          'seeing_r_max',
+
+          'seeing_z_mean',
+          'seeing_z_std',
+          'seeing_z_median',
+          'seeing_z_min',
+          'seeing_z_max',
+          'subpixels_covered']
