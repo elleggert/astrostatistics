@@ -1,8 +1,6 @@
 import numpy as np
 from astropy.io import fits
 import healpy as hp
-import pandas as pd
-import matplotlib.pyplot as plt
 import pickle
 from collections import defaultdict
 
@@ -17,7 +15,6 @@ dataBass = bassCCD[1].data
 
 def raDec2thetaPhi(ra, dec):
     return (0.5 * np.pi - np.deg2rad(dec)), (np.deg2rad(ra))
-
 
 NSIDE = 512
 NSIDE_SUB = 2048
@@ -58,7 +55,6 @@ with open(f'../../bricks_data/pixel2ccd_{NSIDE_SUB}_non_inclusive.pickle', 'rb')
 
 pixel2systematics_dict = defaultdict(list)
 
-# Find subpixels for the given pixel
 for i, sample_pixel in enumerate(pixels_overall):
 
     subpixels_per_pixel = pixel2subpixel_dict[sample_pixel]
@@ -90,7 +86,7 @@ for i, sample_pixel in enumerate(pixels_overall):
         # Get values for singular systematics
         airmass_mean += airmass[ccds_per_subpixel].mean()
         airmass_std += airmass[ccds_per_subpixel].std()
-        airmass_median += airmass[ccds_per_subpixel].median()
+        airmass_median += np.median(airmass[ccds_per_subpixel])
         airmass_min += airmass[ccds_per_subpixel].min()
         airmass_max += airmass[ccds_per_subpixel].max()
 
@@ -104,6 +100,7 @@ for i, sample_pixel in enumerate(pixels_overall):
         seeing_g = see[mask_g]
         seeing_r = see[mask_r]
         seeing_z = see[mask_z]
+
 
         # Sky background
         sb = ccdskysb[ccds_per_subpixel]
@@ -122,19 +119,19 @@ for i, sample_pixel in enumerate(pixels_overall):
             subpixels_covered_g += 1
             seeing_g_mean += seeing_g.mean()
             seeing_g_std += seeing_g.std()
-            seeing_g_median += seeing_g.median()
+            seeing_g_median += np.median(seeing_g)
             seeing_g_min += seeing_g.min()
             seeing_g_max += seeing_g.max()
 
             ccdskysb_g_mean += ccdskysb_g.mean()
             ccdskysb_g_std += ccdskysb_g.std()
-            ccdskysb_g_median += ccdskysb_g.median()
+            ccdskysb_g_median += np.median(ccdskysb_g)
             ccdskysb_g_min += ccdskysb_g.min()
             ccdskysb_g_max += ccdskysb_g.max()
 
             ccdskycounts_g_mean += ccdskycounts_g.mean()
             ccdskycounts_g_std += ccdskycounts_g.std()
-            ccdskycounts_g_median += ccdskycounts_g.median()
+            ccdskycounts_g_median += np.median(ccdskycounts_g)
             ccdskycounts_g_min += ccdskycounts_g.min()
             ccdskycounts_g_max += ccdskycounts_g.max()
 
@@ -143,19 +140,19 @@ for i, sample_pixel in enumerate(pixels_overall):
             subpixels_covered_r += 1
             seeing_r_mean += seeing_r.mean()
             seeing_r_std += seeing_r.std()
-            seeing_r_median += seeing_r.median()
+            seeing_r_median += np.median(seeing_r)
             seeing_r_min += seeing_r.min()
             seeing_r_max += seeing_r.max()
 
             ccdskysb_r_mean += ccdskysb_r.mean()
             ccdskysb_r_std += ccdskysb_r.std()
-            ccdskysb_r_median += ccdskysb_r.median()
+            ccdskysb_r_median += np.median(ccdskysb_r)
             ccdskysb_r_min += ccdskysb_r.min()
             ccdskysb_r_max += ccdskysb_r.max()
 
             ccdskycounts_r_mean += ccdskycounts_r.mean()
             ccdskycounts_r_std += ccdskycounts_r.std()
-            ccdskycounts_r_median += ccdskycounts_r.median()
+            ccdskycounts_r_median += np.median(ccdskycounts_r)
             ccdskycounts_r_min += ccdskycounts_r.min()
             ccdskycounts_r_max += ccdskycounts_r.max()
 
@@ -164,19 +161,19 @@ for i, sample_pixel in enumerate(pixels_overall):
             subpixels_covered_z += 1
             seeing_z_mean += seeing_z.mean()
             seeing_z_std += seeing_z.std()
-            seeing_z_median += seeing_z.median()
+            seeing_z_median += np.median(seeing_z)
             seeing_z_min += seeing_z.min()
             seeing_z_max += seeing_z.max()
 
             ccdskysb_z_mean += ccdskysb_z.mean()
             ccdskysb_z_std += ccdskysb_z.std()
-            ccdskysb_z_median += ccdskysb_z.median()
+            ccdskysb_z_median += np.median(ccdskysb_z)
             ccdskysb_z_min += ccdskysb_z.min()
             ccdskysb_z_max += ccdskysb_z.max()
 
             ccdskycounts_z_mean += ccdskycounts_z.mean()
             ccdskycounts_z_std += ccdskycounts_z.std()
-            ccdskycounts_z_median += ccdskycounts_z.median()
+            ccdskycounts_z_median += np.median(ccdskycounts_z)
             ccdskycounts_z_min += ccdskycounts_z.min()
             ccdskycounts_z_max += ccdskycounts_z.max()
 
@@ -253,7 +250,7 @@ for i, sample_pixel in enumerate(pixels_overall):
 
     pixel2systematics_dict[sample_pixel] = systematics_per_pixel
 
-with open(f'../../bricks_data/pixel2systematics_geometric_{NSIDE}_{NSIDE_SUB}_inclusive.pickle', 'wb') as f:
+with open(f'../../bricks_data/pixel2systematics_reporting', 'wb') as f:
     pickle.dump(pixel2systematics_dict, f)
     f.close()
 
@@ -316,4 +313,5 @@ system = ['airmass_mean',
           'seeing_z_median',
           'seeing_z_min',
           'seeing_z_max',
+
           'subpixels_covered']
