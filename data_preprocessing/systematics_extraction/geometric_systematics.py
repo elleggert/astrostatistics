@@ -3,6 +3,7 @@ from astropy.io import fits
 import healpy as hp
 import pickle
 from collections import defaultdict
+import math
 
 decamCCD = fits.open('../../bricks_data/ccds-annotated-decam-dr9.fits')
 mosaicCCD = fits.open('../../bricks_data/ccds-annotated-mosaic-dr9.fits')
@@ -15,6 +16,7 @@ dataBass = bassCCD[1].data
 
 def raDec2thetaPhi(ra, dec):
     return (0.5 * np.pi - np.deg2rad(dec)), (np.deg2rad(ra))
+
 
 NSIDE = 512
 NSIDE_SUB = 2048
@@ -104,7 +106,6 @@ for i, sample_pixel in enumerate(pixels_overall):
         seeing_r = see[mask_r]
         seeing_z = see[mask_z]
 
-
         # Sky background
         sb = ccdskysb[ccds_per_subpixel]
         ccdskysb_g = sb[mask_g]
@@ -119,22 +120,18 @@ for i, sample_pixel in enumerate(pixels_overall):
 
         g_exp = mask_g.sum()
         if g_exp > 0:
-            print("Vals in subpixel", seeing_g)
-            print("Prev Max", seeing_g_max)
             subpixels_covered_g += 1
             seeing_g_mean += seeing_g.mean()
             seeing_g_std += seeing_g.std()
             seeing_g_median += np.median(seeing_g)
             seeing_g_min = min(seeing_g.min(), seeing_g_min)
-            seeing_g_max = max(seeing_g.max() , seeing_g_max)
-            print("Post Max", seeing_g_max)
-            print()
+            seeing_g_max = max(seeing_g.max(), seeing_g_max)
 
             ccdskysb_g_mean += ccdskysb_g.mean()
             ccdskysb_g_std += ccdskysb_g.std()
             ccdskysb_g_median += np.median(ccdskysb_g)
             ccdskysb_g_min = min(ccdskysb_g.min(), ccdskysb_g_min)
-            ccdskysb_g_max = max(ccdskysb_g.max() , ccdskysb_g_max)
+            ccdskysb_g_max = max(ccdskysb_g.max(), ccdskysb_g_max)
 
             ccdskycounts_g_mean += ccdskycounts_g.mean()
             ccdskycounts_g_std += ccdskycounts_g.std()
@@ -148,7 +145,7 @@ for i, sample_pixel in enumerate(pixels_overall):
             seeing_r_mean += seeing_r.mean()
             seeing_r_std += seeing_r.std()
             seeing_r_median += np.median(seeing_r)
-            seeing_r_min = min(seeing_r.min(),seeing_r_min )
+            seeing_r_min = min(seeing_r.min(), seeing_r_min)
             seeing_r_max = max(seeing_r.max(), seeing_r_max)
 
             ccdskysb_r_mean += ccdskysb_r.mean()
@@ -160,8 +157,8 @@ for i, sample_pixel in enumerate(pixels_overall):
             ccdskycounts_r_mean += ccdskycounts_r.mean()
             ccdskycounts_r_std += ccdskycounts_r.std()
             ccdskycounts_r_median += np.median(ccdskycounts_r)
-            ccdskycounts_r_min = min(ccdskycounts_r.min(),ccdskycounts_r_min )
-            ccdskycounts_r_max = max(ccdskycounts_r.max(),ccdskycounts_r_max )
+            ccdskycounts_r_min = min(ccdskycounts_r.min(), ccdskycounts_r_min)
+            ccdskycounts_r_max = max(ccdskycounts_r.max(), ccdskycounts_r_max)
 
         z_exp = mask_z.sum()
         if z_exp > 0:
@@ -175,7 +172,7 @@ for i, sample_pixel in enumerate(pixels_overall):
             ccdskysb_z_mean += ccdskysb_z.mean()
             ccdskysb_z_std += ccdskysb_z.std()
             ccdskysb_z_median += np.median(ccdskysb_z)
-            ccdskysb_z_min = min(ccdskysb_z.min(),ccdskysb_z_min )
+            ccdskysb_z_min = min(ccdskysb_z.min(), ccdskysb_z_min)
             ccdskysb_z_max = max(ccdskysb_z.max(), ccdskysb_z_max)
 
             ccdskycounts_z_mean += ccdskycounts_z.mean()
@@ -198,66 +195,78 @@ for i, sample_pixel in enumerate(pixels_overall):
     systematics_per_pixel.append(airmass_min)
     systematics_per_pixel.append(airmass_max)
 
-    systematics_per_pixel.append(ccdskysb_g_mean / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskysb_g_std / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskysb_g_median / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskysb_g_min)
-    systematics_per_pixel.append(ccdskysb_g_max)
+    if subpixels_covered_g > 0:
+        systematics_per_pixel.append(ccdskysb_g_mean / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskysb_g_std / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskysb_g_median / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskysb_g_min)
+        systematics_per_pixel.append(ccdskysb_g_max)
 
-    systematics_per_pixel.append(ccdskysb_r_mean / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskysb_r_std / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskysb_r_median / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskysb_r_min)
-    systematics_per_pixel.append(ccdskysb_r_max)
+        systematics_per_pixel.append(ccdskycounts_g_mean / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskycounts_g_std / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskycounts_g_median / subpixels_covered_g)
+        systematics_per_pixel.append(ccdskycounts_g_min)
+        systematics_per_pixel.append(ccdskycounts_g_max)
 
-    systematics_per_pixel.append(ccdskysb_z_mean / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskysb_z_std / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskysb_z_median / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskysb_z_min)
-    systematics_per_pixel.append(ccdskysb_z_max)
+        systematics_per_pixel.append(seeing_g_mean / subpixels_covered_g)
+        systematics_per_pixel.append(seeing_g_std / subpixels_covered_g)
+        systematics_per_pixel.append(seeing_g_median / subpixels_covered_g)
+        systematics_per_pixel.append(seeing_g_min)
+        systematics_per_pixel.append(seeing_g_max)
+    else:
+        for i in range(15):
+            systematics_per_pixel.append(0)
 
-    systematics_per_pixel.append(ccdskycounts_g_mean / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskycounts_g_std / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskycounts_g_median / subpixels_covered_g)
-    systematics_per_pixel.append(ccdskycounts_g_min)
-    systematics_per_pixel.append(ccdskycounts_g_max)
+    if subpixels_covered_r > 0:
+        systematics_per_pixel.append(ccdskysb_r_mean / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskysb_r_std / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskysb_r_median / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskysb_r_min)
+        systematics_per_pixel.append(ccdskysb_r_max)
 
-    systematics_per_pixel.append(ccdskycounts_r_mean / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskycounts_r_std / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskycounts_r_median / subpixels_covered_r)
-    systematics_per_pixel.append(ccdskycounts_r_min)
-    systematics_per_pixel.append(ccdskycounts_r_max)
+        systematics_per_pixel.append(ccdskycounts_r_mean / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskycounts_r_std / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskycounts_r_median / subpixels_covered_r)
+        systematics_per_pixel.append(ccdskycounts_r_min)
+        systematics_per_pixel.append(ccdskycounts_r_max)
 
-    systematics_per_pixel.append(ccdskycounts_z_mean / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskycounts_z_std / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskycounts_z_median / subpixels_covered_z)
-    systematics_per_pixel.append(ccdskycounts_z_min)
-    systematics_per_pixel.append(ccdskycounts_z_max)
+        systematics_per_pixel.append(seeing_r_mean / subpixels_covered_r)
+        systematics_per_pixel.append(seeing_r_std / subpixels_covered_r)
+        systematics_per_pixel.append(seeing_r_median / subpixels_covered_r)
+        systematics_per_pixel.append(seeing_r_min)
+        systematics_per_pixel.append(seeing_r_max)
+    else:
+        for i in range(15):
+            systematics_per_pixel.append(0)
 
-    systematics_per_pixel.append(seeing_g_mean / subpixels_covered_g)
-    systematics_per_pixel.append(seeing_g_std / subpixels_covered_g)
-    systematics_per_pixel.append(seeing_g_median / subpixels_covered_g)
-    systematics_per_pixel.append(seeing_g_min)
-    systematics_per_pixel.append(seeing_g_max)
+    if subpixels_covered_z > 0:
+        systematics_per_pixel.append(ccdskysb_z_mean / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskysb_z_std / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskysb_z_median / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskysb_z_min)
+        systematics_per_pixel.append(ccdskysb_z_max)
 
-    systematics_per_pixel.append(seeing_r_mean / subpixels_covered_r)
-    systematics_per_pixel.append(seeing_r_std / subpixels_covered_r)
-    systematics_per_pixel.append(seeing_r_median / subpixels_covered_r)
-    systematics_per_pixel.append(seeing_r_min)
-    systematics_per_pixel.append(seeing_r_max)
+        systematics_per_pixel.append(ccdskycounts_z_mean / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskycounts_z_std / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskycounts_z_median / subpixels_covered_z)
+        systematics_per_pixel.append(ccdskycounts_z_min)
+        systematics_per_pixel.append(ccdskycounts_z_max)
 
-    systematics_per_pixel.append(seeing_z_mean / subpixels_covered_z)
-    systematics_per_pixel.append(seeing_z_std / subpixels_covered_z)
-    systematics_per_pixel.append(seeing_z_median / subpixels_covered_z)
-    systematics_per_pixel.append(seeing_z_min)
-    systematics_per_pixel.append(seeing_z_max)
+        systematics_per_pixel.append(seeing_z_mean / subpixels_covered_z)
+        systematics_per_pixel.append(seeing_z_std / subpixels_covered_z)
+        systematics_per_pixel.append(seeing_z_median / subpixels_covered_z)
+        systematics_per_pixel.append(seeing_z_min)
+        systematics_per_pixel.append(seeing_z_max)
+    else:
+        for i in range(15):
+            systematics_per_pixel.append(0)
 
     # Also appending fraction of pixel covered to cut on it later
     systematics_per_pixel.append(subpixels_covered / 16)
 
     pixel2systematics_dict[sample_pixel] = systematics_per_pixel
 
-with open(f'../../bricks_data/pixel2systematics_reporting', 'wb') as f:
+with open(f'../../bricks_data/pixel2systematics_reporting.pickle', 'wb') as f:
     pickle.dump(pixel2systematics_dict, f)
     f.close()
 
@@ -273,35 +282,11 @@ system = ['airmass_mean',
           'ccdskysb_g_min',
           'ccdskysb_g_max',
 
-          'ccdskysb_r_mean',
-          'ccdskysb_r_std',
-          'ccdskysb_r_median',
-          'ccdskysb_r_min',
-          'ccdskysb_r_max',
-
-          'ccdskysb_z_mean',
-          'ccdskysb_z_std',
-          'ccdskysb_z_median',
-          'ccdskysb_z_min',
-          'ccdskysb_z_max',
-
           'ccdskycounts_g_mean',
           'ccdskycounts_g_std',
           'ccdskycounts_g_median',
           'ccdskycounts_g_min',
           'ccdskycounts_g_max',
-
-          'ccdskycounts_r_mean',
-          'ccdskycounts_r_std',
-          'ccdskycounts_r_median',
-          'ccdskycounts_r_min',
-          'ccdskycounts_r_max',
-
-          'ccdskycounts_z_mean',
-          'ccdskycounts_z_std',
-          'ccdskycounts_z_median',
-          'ccdskycounts_z_min',
-          'ccdskycounts_z_max',
 
           'seeing_g_mean',
           'seeing_g_std',
@@ -309,11 +294,35 @@ system = ['airmass_mean',
           'seeing_g_min',
           'seeing_g_max',
 
+          'ccdskysb_r_mean',
+          'ccdskysb_r_std',
+          'ccdskysb_r_median',
+          'ccdskysb_r_min',
+          'ccdskysb_r_max',
+
+          'ccdskycounts_r_mean',
+          'ccdskycounts_r_std',
+          'ccdskycounts_r_median',
+          'ccdskycounts_r_min',
+          'ccdskycounts_r_max',
+
           'seeing_r_mean',
           'seeing_r_std',
           'seeing_r_median',
           'seeing_r_min',
           'seeing_r_max',
+
+          'ccdskysb_z_mean',
+          'ccdskysb_z_std',
+          'ccdskysb_z_median',
+          'ccdskysb_z_min',
+          'ccdskysb_z_max',
+
+          'ccdskycounts_z_mean',
+          'ccdskycounts_z_std',
+          'ccdskycounts_z_median',
+          'ccdskycounts_z_min',
+          'ccdskycounts_z_max',
 
           'seeing_z_mean',
           'seeing_z_std',
