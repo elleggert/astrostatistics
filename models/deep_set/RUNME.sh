@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./hp_optim.sh |& tee logs_figs/south/rlbg_11_dual.txt
+./hp_optim.sh |& tee logs_figs/north/elg_11_dual.txt
