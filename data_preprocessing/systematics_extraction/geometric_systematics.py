@@ -4,6 +4,7 @@ import healpy as hp
 import pickle
 from collections import defaultdict
 import math
+import pandas as pd
 
 decamCCD = fits.open('../../bricks_data/ccds-annotated-decam-dr9.fits')
 mosaicCCD = fits.open('../../bricks_data/ccds-annotated-mosaic-dr9.fits')
@@ -48,7 +49,18 @@ with open(f'../../bricks_data/pixel2ccd_{NSIDE}.pickle', 'rb') as f:
     pixel2ccd_dict = pickle.load(f)
     f.close()
 
-pixels_overall = pixel2ccd_dict.keys()
+"""
+df_north = pd.read_csv('../../bricks_data/north_predictions.csv')
+df_south = pd.read_csv('../../bricks_data/south_predictions.csv')
+df_des = pd.read_csv('../../bricks_data/des_predictions.csv')
+df_total = pd.concat((df_south, df_des), axis=0)
+df_total = pd.concat((df_total, df_north), axis=0)
+"""
+df_total = pd.read_csv('../../bricks_data/north_predictions.csv')
+
+
+pixels_overall = df_total.pixel_id.astype(int).to_numpy()
+
 
 # For DECAM, BASS, MzLS
 with open(f'../../bricks_data/pixel2ccd_{NSIDE_SUB}_non_inclusive.pickle', 'rb') as f:
@@ -266,7 +278,7 @@ for i, sample_pixel in enumerate(pixels_overall):
 
     pixel2systematics_dict[sample_pixel] = systematics_per_pixel
 
-with open(f'../../bricks_data/pixel2systematics_reporting.pickle', 'wb') as f:
+with open(f'../../bricks_data/pixel2systematics_reporting_north.pickle', 'wb') as f:
     pickle.dump(pixel2systematics_dict, f)
     f.close()
 

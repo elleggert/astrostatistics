@@ -120,5 +120,5 @@ for area in areas:
             df_deep = df_deep.merge(df_temp, how='inner', on='pixel_id')
 
     df_deep = df_deep.dropna()
-    df_deep.to_csv(f'results/{area}_ds_predictions.csv', index=False)
+    df_deep.to_csv(f'results/{area}_ds_predictions_fin.csv', index=False)
     print(f' Pixels in Area: {area}: {len(df_deep)}. ')
