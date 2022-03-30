@@ -1,0 +1,183 @@
+Area: north started loading.
+72616 290460
+363076
+Area: north finished loading.
+
+
+
+ Area: north. Gal: lrg. Best val: 0.014333634977770293.
+
+363049
+
+ XXXXXX======== TRIAL north - lrg ended
+
+Test Set - R-squared:  0.012851093221407317
+Test Set - RMSE:  4.8126483030905085
+Test Set - MAE:  3.272792036834281
+
+
+ Area: north. Gal: elg. Best val: 0.14253656231312106.
+
+363049
+
+ XXXXXX======== TRIAL north - elg ended
+
+Test Set - R-squared:  0.14403222315736874
+Test Set - RMSE:  7.240297423848662
+Test Set - MAE:  5.648038510430742
+
+
+ Area: north. Gal: qso. Best val: 0.12880242798071206.
+
+363049
+
+ XXXXXX======== TRIAL north - qso ended
+
+Test Set - R-squared:  0.12732775772895744
+Test Set - RMSE:  2.2940743744127214
+Test Set - MAE:  1.7955369268021981
+
+
+ Area: north. Gal: glbg. Best val: 0.2571732834173548.
+
+363049
+
+ XXXXXX======== TRIAL north - glbg ended
+
+Test Set - R-squared:  0.2607760981393852
+Test Set - RMSE:  9.727721072020964
+Test Set - MAE:  7.544313294815258
+
+
+ Area: north. Gal: rlbg. Best val: 0.2939353370455199.
+
+363049
+
+ XXXXXX======== TRIAL north - rlbg ended
+
+Test Set - R-squared:  0.3010642277981035
+Test Set - RMSE:  8.174686435053125
+Test Set - MAE:  6.359660746627666
+ Pixels in Area: north: 363049. 
+Area: south started loading.
+132570 530277
+662847
+Area: south finished loading.
+
+
+
+ Area: south. Gal: lrg. Best val: 0.006369378186776742.
+
+662832
+
+ XXXXXX======== TRIAL south - lrg ended
+
+Test Set - R-squared:  0.005750380685189294
+Test Set - RMSE:  4.94886856187612
+Test Set - MAE:  3.321496503562376
+
+
+ Area: south. Gal: elg. Best val: 0.12684238675681014.
+
+662832
+
+ XXXXXX======== TRIAL south - elg ended
+
+Test Set - R-squared:  0.12889477406417826
+Test Set - RMSE:  7.346755205833389
+Test Set - MAE:  5.782816568518351
+
+
+ Area: south. Gal: qso. Best val: 0.10334795011664266.
+
+662832
+
+ XXXXXX======== TRIAL south - qso ended
+
+Test Set - R-squared:  0.09986124449856248
+Test Set - RMSE:  2.2461808294331433
+Test Set - MAE:  1.719994331970079
+
+
+ Area: south. Gal: glbg. Best val: 0.18911453103546239.
+
+662832
+
+ XXXXXX======== TRIAL south - glbg ended
+
+Test Set - R-squared:  0.1887399156560875
+Test Set - RMSE:  7.528147579848062
+Test Set - MAE:  5.7844332548728685
+
+
+ Area: south. Gal: rlbg. Best val: 0.1563574296419069.
+
+662832
+
+ XXXXXX======== TRIAL south - rlbg ended
+
+Test Set - R-squared:  0.15659091992978513
+Test Set - RMSE:  4.143541674197782
+Test Set - MAE:  3.179546059036904
+ Pixels in Area: south: 662832. 
+Area: des started loading.
+67706 270820
+338526
+Area: des finished loading.
+
+
+
+ Area: des. Gal: lrg. Best val: 0.025305062865661365.
+
+338479
+
+ XXXXXX======== TRIAL des - lrg ended
+
+Test Set - R-squared:  0.025593476788113523
+Test Set - RMSE:  4.248980190478164
+Test Set - MAE:  3.094243466776437
+
+
+ Area: des. Gal: elg. Best val: 0.04756083163409808.
+
+338479
+
+ XXXXXX======== TRIAL des - elg ended
+
+Test Set - R-squared:  0.048007722321337876
+Test Set - RMSE:  7.048246289179957
+Test Set - MAE:  5.5811267660841875
+
+
+ Area: des. Gal: qso. Best val: 0.029479080716163675.
+
+338479
+
+ XXXXXX======== TRIAL des - qso ended
+
+Test Set - R-squared:  0.029869239219570187
+Test Set - RMSE:  1.9559200311602856
+Test Set - MAE:  1.5542855332067556
+
+
+ Area: des. Gal: glbg. Best val: 0.1328520981189617.
+
+338479
+
+ XXXXXX======== TRIAL des - glbg ended
+
+Test Set - R-squared:  0.133881624956683
+Test Set - RMSE:  8.8927364558848
+Test Set - MAE:  6.892338223724565
+
+
+ Area: des. Gal: rlbg. Best val: 0.1066502543129807.
+
+338479
+
+ XXXXXX======== TRIAL des - rlbg ended
+
+Test Set - R-squared:  0.10632270427572199
+Test Set - RMSE:  2.44409736961223
+Test Set - MAE:  1.9270649228190353
+ Pixels in Area: des: 338479. 
